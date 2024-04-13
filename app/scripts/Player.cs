@@ -46,4 +46,9 @@ public class Player : Node2D
 	{
 		MovePlayer(delta);
 	}
+	
+	private void _on_Area2D_body_entered(object body)
+	{
+		GetCollisionDirection();
+	}
 }
