@@ -152,3 +152,8 @@ script = SubResource( 2 )
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 script = ExtResource( 3 )
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+margin_right = 14.0
+margin_bottom = 14.0
+rect_scale = Vector2( 34.8556, -20.4331 )
