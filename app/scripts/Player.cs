@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Player : Node2D
+public class Player : KinematicBody2D
 {
 	// Speed at which the player moves, as a vector.
 	private Vector2 m_speed = new Vector2(200, 200);
@@ -29,7 +29,6 @@ public class Player : Node2D
 		RectangleShape2D rectangle = new RectangleShape2D();
 		m_sprite = GetNode<Sprite>("/root/Node2D/Player/Sprite");
 		
-		
 		// TODO: set the starting position
 		Position = new Vector2(100, 100);
 		m_sprite.Texture = m_front;
@@ -37,7 +36,7 @@ public class Player : Node2D
 	}
 
 	// Move the player according to the current input state.
-	private void MovePlayer(float delta) {
+	private void MovePlayer() {
 		// Get input from the keyboard
 		var inputVector = new Vector2();
 
@@ -74,12 +73,12 @@ public class Player : Node2D
 		inputVector = inputVector.Normalized();
 
 		// Move the square
-		Position += inputVector * m_speed * delta;
+		MoveAndSlide(inputVector * m_speed);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(float delta)
+	public override void _PhysicsProcess(float delta)
 	{
-		MovePlayer(delta);
+		MovePlayer();
 	}
 }
