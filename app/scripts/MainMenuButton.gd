@@ -9,7 +9,7 @@ extends Button
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.flat = true
-	self.text = "Main Menu"
+	self.text = "main menu"
 
 	
 	pass # Replace with function body.
