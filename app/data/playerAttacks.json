@@ -1,0 +1,27 @@
+{
+    "0": {
+        "name": "Chop",
+        "minBaseDMG": "2",
+        "maxBaseDMG": "5",
+        "critChance": "0.25",
+        "icon": "res://chop.png",
+        "minUpgradeDMG": "2",
+        "maxUpgradeDMG": "3",
+        "reach": ["1", "2", "3", "4"],
+        "effect": "-1"
+    },
+    "1": {
+        "name": "Hilt Bonk",
+        "base": {
+            "minDMG": "1",
+            "maxDMG": "3"
+        },
+        "upgraded": {
+            "minDMG": "1",
+            "maxDMG": "1"
+        },
+        "critChance": "0.15",
+        "reach": ["1", "2", "3", "4"],
+        "effect": "0"
+    }
+}
