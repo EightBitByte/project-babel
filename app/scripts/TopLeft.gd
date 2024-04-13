@@ -1,9 +1,10 @@
-extends VBoxContainer
+extends HBoxContainer
 
+# Called when the node enters the scene tree for the first time.
 func _ready():
 	self.size_flags_horizontal = SIZE_EXPAND_FILL
+	self.size_flags_vertical = SIZE_EXPAND_FILL
 	self.size_flags_stretch_ratio = 4.0
-
 	pass # Replace with function body.
 
 

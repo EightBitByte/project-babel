@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://scripts/Player.cs" type="Script" id=1]
 [ext_resource path="res://scripts/InventoryMenu.gd" type="Script" id=2]
@@ -10,6 +10,11 @@
 [ext_resource path="res://scripts/MenuSubContainer.gd" type="Script" id=8]
 [ext_resource path="res://scripts/LeftSide.gd" type="Script" id=9]
 [ext_resource path="res://scripts/RightSide.gd" type="Script" id=10]
+[ext_resource path="res://data/MC_front.png" type="Texture" id=11]
+[ext_resource path="res://scripts/TopLeft.gd" type="Script" id=12]
+[ext_resource path="res://scripts/PlayerOverview.gd" type="Script" id=13]
+[ext_resource path="res://scripts/JournalButton.gd" type="Script" id=14]
+[ext_resource path="res://scripts/BottomLeft.gd" type="Script" id=15]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 75, 75 )
@@ -167,8 +172,8 @@ script = ExtResource( 3 )
 [node name="BigMenuBorder" type="PanelContainer" parent="Camera2D"]
 margin_left = 9.0
 margin_top = 9.0
-margin_right = 31.0
-margin_bottom = 31.0
+margin_right = 57.0
+margin_bottom = 51.0
 theme = ExtResource( 6 )
 custom_styles/panel = ExtResource( 5 )
 script = ExtResource( 2 )
@@ -176,30 +181,36 @@ script = ExtResource( 2 )
 [node name="MenuSubContainer" type="HBoxContainer" parent="Camera2D/BigMenuBorder"]
 margin_left = 5.0
 margin_top = 5.0
-margin_right = 19.0
-margin_bottom = 23.0
+margin_right = 43.0
+margin_bottom = 37.0
 script = ExtResource( 8 )
 
 [node name="LeftSide" type="VBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer"]
 margin_right = 10.0
-margin_bottom = 18.0
+margin_bottom = 32.0
 script = ExtResource( 9 )
 
 [node name="TopLeft" type="HBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide"]
 margin_right = 10.0
+script = ExtResource( 12 )
 
 [node name="PlayerOverview" type="Sprite" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft"]
+texture = ExtResource( 11 )
+script = ExtResource( 13 )
 
-[node name="HealthBarContainer" type="VBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft"]
+[node name="HealthBarContainer" type="Panel" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft"]
+custom_styles/panel = ExtResource( 5 )
 
 [node name="JournalButton" type="TextureButton" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft"]
 margin_left = 4.0
 margin_right = 4.0
+script = ExtResource( 14 )
 
 [node name="BottomLeft" type="VBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide"]
 margin_top = 4.0
 margin_right = 10.0
 margin_bottom = 18.0
+script = ExtResource( 15 )
 
 [node name="InventoryBorder" type="PanelContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/BottomLeft"]
 margin_right = 10.0
@@ -220,5 +231,5 @@ margin_bottom = 14.0
 [node name="RightSide" type="VBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer"]
 margin_left = 14.0
 margin_right = 14.0
-margin_bottom = 18.0
+margin_bottom = 32.0
 script = ExtResource( 10 )
