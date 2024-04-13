@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using Godot;
 
 class CombatPlayer {
     public CombatPlayer(int health, int maxHP, Dictionary<int, Attack> aDict) {
@@ -40,6 +41,16 @@ class CombatPlayer {
         Health -= Health - amount > maxHealth ? (Health - maxHealth) : amount;
 
         return Health <= 0;
+    }
+
+    public void DEBUG_PRINT() {
+        GD.Print("Health: ", Health, "\nMaxHealth: ", maxHealth, "\nattackDict: {");
+
+        foreach (KeyValuePair<int, Attack> kv in attackDict) {
+            GD.Print("Attack #", kv.Key, ": ");
+            kv.Value.DEBUG_PRINT();
+        }
+        GD.Print("}\n");
     }
 
     private int Health;

@@ -1,3 +1,5 @@
+# define COMBAT_DEBUG
+
 using System;
 using System.Collections.Generic;
 using Godot;
@@ -9,22 +11,27 @@ public class Combat : Node
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        
+        CombatPlayer cp = LoadCombatPlayer();
+
+        #if COMBAT_DEBUG
+        cp.DEBUG_PRINT();
+        #endif
     }
 
     private CombatPlayer LoadCombatPlayer() {
         // Read the attack collection and player stats
-        Godot.Collections.Dictionary allAttacks = Json.ReadJSON("res://data/playerAttacks");
-        Godot.Collections.Dictionary playerDict = Json.ReadJSON("res://player.json");
+        Godot.Collections.Dictionary allAttacks = Json.ReadJSON("res://data/playerAttacks.json");
+        Godot.Collections.Dictionary playerDict = Json.ReadJSON("res://data/player.json");
 
         Godot.Collections.Array knownAttacks = playerDict["knownAttacks"] as Godot.Collections.Array;
         int knownLength = knownAttacks.Count;
 
         Dictionary<int, Attack> attackDict = new();
         for (int index = 0; index < knownLength; ++index) {
-            int attackID = (int)knownAttacks[index];
+            int attackID = int.Parse((string)knownAttacks[index]);
 
-            attackDict.Add(attackID, JSONToAttack(allAttacks[attackID] as Godot.Collections.Dictionary));
+            Godot.Collections.Dictionary thisAttack = allAttacks[attackID.ToString()] as Godot.Collections.Dictionary;
+            attackDict.Add(attackID, JSONToAttack(thisAttack));
         }
 
         return new(
@@ -42,7 +49,8 @@ public class Combat : Node
             double.Parse((string)attackDict["critChance"]),
             (string)attackDict["icon"],
             int.Parse((string)attackDict["minUpgradeDMG"]),
-            int.Parse((string)attackDict["maxUpgadeDMG"])
+            int.Parse((string)attackDict["maxUpgradeDMG"]),
+            (StatusEffect)int.Parse((string)attackDict["effect"])
         );
     }
 

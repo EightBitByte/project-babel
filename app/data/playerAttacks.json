@@ -11,16 +11,13 @@
         "effect": "-1"
     },
     "1": {
-        "name": "Hilt Bonk",
-        "base": {
-            "minDMG": "1",
-            "maxDMG": "3"
-        },
-        "upgraded": {
-            "minDMG": "1",
-            "maxDMG": "1"
-        },
+        "name": "Pommel Strike",
+        "minBaseDMG": "1",
+        "maxBaseDMG": "2",
         "critChance": "0.15",
+        "icon": "res://pommel.png",
+        "minUpgradeDMG": "2",
+        "maxUpgradeDMG": "3",
         "reach": ["1", "2", "3", "4"],
         "effect": "0"
     }
