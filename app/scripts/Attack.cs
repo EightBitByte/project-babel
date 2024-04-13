@@ -1,6 +1,7 @@
 // Attack.cs
 //
 // Represents the data for an attack.
+using System;
 using Godot;
 
 enum StatusEffect {
@@ -15,33 +16,19 @@ class Attack {
     /// Default initializer.
     /// </summary>
     public Attack(string name, int minDamage, int maxDamage, double critChance, 
-                  string icon, int minUpgradeDamage, int maxUpgradeDamage, StatusEffect effect) {
+                  string icon, double favorability,int minUpgradeDamage, 
+                  int maxUpgradeDamage, StatusEffect effect) {
         Name = name;
         MinDamage = minDamage;
         MaxDamage = maxDamage;
         CritChance = critChance;
         Icon = icon;
+        Favorability = favorability;
         MinUpgradeDamage = minUpgradeDamage;
         MaxUpgradeDamage = maxUpgradeDamage;
         Effect = effect;
     }
     
-
-    /// <summary>
-    /// Initializes an Attack object from a JSON dict.
-    /// </summary>
-    /// <param name="attackDict">A JSON dictionary with all necessary kv pairs.</param>
-    public Attack(Godot.Collections.Dictionary attackDict) {
-        Name = (string)attackDict["name"];
-        MinDamage = int.Parse((string)attackDict["minBaseDMG"]);
-        MaxDamage = int.Parse((string)attackDict["maxBaseDMG"]);
-        CritChance = double.Parse((string)attackDict["critChance"]);
-        Icon = (string)attackDict["icon"];
-        MinUpgradeDamage = int.Parse((string)attackDict["minUpgradeDMG"]);
-        MaxUpgradeDamage = int.Parse((string)attackDict["maxUpgradeDMG"]);
-        Effect = (StatusEffect)int.Parse((string)attackDict["effect"]);
-    }
-
 
     /// <summary>
     /// Upgrades the minimum and maximum damage by the modifiers, and 
@@ -59,10 +46,14 @@ class Attack {
     /// For debug purposes only.
     /// </summary>
     public void DEBUG_PRINT() {
-        GD.Print("Name: ", Name, "\nMinDamage:", MinDamage, "\nCritChance: ", 
-                 CritChance, "\nLevel: ", Level, "\nIcon: ", Icon, 
-                 "\nMinUpgradeDamage: ", MinUpgradeDamage, "\nMaxUpgradeDamage: ", 
-                 MaxUpgradeDamage);
+        GD.Print("\tName: ", Name, 
+                 "\n\tMinDamage:", MinDamage, 
+                 "\n\tCritChance: ", CritChance, 
+                 "\n\tLevel: ", Level, 
+                 "\n\tIcon: ", Icon, 
+                 "\n\tFavorability: ", Favorability,
+                 "\n\tMinUpgradeDamage: ", MinUpgradeDamage, 
+                 "\n\tMaxUpgradeDamage: ", MaxUpgradeDamage);
     }
 
 
@@ -72,6 +63,8 @@ class Attack {
     public double CritChance { get; }
     public int Level { get; private set; }
     public string Icon { get; }
+    // For use only with enemies - determines which attack they choose
+    public double Favorability { get; } 
     private readonly int MinUpgradeDamage;
     private readonly int MaxUpgradeDamage;
     private readonly StatusEffect Effect;
