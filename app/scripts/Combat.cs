@@ -34,27 +34,14 @@ public class Combat : Node
         for (int index = 0; index < knownLength; ++index) {
             int attackID = int.Parse((string)knownAttacks[index]);
 
-            Godot.Collections.Dictionary thisAttack = allAttacks[attackID.ToString()] as Godot.Collections.Dictionary;
-            attackDict.Add(attackID, JSONToAttack(thisAttack));
+            Attack toAdd = new(allAttacks[attackID.ToString()] as Godot.Collections.Dictionary);
+            attackDict.Add(attackID, toAdd);
         }
 
         return new(
             DEFAULT_MAX_HP,
             DEFAULT_MAX_HP,
             attackDict
-        );
-    }
-
-    private Attack JSONToAttack(Godot.Collections.Dictionary attackDict) {
-        return new(
-            (string)attackDict["name"],
-            int.Parse((string)attackDict["minBaseDMG"]),
-            int.Parse((string)attackDict["maxBaseDMG"]),
-            double.Parse((string)attackDict["critChance"]),
-            (string)attackDict["icon"],
-            int.Parse((string)attackDict["minUpgradeDMG"]),
-            int.Parse((string)attackDict["maxUpgradeDMG"]),
-            (StatusEffect)int.Parse((string)attackDict["effect"])
         );
     }
 
