@@ -26,23 +26,23 @@ public class PlayerCollision : CollisionShape2D
 		
 		var spaceState = GetWorld2d().DirectSpaceState;
 		
-		string[] correspondences = ["left", "left", "top", "top", "right", "right", "down", "down"];
-		HashSet<string> stringSet;
+		string[] correspondences = {"left", "left", "top", "top", "right", "right", "down", "down"};
+		
 		int n = correspondences.Length;
-
-		var[] result = [spaceState.IntersectRay(topLeft, new Vector2(-0.1, 0), new Godot.Collections.Array { this }), 
-					spaceState.IntersectRay(botLeft, new Vector2(-0.1, 0), new Godot.Collections.Array { this }),
-					spaceState.IntersectRay(topLeft, new Vector2(0, 0.1), new Godot.Collections.Array { this }),
-					spaceState.IntersectRay(topRight, new Vector2(0, 0.1), new Godot.Collections.Array { this }),
-					spaceState.IntersectRay(topRight, new Vector2(0.1, 0), new Godot.Collections.Array { this }),
-					spaceState.IntersectRay(botRight, new Vector2(0.1, 0), new Godot.Collections.Array { this }),
-					spaceState.IntersectRay(botRight, new Vector2(0, -0.1), new Godot.Collections.Array { this }),
-					spaceState.IntersectRay(botLeft, new Vector2(0, -0.1), new Godot.Collections.Array { this })
-					];
+		
+		Godot.Collections.Dictionary[] result = {spaceState.IntersectRay(topLeft, new Vector2(-0.1f, 0f), new Godot.Collections.Array { this }), 
+					spaceState.IntersectRay(botLeft, new Vector2(-0.1f, 0f), new Godot.Collections.Array { this }),
+					spaceState.IntersectRay(topLeft, new Vector2(0f, 0.1f), new Godot.Collections.Array { this }),
+					spaceState.IntersectRay(topRight, new Vector2(0f, 0.1f), new Godot.Collections.Array { this }),
+					spaceState.IntersectRay(topRight, new Vector2(0.1f, 0f), new Godot.Collections.Array { this }),
+					spaceState.IntersectRay(botRight, new Vector2(0.1f, 0f), new Godot.Collections.Array { this }),
+					spaceState.IntersectRay(botRight, new Vector2(0f, -0.1f), new Godot.Collections.Array { this }),
+					spaceState.IntersectRay(botLeft, new Vector2(0f, -0.1f), new Godot.Collections.Array { this })
+					};
 		
 		for (int i = 0; i < n; ++i) {
-			if (result[i].Count > 0 && result[i]["collider"]) {
-				GD.Print("Hit at point: ", result["position"]);
+			if (result[i].Count > 0) {
+				GD.Print("Hit at point: ", result[i]["position"]);
 			}
 		}
 	}

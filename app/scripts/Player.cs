@@ -7,6 +7,7 @@ public class Player : Node2D
 	private Vector2 m_speed = new Vector2(200, 200);
 	// Player sprite
 	private Sprite m_sprite;
+	private PlayerCollision m_player_collider;
 	// Textures for the multiple directions player faces.
 	private Texture m_front = (Texture)GD.Load("res://data/MC_front.png");
 	private Texture m_back = (Texture)GD.Load("res://data/MC_back.png");
@@ -29,6 +30,7 @@ public class Player : Node2D
 		RectangleShape2D rectangle = new RectangleShape2D();
 		m_sprite = GetNode<Sprite>("/root/Node2D/Player/Sprite");
 		
+		m_player_collider = GetNode<PlayerCollision>("./Area2D/CollisionShape2D");
 		
 		// TODO: set the starting position
 		Position = new Vector2(100, 100);
@@ -85,6 +87,6 @@ public class Player : Node2D
 	
 	private void _on_Area2D_body_entered(object body)
 	{
-		GetCollisionDirection();
+		m_player_collider.GetCollisionDirection();
 	}
 }
