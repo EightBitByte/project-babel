@@ -6,13 +6,7 @@ public class Player : KinematicBody2D
 	// Speed at which the player moves, as a vector.
 	private Vector2 m_speed = new Vector2(200, 200);
 	// Player sprite
-	private Sprite m_sprite;
 	private AnimatedSprite m_animatedSprite;
-	// Textures for the multiple directions player faces.
-	private Texture m_front = (Texture)GD.Load("res://data/MC_front.png");
-	private Texture m_back = (Texture)GD.Load("res://data/MC_back.png");
-	private Texture m_left = (Texture)GD.Load("res://data/MC_left.png");
-	private Texture m_right = (Texture)GD.Load("res://data/MC_right.png");
 
 	// Represents direction of the player
 	private enum Direction 
@@ -29,41 +23,23 @@ public class Player : KinematicBody2D
 	public override void _Ready()
 	{
 		RectangleShape2D rectangle = new RectangleShape2D();
-		//m_sprite = GetNode<Sprite>("/root/Node2D/Player/Sprite");
 		
 		// TODO: set the starting position
 		Position = new Vector2(100, 100);
-		//m_sprite.Texture = m_front;
 		
 		m_animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
-		
-		//SpriteFrames walkFrames = new SpriteFrames("res://data/front_walk");
-		
-		//m_animatedSprite.Set_sprite_frames(walkFrames);
 	}
 
-
+	// Switch direction to d (if necessary) and set animation accordingly.
 	private void SwitchDirection(Direction d) {
+		// If we're in the same direction, do nothing.
 		if (d == m_direction) {
 			return;
 		}
+		// If we stopped moving, stop the animation and set frame to the idle frame.
 		if (d == Direction.None) {
 			m_animatedSprite.Stop();
 			m_animatedSprite.Frame = 0;
-			/*
-			if (m_direction == Direction.Front) {
-				m_sprite.Texture = m_front;
-			}
-			if (m_direction == Direction.Right) {
-				m_sprite.Texture = m_right;
-			}
-			if (m_direction == Direction.Left) {
-				m_sprite.Texture = m_left;
-			}
-			if (m_direction == Direction.Back) {
-				m_sprite.Texture = m_back;
-			}
-			*/
 			m_direction = Direction.None;
 			return;
 		}
@@ -71,7 +47,7 @@ public class Player : KinematicBody2D
 		// I would use maps in this function with direction as key and texture as value and such,
 		// but alas, I will stick with the safe option
 		m_direction = d;
-		
+		// Set animation according to movement direction.
 		if (m_direction == Direction.Front) {
 			m_animatedSprite.Play("front_walk");
 		}
@@ -90,8 +66,9 @@ public class Player : KinematicBody2D
 	private void MovePlayer() {
 		// Get input from the keyboard
 		var inputVector = new Vector2();
-
 		Direction newDir = Direction.None;
+
+		// Set local variables depending on input;
 		if (Input.IsActionPressed("move_right")) {
 			newDir = Direction.Right;
 			inputVector.x += 1;
@@ -108,7 +85,7 @@ public class Player : KinematicBody2D
 			newDir = Direction.Back;
 			inputVector.y -= 1;
 		}
-		
+		// Switch the direction to the received input direction.
 		SwitchDirection(newDir);
 
 		// Normalize the input vector so diagonal movement isn't faster
