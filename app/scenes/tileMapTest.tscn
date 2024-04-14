@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://scripts/levelScripts/LevelManager.cs" type="Script" id=1]
+[ext_resource path="res://levelPrefabs/startChamber.tscn" type="PackedScene" id=2]
 
 [node name="Node2D" type="Node2D"]
 
@@ -11,3 +12,5 @@ script = ExtResource( 1 )
 position = Vector2( 0, -1000 )
 current = true
 zoom = Vector2( 10, 10 )
+
+[node name="Node2D" parent="." instance=ExtResource( 2 )]

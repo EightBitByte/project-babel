@@ -54,6 +54,7 @@ public class LevelManager : Node
 		if (coordToChamber.ContainsKey(coord)) {
 			// Updates a chamber to link doors with its neigher from the incoming edge 
 			coordToChamber[coord].GenerateDoor(incomingDir);
+			return;
 		}
 		
 		// Instantiate a chamberPrefab and add it to the dictionary
