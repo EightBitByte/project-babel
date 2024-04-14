@@ -5,6 +5,7 @@ using System;
 using Godot;
 
 enum StatusEffect {
+    None = -1,
     Stun,
     Weaken,
     Slow,
@@ -54,6 +55,20 @@ class Attack {
                  "\n\tFavorability: ", Favorability,
                  "\n\tMinUpgradeDamage: ", MinUpgradeDamage, 
                  "\n\tMaxUpgradeDamage: ", MaxUpgradeDamage);
+    }
+
+    /// <summary>
+    /// Gets the damage done for this attack.
+    /// </summary>
+    /// <returns>The amount of damage that this will do.</returns>
+    public int GetDamage() {
+        Random rand = new();
+
+        bool isCrit = rand.NextDouble() <= CritChance;
+        int damage = rand.Next(MinDamage, MaxDamage);
+
+        // If crit, double damage
+        return isCrit ? damage * 2 : damage;
     }
 
 

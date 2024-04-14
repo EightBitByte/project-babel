@@ -10,5 +10,11 @@
         "health": "10",
         "speed": "1",
         "knownAttacks": ["1"]
+    }, 
+    "2": {
+        "name": "Mutant Rat",
+        "health": "2",
+        "speed": "9",
+        "knownAttacks": ["0"]
     }
 }

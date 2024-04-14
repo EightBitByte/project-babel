@@ -13,7 +13,7 @@ config_version=4
 config/name="Babel"
 run/main_scene="res://scenes/movement.tscn"
 config/icon="res://icon.png"
-<<<<<<<HEADrun/main_scene="res://scenes/pause.tscn"
+run/main_scene="res://scenes/pause.tscn"
 
 [display]
 
@@ -24,7 +24,6 @@ window/dpi/allow_hidpi=true
 dpy=false
 dpi=false
 default=false
-render=false
 
 [gui]
 
