@@ -16,17 +16,37 @@ public class LevelChamber : TileMap
 	private RandomNumberGenerator random;
 	
 	public Godot.Collections.Dictionary<string, bool> corridor;
+	Godot.Collections.Dictionary<string, Vector2> directionToVector;
+	private int _minDepth;
+	private int _maxDepth;
 
 	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+	public void Init(int minDepth=0, int maxDepth=0)
 	{
-		//         { left, up, right, down }
+		corridor = new Godot.Collections.Dictionary<string, bool>(){
+			{"left", false},
+			{"up", false},
+			{"right", false},
+			{"down", false},
+		};
 		
+		directionToVector = new Godot.Collections.Dictionary<string, Vector2> {
+			{"left", new Vector2(-1, 0)},
+			{"up", new Vector2(0, -1)},
+			{"right", new Vector2(1, 0)},
+			{"down", new Vector2(0, 1)}
+		};
+		
+		_minDepth = minDepth;
+		_maxDepth = maxDepth;
+
+		random = new RandomNumberGenerator();
+		random.Randomize();
 	}
 	
 	// Based on the depth, randomly determines if the door is to be generated or not
 	private bool _HasDoor(int depth, int x, int y) {
-		if (depth == 0)
+		if (_maxDepth != 0 && depth >= _maxDepth)
 			return false;
 		
 		if (y >= 0)
@@ -51,28 +71,14 @@ public class LevelChamber : TileMap
 	// Creates the chamber and initializes doors
 	public Godot.Collections.Array<string> CreateChamber(string incomingDir, int currDepth, int x, int y) {
 		
-		corridor = new Godot.Collections.Dictionary<string, bool>(){
-			{"left", false},
-			{"up", false},
-			{"right", false},
-			{"down", false},
-		};
-		
-		Godot.Collections.Dictionary<string, Vector2> directionToVector
-		= new Godot.Collections.Dictionary<string, Vector2> {
-			{"left", new Vector2(-1, 0)},
-			{"up", new Vector2(0, -1)},
-			{"right", new Vector2(1, 0)},
-			{"down", new Vector2(0, 1)}
-		};
-
-		random = new RandomNumberGenerator();
-		random.Randomize();
-		
+		int numDoors = 1;
 		GenerateDoor(incomingDir);
 		Godot.Collections.Array<string> outputDirections = new Godot.Collections.Array<string>();
 		
-		foreach (string direction in corridor.Keys) {
+		Godot.Collections.Array<string> directions = corridor.Keys as Godot.Collections.Array<string>;
+		directions.Shuffle();
+		
+		foreach (string direction in directions) {
 			if (direction == incomingDir)
 				continue;
 			
@@ -80,6 +86,18 @@ public class LevelChamber : TileMap
 			if (_HasDoor(currDepth, x + (int) dirVector.x, y + (int) dirVector.y)) {
 				GenerateDoor(direction);
 				outputDirections.Add(direction);
+				++numDoors;
+			}
+		}
+			
+		// If we are below the minDepth, but only have 1 door, add another
+		if (numDoors < 2 && currDepth < _minDepth) {
+			foreach (string direction in directions) {
+				if (!corridor[direction]) {
+					GenerateDoor(direction);
+					outputDirections.Add(direction);
+					break;
+				}
 			}
 		}
 		
