@@ -11,7 +11,7 @@ config_version=4
 [application]
 
 config/name="Babel"
-run/main_scene="res://scenes/movement.tscn"
+run/main_scene="res://scenes/pause.tscn"
 config/icon="res://icon.png"
 <<<<<<<HEADrun/main_scene="res://scenes/pause.tscn"
 

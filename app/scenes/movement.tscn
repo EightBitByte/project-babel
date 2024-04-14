@@ -153,6 +153,55 @@ public class PlayerCollision : CollisionShape2D
 }
 "
 
+[sub_resource type="AtlasTexture" id=3]
+flags = 4
+atlas = ExtResource( 6 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=4]
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=5]
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=6]
+region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=8]
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=7]
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=10]
+region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=9]
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=11]
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=12]
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=13]
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=14]
+region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=15]
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=16]
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=17]
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=18]
+=======
 [sub_resource type="AtlasTexture" id=20]
 atlas = ExtResource( 11 )
 region = Rect2( 0, 0, 32, 32 )
@@ -244,9 +293,6 @@ animations = [ {
 size = 48
 font_data = ExtResource( 13 )
 
-[sub_resource type="DynamicFont" id=3]
-size = 30
-font_data = ExtResource( 13 )
 
 [node name="Node2D" type="Node2D"]
 
@@ -269,6 +315,10 @@ script = SubResource( 2 )
 scale = Vector2( 3.6, 3.6 )
 frames = SubResource( 19 )
 animation = "back_walk"
+
+[node name="UIManager" type="Node2D" parent="."]
+position = Vector2( 9, 9 )
+script = ExtResource( 7 )
 
 [node name="UIManager" type="Node2D" parent="."]
 position = Vector2( 9, 9 )
