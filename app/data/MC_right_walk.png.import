@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/MC_back.png-cd6c71a38e402cc3fe0835c1ff01ae6a.stex"
+path="res://.import/MC_right_walk.png-0e16044c41b7e3fab9748f97d568d992.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/MC_back.png"
-dest_files=[ "res://.import/MC_back.png-cd6c71a38e402cc3fe0835c1ff01ae6a.stex" ]
+source_file="res://data/MC_right_walk.png"
+dest_files=[ "res://.import/MC_right_walk.png-0e16044c41b7e3fab9748f97d568d992.stex" ]
 
 [params]
 
