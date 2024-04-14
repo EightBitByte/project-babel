@@ -26,7 +26,7 @@ public class PlayerScene : Node2D
 		Position = new Vector2(-33, 20);
 	}
 	
-	private void AttackAnimation()
+	public void AttackAnimation()
 	{
 		m_animatedSprite.Play("attack");
 		Position = new Vector2(0, -13);
@@ -35,10 +35,12 @@ public class PlayerScene : Node2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta)
 	{
-			// this is for debug purposes
-			if (Input.IsActionPressed("move_left")) {
+		// this is for debug purposes
+		/*
+		if (Input.IsActionPressed("move_left")) {
 			AttackAnimation();
 		}
+		*/
 	}
 }
 

@@ -1,48 +1,38 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://scripts/Combat.cs" type="Script" id=1]
-[ext_resource path="res://scripts/Enemy4Scene.cs" type="Script" id=2]
-[ext_resource path="res://scripts/Enemy1Scene.cs" type="Script" id=3]
+[ext_resource path="res://scripts/EnemyScene.cs" type="Script" id=2]
+[ext_resource path="res://data/Enemy_temp_attack.png" type="Texture" id=3]
 [ext_resource path="res://scripts/PlayerScene.cs" type="Script" id=4]
-[ext_resource path="res://scripts/Enemy2Scene.cs" type="Script" id=5]
-[ext_resource path="res://scripts/Enemy3Scene.cs" type="Script" id=6]
 [ext_resource path="res://data/MC_idle.png" type="Texture" id=7]
-[ext_resource path="res://data/red.jpg" type="Texture" id=9]
 [ext_resource path="res://data/MC_attack.png" type="Texture" id=11]
 [ext_resource path="res://data/Enemy_temp_idle.png" type="Texture" id=12]
 
 [sub_resource type="AtlasTexture" id=61]
-flags = 4
 atlas = ExtResource( 11 )
 region = Rect2( 0, 0, 128, 128 )
 
 [sub_resource type="AtlasTexture" id=62]
-flags = 4
 atlas = ExtResource( 11 )
 region = Rect2( 128, 0, 128, 128 )
 
 [sub_resource type="AtlasTexture" id=63]
-flags = 4
 atlas = ExtResource( 11 )
 region = Rect2( 256, 0, 128, 128 )
 
 [sub_resource type="AtlasTexture" id=64]
-flags = 4
 atlas = ExtResource( 11 )
 region = Rect2( 384, 0, 128, 128 )
 
 [sub_resource type="AtlasTexture" id=65]
-flags = 4
 atlas = ExtResource( 11 )
 region = Rect2( 512, 0, 128, 128 )
 
 [sub_resource type="AtlasTexture" id=66]
-flags = 4
 atlas = ExtResource( 7 )
 region = Rect2( 0, 0, 128, 128 )
 
 [sub_resource type="AtlasTexture" id=67]
-flags = 4
 atlas = ExtResource( 7 )
 region = Rect2( 128, 0, 128, 128 )
 
@@ -59,10 +49,25 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[sub_resource type="AtlasTexture" id=20]
-flags = 4
-atlas = ExtResource( 9 )
-region = Rect2( 0, 16, 16, 16 )
+[sub_resource type="AtlasTexture" id=70]
+atlas = ExtResource( 3 )
+region = Rect2( 512, 0, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=71]
+atlas = ExtResource( 3 )
+region = Rect2( 384, 0, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=72]
+atlas = ExtResource( 3 )
+region = Rect2( 256, 0, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=73]
+atlas = ExtResource( 3 )
+region = Rect2( 128, 0, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=74]
+atlas = ExtResource( 3 )
+region = Rect2( 0, 0, 128, 128 )
 
 [sub_resource type="AtlasTexture" id=68]
 atlas = ExtResource( 12 )
@@ -74,7 +79,7 @@ region = Rect2( 128, 0, 128, 128 )
 
 [sub_resource type="SpriteFrames" id=5]
 animations = [ {
-"frames": [ SubResource( 20 ) ],
+"frames": [ SubResource( 70 ), SubResource( 71 ), SubResource( 72 ), SubResource( 73 ), SubResource( 74 ) ],
 "loop": true,
 "name": "attack",
 "speed": 5.0
@@ -92,36 +97,36 @@ script = ExtResource( 1 )
 script = ExtResource( 4 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="PlayerScene"]
-position = Vector2( 0, -33 )
+position = Vector2( 0, -30 )
 frames = SubResource( 1 )
 animation = "attack"
 
 [node name="Enemy1Scene" type="Node2D" parent="."]
-script = ExtResource( 3 )
+script = ExtResource( 2 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Enemy1Scene"]
 position = Vector2( 20, 0 )
 frames = SubResource( 5 )
 animation = "idle"
-offset = Vector2( 210, 0 )
+offset = Vector2( 70, 0 )
 
 [node name="Enemy2Scene" type="Node2D" parent="."]
-script = ExtResource( 5 )
+script = ExtResource( 2 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Enemy2Scene"]
 position = Vector2( -30, 0 )
 frames = SubResource( 5 )
 animation = "idle"
-offset = Vector2( 210, 0 )
+offset = Vector2( 170, 0 )
 
 [node name="Enemy3Scene" type="Node2D" parent="."]
-script = ExtResource( 6 )
+script = ExtResource( 2 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Enemy3Scene"]
 position = Vector2( -70, 0 )
 frames = SubResource( 5 )
 animation = "idle"
-offset = Vector2( 210, 0 )
+offset = Vector2( 250, 0 )
 
 [node name="Enemy4Scene" type="Node2D" parent="."]
 script = ExtResource( 2 )
@@ -130,6 +135,7 @@ script = ExtResource( 2 )
 position = Vector2( 90, 0 )
 frames = SubResource( 5 )
 animation = "idle"
+offset = Vector2( 140, 0 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 54, 0 )

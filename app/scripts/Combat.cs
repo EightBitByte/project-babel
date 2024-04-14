@@ -43,6 +43,14 @@ public class Combat : Node
 			roundNum = 1;
 		#endif
 
+		// Instantiate member variables for the scene nodes.
+		playerScene = GetNode<PlayerScene>("PlayerScene");
+		enemySceneArray = new EnemyScene[4];
+		enemySceneArray[0] = GetNode<EnemyScene>("Enemy1Scene");
+		enemySceneArray[1] = GetNode<EnemyScene>("Enemy2Scene");
+		enemySceneArray[2] = GetNode<EnemyScene>("Enemy3Scene");
+		enemySceneArray[3] = GetNode<EnemyScene>("Enemy4Scene");
+
 		// Instantiation of buttons lol
 		GetNode<Button>((NodePath)"Target1").Connect("button_up", this, "SetPlayerTarget", new(){"1"});
 		GetNode<Button>((NodePath)"Target2").Connect("button_up", this, "SetPlayerTarget", new(){"2"});
@@ -90,7 +98,7 @@ public class Combat : Node
 	/// <param name="allEnemyDict">The dictionary from which to read the enemy data from all of the enemies available.</param>
 	/// <param name="enemyAttackDict">The dictionary from which to read the enemy attack data.</param>
 	/// <returns>An Enemy object representing the enemy at enemyID in enemyDict.</returns>
-	private Enemy LoadEnemyData(int enemyID, GDictionary allEnemyDict, GDictionary enemyAttackDict) {
+	private Enemy LoadEnemyData(int enemyID, GDictionary allEnemyDict, GDictionary enemyAttackDict, int index) {
 		GDictionary enemyDict = allEnemyDict[enemyID.ToString()] as GDictionary;
 
 		Dictionary<int, Attack> attackDict = LoadKnownAttacks(enemyAttackDict, enemyDict);
@@ -103,7 +111,8 @@ public class Combat : Node
 			entityHealth,
 			entityHealth,
 			int.Parse((string)enemyDict["speed"]),
-			attackDict
+			attackDict,
+			index
 		);
 	}
 
@@ -119,11 +128,11 @@ public class Combat : Node
 		GDictionary enemyAttacks = Json.ReadJSON("res://data/" + ENEMY_ATTACK_FILE + ".json");
 		GDictionary enemyData = Json.ReadJSON("res://data/" + ENEMY_FILE + ".json");
 
-		List<Enemy> enemyList = new() { LoadEnemyData(enemyID, enemyData, enemyAttacks) };
+		List<Enemy> enemyList = new() { LoadEnemyData(enemyID, enemyData, enemyAttacks, 0) };
 
 		// Instantiate all other enemies with the IDs provided
 		for (int index = 0; index < otherIDs.Length; ++index) {
-			enemyList.Add(LoadEnemyData(otherIDs[index], enemyData, enemyAttacks));
+			enemyList.Add(LoadEnemyData(otherIDs[index], enemyData, enemyAttacks, index + 1));
 		}
 
 		return enemyList;
@@ -203,12 +212,20 @@ public class Combat : Node
 	}
 
 	private void InitiateAttack(int attackButton) {
+		// Check if it is currently the player's turn. Otherwise, ignore the signal.
+		if (!isPlayerTurn) { return; }
+		isPlayerTurn = false;
+
 		Attack outgoing = playerData.GetAttack(attackButton);
 		int damage = outgoing.GetDamage();
 
 		# if COMBAT_LOG_DEBUG
-			GD.Print("Player ", outgoing.Name, "s ", enemyDataList[SelectedEnemy].Name, " for ", damage);
+			GD.Print(isPlayerTurn + " Player ", outgoing.Name, "s ", enemyDataList[SelectedEnemy].Name, " for ", damage);
 		# endif
+		
+		// Play the player attack animation.
+		playerScene.AttackAnimation();
+		
 		enemyDataList[SelectedEnemy].TakeDamage(damage);
 		++currentTurn;
 	}
@@ -216,6 +233,13 @@ public class Combat : Node
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta) {
+		// Process every 1.5 seconds, approximately.
+		if (timer < 1.5F) {
+			timer += delta;
+			return;
+		}
+		timer = 0.0F;
+		
 		//TODO: Remove enemy from turn order when dead
 		// If we've reached the end of the turn order, repopulate it based on speed
 		if (currentTurn == turnOrder.Count) {
@@ -237,8 +261,14 @@ public class Combat : Node
 
 		// If an attacker is an enemy, get enemy's attack and show/update
 		if (attacker is Enemy enemy) {
+			// Block player action.
+			isPlayerTurn = false;
+			
 			Attack incoming = enemy.GetAttack();
 			int damage = incoming.GetDamage();
+
+			// Play the enemy attack animation.
+			enemySceneArray[enemy.Position].AttackAnimation();
 
 			// damage = ShowEnemyAttack(damage, incoming);
 
@@ -248,11 +278,17 @@ public class Combat : Node
 
 			bool isDead = playerData.TakeDamage(damage);
 			++currentTurn;
+			return;
 		}
 
-		// If the attacker is the player, await player choice
-
+		// If the attacker is the player, await player choice; set the flag to player turn.
+		isPlayerTurn = true;
 	}
+
+	// Timer variable for processing in intervals.
+	float timer = 0.0F;
+	// Flag variable for whether it is the player's turn.
+	bool isPlayerTurn = false;
 
 	private List<Entity> turnOrder;
 	private int currentTurn;
@@ -260,6 +296,10 @@ public class Combat : Node
 	private List<Enemy> enemyDataList;
 	private int SelectedEnemy;
 	private int SelectedAttackButton;
+
+	// Scene node resources.
+	private PlayerScene playerScene;
+	private EnemyScene[] enemySceneArray;
 
 	#if COMBAT_LOG_DEBUG
 	private int roundNum;
