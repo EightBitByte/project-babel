@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
-
+// I am the storm that is approaching...
 public class Combat : Node
 {
 	const string PLAYER_ATTACK_FILE = "playerAttacks";
