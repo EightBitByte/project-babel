@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://scripts/Combat.cs" type="Script" id=1]
 [ext_resource path="res://scripts/Enemy4Scene.cs" type="Script" id=2]
@@ -7,10 +7,9 @@
 [ext_resource path="res://scripts/Enemy2Scene.cs" type="Script" id=5]
 [ext_resource path="res://scripts/Enemy3Scene.cs" type="Script" id=6]
 [ext_resource path="res://data/MC_idle.png" type="Texture" id=7]
-[ext_resource path="res://data/MC_right_walk.png" type="Texture" id=8]
 [ext_resource path="res://data/red.jpg" type="Texture" id=9]
-[ext_resource path="res://data/MC_left_walk.png" type="Texture" id=10]
 [ext_resource path="res://data/MC_attack.png" type="Texture" id=11]
+[ext_resource path="res://data/Enemy_temp_idle.png" type="Texture" id=12]
 
 [sub_resource type="AtlasTexture" id=61]
 flags = 4
@@ -60,274 +59,18 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[sub_resource type="AtlasTexture" id=14]
-flags = 4
-atlas = ExtResource( 9 )
-region = Rect2( 16, 16, 16, 16 )
-
-[sub_resource type="AtlasTexture" id=15]
-flags = 4
-atlas = ExtResource( 9 )
-region = Rect2( 48, 16, 16, 16 )
-
-[sub_resource type="AtlasTexture" id=29]
-flags = 4
-atlas = ExtResource( 10 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=30]
-flags = 4
-atlas = ExtResource( 10 )
-region = Rect2( 32, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=31]
-flags = 4
-atlas = ExtResource( 10 )
-region = Rect2( 64, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=32]
-flags = 4
-atlas = ExtResource( 10 )
-region = Rect2( 96, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=33]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=34]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 32, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=35]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 64, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=36]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 96, 0, 32, 32 )
-
-[sub_resource type="SpriteFrames" id=2]
-animations = [ {
-"frames": [ SubResource( 14 ) ],
-"loop": true,
-"name": "attack",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 15 ) ],
-"loop": true,
-"name": "idle",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 29 ), SubResource( 30 ), SubResource( 31 ), SubResource( 32 ) ],
-"loop": true,
-"name": "testAttack",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 33 ), SubResource( 34 ), SubResource( 35 ), SubResource( 36 ) ],
-"loop": true,
-"name": "testIdle",
-"speed": 5.0
-} ]
-
-[sub_resource type="AtlasTexture" id=16]
-flags = 4
-atlas = ExtResource( 9 )
-region = Rect2( 32, 16, 16, 16 )
-
-[sub_resource type="AtlasTexture" id=17]
-flags = 4
-atlas = ExtResource( 9 )
-region = Rect2( 16, 16, 16, 16 )
-
-[sub_resource type="AtlasTexture" id=37]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=38]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 32, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=39]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 64, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=40]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 96, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=41]
-flags = 4
-atlas = ExtResource( 10 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=42]
-flags = 4
-atlas = ExtResource( 10 )
-region = Rect2( 32, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=43]
-flags = 4
-atlas = ExtResource( 10 )
-region = Rect2( 64, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=44]
-flags = 4
-atlas = ExtResource( 10 )
-region = Rect2( 96, 0, 32, 32 )
-
-[sub_resource type="SpriteFrames" id=3]
-animations = [ {
-"frames": [ SubResource( 16 ) ],
-"loop": true,
-"name": "attack",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 17 ) ],
-"loop": true,
-"name": "idle",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 37 ), SubResource( 38 ), SubResource( 39 ), SubResource( 40 ) ],
-"loop": true,
-"name": "testAttack",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 41 ), SubResource( 42 ), SubResource( 43 ), SubResource( 44 ) ],
-"loop": true,
-"name": "testIdle",
-"speed": 5.0
-} ]
-
-[sub_resource type="AtlasTexture" id=18]
-flags = 4
-atlas = ExtResource( 9 )
-region = Rect2( 16, 16, 16, 16 )
-
-[sub_resource type="AtlasTexture" id=19]
-flags = 4
-atlas = ExtResource( 9 )
-region = Rect2( 16, 16, 16, 16 )
-
-[sub_resource type="AtlasTexture" id=45]
-flags = 4
-atlas = ExtResource( 10 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=46]
-flags = 4
-atlas = ExtResource( 10 )
-region = Rect2( 32, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=47]
-flags = 4
-atlas = ExtResource( 10 )
-region = Rect2( 64, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=48]
-flags = 4
-atlas = ExtResource( 10 )
-region = Rect2( 96, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=49]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=50]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 32, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=51]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 64, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=52]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 96, 0, 32, 32 )
-
-[sub_resource type="SpriteFrames" id=4]
-animations = [ {
-"frames": [ SubResource( 18 ) ],
-"loop": true,
-"name": "attack",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 19 ) ],
-"loop": true,
-"name": "idle",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 45 ), SubResource( 46 ), SubResource( 47 ), SubResource( 48 ) ],
-"loop": true,
-"name": "testAttack",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 49 ), SubResource( 50 ), SubResource( 51 ), SubResource( 52 ) ],
-"loop": true,
-"name": "testIdle",
-"speed": 5.0
-} ]
-
 [sub_resource type="AtlasTexture" id=20]
 flags = 4
 atlas = ExtResource( 9 )
 region = Rect2( 0, 16, 16, 16 )
 
-[sub_resource type="AtlasTexture" id=21]
-flags = 4
-atlas = ExtResource( 9 )
-region = Rect2( 0, 16, 16, 16 )
+[sub_resource type="AtlasTexture" id=68]
+atlas = ExtResource( 12 )
+region = Rect2( 0, 0, 128, 128 )
 
-[sub_resource type="AtlasTexture" id=53]
-flags = 4
-atlas = ExtResource( 10 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=54]
-flags = 4
-atlas = ExtResource( 10 )
-region = Rect2( 32, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=55]
-flags = 4
-atlas = ExtResource( 10 )
-region = Rect2( 64, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=56]
-flags = 4
-atlas = ExtResource( 10 )
-region = Rect2( 96, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=57]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=58]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 32, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=59]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 64, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=60]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 96, 0, 32, 32 )
+[sub_resource type="AtlasTexture" id=69]
+atlas = ExtResource( 12 )
+region = Rect2( 128, 0, 128, 128 )
 
 [sub_resource type="SpriteFrames" id=5]
 animations = [ {
@@ -336,19 +79,9 @@ animations = [ {
 "name": "attack",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 21 ) ],
+"frames": [ SubResource( 68 ), SubResource( 69 ) ],
 "loop": true,
 "name": "idle",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 53 ), SubResource( 54 ), SubResource( 55 ), SubResource( 56 ) ],
-"loop": true,
-"name": "testAttack",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 57 ), SubResource( 58 ), SubResource( 59 ), SubResource( 60 ) ],
-"loop": true,
-"name": "testIdle",
 "speed": 5.0
 } ]
 
@@ -367,33 +100,36 @@ animation = "attack"
 script = ExtResource( 3 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Enemy1Scene"]
-frames = SubResource( 2 )
-animation = "testAttack"
-offset = Vector2( 90, 0 )
+position = Vector2( 20, 0 )
+frames = SubResource( 5 )
+animation = "idle"
+offset = Vector2( 210, 0 )
 
 [node name="Enemy2Scene" type="Node2D" parent="."]
 script = ExtResource( 5 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Enemy2Scene"]
-frames = SubResource( 3 )
-animation = "testIdle"
-offset = Vector2( 130, 0 )
+position = Vector2( -30, 0 )
+frames = SubResource( 5 )
+animation = "idle"
+offset = Vector2( 210, 0 )
 
 [node name="Enemy3Scene" type="Node2D" parent="."]
 script = ExtResource( 6 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Enemy3Scene"]
-frames = SubResource( 4 )
-animation = "testIdle"
-offset = Vector2( 170, 0 )
+position = Vector2( -70, 0 )
+frames = SubResource( 5 )
+animation = "idle"
+offset = Vector2( 210, 0 )
 
 [node name="Enemy4Scene" type="Node2D" parent="."]
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Enemy4Scene"]
+position = Vector2( 90, 0 )
 frames = SubResource( 5 )
-animation = "testAttack"
-offset = Vector2( 210, 0 )
+animation = "idle"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 54, 0 )
@@ -401,49 +137,49 @@ current = true
 zoom = Vector2( 0.2, 0.2 )
 
 [node name="Target1" type="Button" parent="."]
-margin_left = 462.0
-margin_top = 205.0
-margin_right = 572.0
-margin_bottom = 225.0
-rect_pivot_offset = Vector2( 55, 10 )
-text = "Target Enemy 1"
+margin_left = 72.0
+margin_top = 37.0
+margin_right = 92.0
+margin_bottom = 57.0
+rect_pivot_offset = Vector2( 10, 10 )
+text = "1"
 
 [node name="Target2" type="Button" parent="."]
-margin_left = 463.0
-margin_top = 238.0
-margin_right = 573.0
-margin_bottom = 258.0
-rect_pivot_offset = Vector2( 55, 10 )
-text = "Target Enemy 2"
+margin_left = 125.0
+margin_top = 37.0
+margin_right = 145.0
+margin_bottom = 57.0
+rect_pivot_offset = Vector2( 10, 10 )
+text = "2"
 
 [node name="Target3" type="Button" parent="."]
-margin_left = 463.0
-margin_top = 270.0
-margin_right = 573.0
-margin_bottom = 290.0
-rect_pivot_offset = Vector2( 55, 10 )
-text = "Target Enemy 3"
+margin_left = 168.0
+margin_top = 37.0
+margin_right = 188.0
+margin_bottom = 57.0
+rect_pivot_offset = Vector2( 10, 10 )
+text = "3"
 
 [node name="Target4" type="Button" parent="."]
-margin_left = 461.0
-margin_top = 305.0
-margin_right = 571.0
-margin_bottom = 325.0
-rect_pivot_offset = Vector2( 55, 10 )
-text = "Target Enemy 4"
+margin_left = 219.0
+margin_top = 38.0
+margin_right = 239.0
+margin_bottom = 58.0
+rect_pivot_offset = Vector2( 10, 10 )
+text = "4"
 
 [node name="Chop" type="Button" parent="."]
-margin_left = 28.0
-margin_top = 552.0
-margin_right = 138.0
-margin_bottom = 572.0
+margin_left = -90.0
+margin_top = 41.0
+margin_right = 20.0
+margin_bottom = 61.0
 rect_pivot_offset = Vector2( 55, 10 )
 text = "Chop"
 
 [node name="Pommel" type="Button" parent="."]
-margin_left = 160.0
-margin_top = 551.0
-margin_right = 270.0
-margin_bottom = 571.0
+margin_left = -91.0
+margin_top = 66.0
+margin_right = 19.0
+margin_bottom = 86.0
 rect_pivot_offset = Vector2( 55, 10 )
 text = "Pommel Strike"
