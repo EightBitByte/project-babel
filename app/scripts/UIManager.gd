@@ -20,6 +20,7 @@ func _input(event):
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	hide_inventory_menu()
+	get_node("/root/Node2D/Camera2D/DialogueBox").show_dialogue("i said a thing")
 	pass # Replace with function body.
 
 
