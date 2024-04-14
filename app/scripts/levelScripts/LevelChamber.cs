@@ -13,23 +13,76 @@ public class LevelChamber : TileMap
 	const int wallTileIdx = 2;
 	const int topWallTileIdx = 1;
 	
+	private RandomNumberGenerator random;
+	
 	public int depth;
-	public Godot.Collections.Dictionary corridor;
+	public Godot.Collections.Dictionary<string, bool> corridor;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		//         { left, up, right, down }
-		corridor = new Godot.Collections.Dictionary();
+		
+	}
+	
+	// Based on the depth, randomly determines if the door is to be generated or not
+	public bool _HasDoor(int depth) {
+		if (depth == 0)
+			return false;
+		
+		float randomNum = random.Randf() * depth;
+		GD.Print(randomNum);
+		return randomNum <= 1;
+	}
+	
+	// Generates a door in the direction specified
+	public void GenerateDoor(string direction) {
+		if (direction == "left")
+			GenerateLeftDoor();
+		else if (direction == "up")
+			GenerateUpDoor();
+		else if (direction == "right")
+			GenerateRightDoor();
+		else if (direction == "down")
+			GenerateDownDoor();
+	}
+
+	// Creates the chamber and initializes doors
+	public Godot.Collections.Array<string> CreateChamber(string incomingDir, int currDepth) {
+		
+		corridor = new Godot.Collections.Dictionary<string, bool>();
 		corridor["left"] = false;
 		corridor["up"] = false;
 		corridor["right"] = false;
 		corridor["down"] = false;
+
+		random = new RandomNumberGenerator();
+		random.Randomize();
+		
+		GenerateDoor(incomingDir);
+		GD.Print(corridor);
+		depth = currDepth;
+		Godot.Collections.Array<string> outputDirections = new Godot.Collections.Array<string>();
+		
+		foreach (string direction in corridor.Keys) {
+			if (direction == incomingDir)
+				continue;
+				
+			if (_HasDoor(depth)) {
+				GenerateDoor(direction);
+				outputDirections.Add(direction);
+			}
+		}
+		
+		return outputDirections;
 	}
 
-	public void CreateChamber()
-
+	// Generate single door functions:
+	
 	public void GenerateLeftDoor() {
+		if (corridor["left"])
+			return;
+		
 		int currentX = -halfWidth;
 		while (GetCell(currentX, 0) == -1) {
 			SetCell(currentX, -3, topWallTileIdx);
@@ -55,6 +108,9 @@ public class LevelChamber : TileMap
 	}
 
 	public void GenerateUpDoor() {
+		if (corridor["up"])
+			return;
+			
 		int currentY = -halfHeight;
 		while (GetCell(0, currentY) == -1) {
 			SetCell(-2, currentY, topWallTileIdx);
@@ -84,6 +140,9 @@ public class LevelChamber : TileMap
 	}
 	
 	public void GenerateRightDoor() {
+		if (corridor["right"])
+			return;
+			
 		int currentX = halfWidth;
 		while (GetCell(currentX, 0) == -1) {
 			SetCell(currentX, -3, topWallTileIdx);
@@ -109,6 +168,9 @@ public class LevelChamber : TileMap
 	}
 	
 	public void GenerateDownDoor() {
+		if (corridor["down"])
+			return;
+			
 		int currentY = halfHeight;
 		while (GetCell(0, currentY) == -1) {
 			SetCell(-2, currentY, topWallTileIdx);
