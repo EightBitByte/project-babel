@@ -4,6 +4,14 @@ func toggle_inventory_menu():
 	get_node("/root/Node2D/Camera2D/BigMenuBorder").toggle()
 	get_node("/root/Node2D/Camera2D/InventoryBackground").toggle()
 
+func show_inventory_menu():
+	get_node("/root/Node2D/Camera2D/BigMenuBorder").show()
+	get_node("/root/Node2D/Camera2D/InventoryBackground").show()
+
+func hide_inventory_menu():
+	get_node("/root/Node2D/Camera2D/BigMenuBorder").hide()
+	get_node("/root/Node2D/Camera2D/InventoryBackground").hide()
+
 func _input(event):
 	if event is InputEventKey and event.pressed:
 		if event.scancode == KEY_E:
@@ -11,6 +19,7 @@ func _input(event):
 			
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	hide_inventory_menu()
 	pass # Replace with function body.
 
 
