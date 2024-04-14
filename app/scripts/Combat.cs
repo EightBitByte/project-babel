@@ -1,14 +1,19 @@
 // Define this flag for combat loading from JSON debug output.
-# define COMBAT_LOAD_DEBUG
+// # define COMBAT_LOAD_DEBUG
 # define COMBAT_LOG_DEBUG
 
-global using GDictionary = Godot.Collections.Dictionary;
-global using GArray = Godot.Collections.Array;
+using GDictionary = Godot.Collections.Dictionary;
+using GArray = Godot.Collections.Array;
 
 using System;
 using System.Collections.Generic;
 using Godot;
+using System.Collections.Concurrent;
 
+enum CombatState {
+	EnemyTurn,
+	PlayerTurn
+}
 
 public class Combat : Node
 {
@@ -26,17 +31,28 @@ public class Combat : Node
 	public override void _Ready()
 	{
 		playerData = LoadCombatPlayer();
-		enemyDataList = LoadEnemies(0, 1);
+		enemyDataList = LoadEnemies(1, 0, 2);
+		turnOrder = new();
+		currentTurn = 0;
 
 		#if COMBAT_LOAD_DEBUG
-		GD.Print("========== Player ==========\n");
-		playerData.DEBUG_PRINT();
-		
-		GD.Print("========== Enemies ==========\n");
-		foreach(Enemy e in enemyDataList) {
-			e.DEBUG_PRINT();
-		}
+			GD.Print("========== Player ==========\n");
+			playerData.DEBUG_PRINT();
+			
+			GD.Print("========== Enemies ==========\n");
+			foreach(Enemy e in enemyDataList) {
+				e.DEBUG_PRINT();
+			}
 		#endif
+
+		target1 = GetNode<Button>((NodePath)"Target1");
+		target2 = GetNode<Button>((NodePath)"Target2");
+		target3 = GetNode<Button>((NodePath)"Target3");
+		target4 = GetNode<Button>((NodePath)"Target4");
+		chop = GetNode<Button>((NodePath)"Chop");
+		pommel = GetNode<Button>((NodePath)"Pommel");
+
+		turnOrder = PopulateOrder();
 	}
 
 
@@ -153,24 +169,59 @@ public class Combat : Node
 		);
 	}
 
- // Called every frame. 'delta' is the elapsed time since the previous frame.
- public override void _Process(float delta)
- {
-	// If order queue is empty, populate it based on speed
+	/// <summary>
+	/// Populates the List with the turn order of the entities (player and foe alike) based on speed.
+	/// </summary>
+	/// <returns></returns>
+	private List<Entity> PopulateOrder() {
+		List<Entity> newOrder = new();
 
-	 // Get first in turn order queue
-	 
-	 // Check status effects of current attacker, apply 
+		foreach (Enemy e in enemyDataList) 
+			newOrder.Add(e);
+		newOrder.Add(playerData);
+		newOrder.Sort(Entity.Compare);
 
-	 // If an attacker is an enemy, get enemy's attack and show/update
+		#if COMBAT_LOAD_DEBUG
+		foreach (Entity e in newOrder)
+			if (e is CombatPlayer p)
+				GD.Print("Player");
+			else if (e is Enemy en)
+				GD.Print(en.Name);
+		#endif
 
-	 // If the attacker is the player, await player choice
-
-	 // Show player's choice, update & show
- }
+		return newOrder;
+	}
 
 
-	private Queue<Entity> turnQueue;
+	// Called every frame. 'delta' is the elapsed time since the previous frame.
+	public override void _Process(float delta)
+	{
+		// If we've reached the end of the turn order, repopulate it based on speed
+		if (currentTurn == turnOrder.Count)
+			turnOrder = PopulateOrder();
+
+		// Get first in turn order queue
+		Entity currentOrder;
+		
+		// Check status effects of current attacker, apply 
+
+		// If an attacker is an enemy, get enemy's attack and show/update
+
+		// If the attacker is the player, await player choice
+
+		// Show player's choice, update & show
+	}
+
+	private List<Entity> turnOrder;
+	private int currentTurn;
 	private CombatPlayer playerData;
 	private List<Enemy> enemyDataList;
+	private Button target1;
+	private Button target2;
+	private Button target3;
+	private Button target4;
+	private Button chop;
+	private Button pommel;
+	private CombatState currentState;
+
 }
