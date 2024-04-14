@@ -13,6 +13,8 @@ public class PlayerScene : Node2D
 		m_animatedSprite.Connect("animation_finished", this, nameof(OnAnimationFinished));
 		
 		m_animatedSprite.Play("idle");
+		
+		Position = new Vector2(-33, 20);
 	}
 
 	private void OnAnimationFinished()
@@ -20,12 +22,14 @@ public class PlayerScene : Node2D
 		// Stop the animation
 		m_animatedSprite.Stop();
 		m_animatedSprite.Play("idle");
-
+		
+		Position = new Vector2(-33, 20);
 	}
 	
 	private void AttackAnimation()
 	{
 		m_animatedSprite.Play("attack");
+		Position = new Vector2(0, -13);
 	}
 	
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
