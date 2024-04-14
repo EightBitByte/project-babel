@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=44 format=2]
 
 [ext_resource path="res://scripts/Player.cs" type="Script" id=1]
 [ext_resource path="res://scripts/InventoryMenu.gd" type="Script" id=2]
@@ -10,7 +10,7 @@
 [ext_resource path="res://scripts/MenuSubContainer.gd" type="Script" id=8]
 [ext_resource path="res://scripts/LeftSide.gd" type="Script" id=9]
 [ext_resource path="res://scripts/RightSide.gd" type="Script" id=10]
-[ext_resource path="res://data/MC_front.png" type="Texture" id=11]
+[ext_resource path="res://data/MC_back_walk.png" type="Texture" id=11]
 [ext_resource path="res://scripts/TopLeft.gd" type="Script" id=12]
 [ext_resource path="res://data/pixeldroidMenuRegular.ttf" type="DynamicFontData" id=13]
 [ext_resource path="res://scripts/JournalButton.gd" type="Script" id=14]
@@ -20,7 +20,9 @@
 [ext_resource path="res://data/red.jpg" type="Texture" id=18]
 [ext_resource path="res://scripts/PlayerOverview.gd" type="Script" id=19]
 [ext_resource path="res://scripts/PanelContainer.gd" type="Script" id=20]
-
+[ext_resource path="res://data/MC_front_walk.png" type="Texture" id=21]
+[ext_resource path="res://data/MC_left_walk.png" type="Texture" id=22]
+[ext_resource path="res://data/MC_right_walk.png" type="Texture" id=23]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 75, 75 )
@@ -148,113 +150,112 @@ public class PlayerCollision : CollisionShape2D
 }
 "
 
-[sub_resource type="DynamicFont" id=3]
-size = 30
-font_data = ExtResource( 13 )
-
-[sub_resource type="AtlasTexture" id=3]
+[sub_resource type="AtlasTexture" id=20]
 flags = 4
-atlas = ExtResource( 6 )
+atlas = ExtResource( 11 )
 region = Rect2( 0, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=4]
+[sub_resource type="AtlasTexture" id=21]
 flags = 4
-atlas = ExtResource( 6 )
+atlas = ExtResource( 11 )
 region = Rect2( 32, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=5]
+[sub_resource type="AtlasTexture" id=22]
 flags = 4
-atlas = ExtResource( 6 )
+atlas = ExtResource( 11 )
 region = Rect2( 64, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=6]
+[sub_resource type="AtlasTexture" id=23]
 flags = 4
-atlas = ExtResource( 6 )
+atlas = ExtResource( 11 )
 region = Rect2( 96, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=8]
+[sub_resource type="AtlasTexture" id=24]
 flags = 4
-atlas = ExtResource( 2 )
+atlas = ExtResource( 21 )
 region = Rect2( 32, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=7]
+[sub_resource type="AtlasTexture" id=25]
 flags = 4
-atlas = ExtResource( 2 )
+atlas = ExtResource( 21 )
 region = Rect2( 0, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=10]
+[sub_resource type="AtlasTexture" id=26]
 flags = 4
-atlas = ExtResource( 2 )
+atlas = ExtResource( 21 )
 region = Rect2( 96, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=9]
+[sub_resource type="AtlasTexture" id=27]
 flags = 4
-atlas = ExtResource( 2 )
+atlas = ExtResource( 21 )
 region = Rect2( 64, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=11]
+[sub_resource type="AtlasTexture" id=28]
 flags = 4
-atlas = ExtResource( 7 )
+atlas = ExtResource( 22 )
 region = Rect2( 0, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=12]
+[sub_resource type="AtlasTexture" id=29]
 flags = 4
-atlas = ExtResource( 7 )
+atlas = ExtResource( 22 )
 region = Rect2( 32, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=13]
+[sub_resource type="AtlasTexture" id=30]
 flags = 4
-atlas = ExtResource( 7 )
+atlas = ExtResource( 22 )
 region = Rect2( 64, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=14]
+[sub_resource type="AtlasTexture" id=31]
 flags = 4
-atlas = ExtResource( 7 )
+atlas = ExtResource( 22 )
 region = Rect2( 96, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=15]
+[sub_resource type="AtlasTexture" id=32]
 flags = 4
-atlas = ExtResource( 5 )
+atlas = ExtResource( 23 )
 region = Rect2( 0, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=16]
+[sub_resource type="AtlasTexture" id=33]
 flags = 4
-atlas = ExtResource( 5 )
+atlas = ExtResource( 23 )
 region = Rect2( 32, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=17]
+[sub_resource type="AtlasTexture" id=34]
 flags = 4
-atlas = ExtResource( 5 )
+atlas = ExtResource( 23 )
 region = Rect2( 64, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=18]
+[sub_resource type="AtlasTexture" id=35]
 flags = 4
-atlas = ExtResource( 5 )
+atlas = ExtResource( 23 )
 region = Rect2( 96, 0, 32, 32 )
 
 [sub_resource type="SpriteFrames" id=19]
 animations = [ {
-"frames": [ SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
+"frames": [ SubResource( 20 ), SubResource( 21 ), SubResource( 22 ), SubResource( 23 ) ],
 "loop": true,
 "name": "back_walk",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 8 ), SubResource( 7 ), SubResource( 10 ), SubResource( 9 ) ],
+"frames": [ SubResource( 24 ), SubResource( 25 ), SubResource( 26 ), SubResource( 27 ) ],
 "loop": true,
 "name": "front_walk",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 11 ), SubResource( 12 ), SubResource( 13 ), SubResource( 14 ) ],
+"frames": [ SubResource( 28 ), SubResource( 29 ), SubResource( 30 ), SubResource( 31 ) ],
 "loop": true,
 "name": "left_walk",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 15 ), SubResource( 16 ), SubResource( 17 ), SubResource( 18 ) ],
+"frames": [ SubResource( 32 ), SubResource( 33 ), SubResource( 34 ), SubResource( 35 ) ],
 "loop": true,
 "name": "right_walk",
 "speed": 5.0
 } ]
 
+[sub_resource type="DynamicFont" id=3]
+size = 30
+font_data = ExtResource( 13 )
 
 [node name="Node2D" type="Node2D"]
 
@@ -273,14 +274,14 @@ scale = Vector2( 0.44, 0.44 )
 shape = SubResource( 1 )
 script = SubResource( 2 )
 
-[node name="UIManager" type="Node2D" parent="."]
-position = Vector2( 9, 9 )
-script = ExtResource( 7 )
-
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Player"]
 scale = Vector2( 3.6, 3.6 )
 frames = SubResource( 19 )
-animation = "front_walk"
+animation = "back_walk"
+
+[node name="UIManager" type="Node2D" parent="."]
+position = Vector2( 9, 9 )
+script = ExtResource( 7 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
@@ -332,7 +333,6 @@ margin_right = 53.0
 margin_bottom = 106.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-texture = ExtResource( 11 )
 expand = true
 script = ExtResource( 19 )
 
