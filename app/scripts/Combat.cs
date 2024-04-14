@@ -5,15 +5,8 @@
 using GDictionary = Godot.Collections.Dictionary;
 using GArray = Godot.Collections.Array;
 
-using System;
 using System.Collections.Generic;
 using Godot;
-using System.Collections.Concurrent;
-
-enum CombatState {
-	EnemyTurn,
-	PlayerTurn
-}
 
 public class Combat : Node
 {
@@ -45,14 +38,25 @@ public class Combat : Node
 			}
 		#endif
 
-		target1 = GetNode<Button>((NodePath)"Target1");
-		target2 = GetNode<Button>((NodePath)"Target2");
-		target3 = GetNode<Button>((NodePath)"Target3");
-		target4 = GetNode<Button>((NodePath)"Target4");
-		chop = GetNode<Button>((NodePath)"Chop");
-		pommel = GetNode<Button>((NodePath)"Pommel");
+		#if COMBAT_LOG_DEBUG
+			roundNum = 1;
+		#endif
+
+		// Instantiation of buttons lol
+		GetNode<Button>((NodePath)"Target1").Connect("button_up", this, "SetPlayerTarget", new(){"1"});
+		GetNode<Button>((NodePath)"Target2").Connect("button_up", this, "SetPlayerTarget", new(){"2"});
+		GetNode<Button>((NodePath)"Target3").Connect("button_up", this, "SetPlayerTarget", new(){"3"});
+		GetNode<Button>((NodePath)"Target4").Connect("button_up", this, "SetPlayerTarget", new(){"4"});
+		GetNode<Button>((NodePath)"Chop").Connect("button_up", this, "InitiateAttack", new(){"0"});
+		GetNode<Button>((NodePath)"Pommel").Connect("button_up", this, "InitiateAttack", new(){"1"});
+
+		SelectedAttackButton = -1;
 
 		turnOrder = PopulateOrder();
+
+		#if COMBAT_LOG_DEBUG
+		GD.Print("========== ROUND 1 ==========");
+		#endif
 	}
 
 
@@ -193,35 +197,70 @@ public class Combat : Node
 	}
 
 
+	private void SetPlayerTarget(int target) {
+		SelectedEnemy = target;
+	}
+
+	private void InitiateAttack(int attackButton) {
+		Attack outgoing = playerData.GetAttack(attackButton);
+		int damage = outgoing.GetDamage();
+
+		# if COMBAT_LOG_DEBUG
+			GD.Print("Player ", outgoing.Name, "s ", enemyDataList[SelectedEnemy].Name, " for ", damage);
+		# endif
+		enemyDataList[SelectedEnemy].TakeDamage(damage);
+		++currentTurn;
+	}
+
+
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(float delta)
-	{
+	public override void _Process(float delta) {
+		//TODO: Remove enemy from turn order when dead
 		// If we've reached the end of the turn order, repopulate it based on speed
-		if (currentTurn == turnOrder.Count)
+		if (currentTurn == turnOrder.Count) {
+			# if COMBAT_LOG_DEBUG
+			GD.Print("\n========== ROUND ", ++roundNum, " ==========");
+			GD.Print("Player: ", playerData.Health);
+			foreach (Enemy e in enemyDataList)
+				GD.Print(e.Name, ": ", e.Health);
+			# endif
+
 			turnOrder = PopulateOrder();
+			currentTurn = 0;
+		}
 
 		// Get first in turn order queue
-		Entity currentOrder;
-		
-		// Check status effects of current attacker, apply 
+		Entity attacker = turnOrder[currentTurn];
+
+		// TODO: Check status effects of current attacker, apply 
 
 		// If an attacker is an enemy, get enemy's attack and show/update
+		if (attacker is Enemy enemy) {
+			Attack incoming = enemy.GetAttack();
+			int damage = incoming.GetDamage();
+
+			// damage = ShowEnemyAttack(damage, incoming);
+
+			# if COMBAT_LOG_DEBUG
+				GD.Print(enemy.Name, " ", incoming.Name, "s Player for ", damage);
+			# endif
+
+			bool isDead = playerData.TakeDamage(damage);
+			++currentTurn;
+		}
 
 		// If the attacker is the player, await player choice
 
-		// Show player's choice, update & show
 	}
 
 	private List<Entity> turnOrder;
 	private int currentTurn;
 	private CombatPlayer playerData;
 	private List<Enemy> enemyDataList;
-	private Button target1;
-	private Button target2;
-	private Button target3;
-	private Button target4;
-	private Button chop;
-	private Button pommel;
-	private CombatState currentState;
+	private int SelectedEnemy;
+	private int SelectedAttackButton;
 
+	#if COMBAT_LOG_DEBUG
+	private int roundNum;
+	#endif
 }
