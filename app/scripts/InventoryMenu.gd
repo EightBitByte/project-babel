@@ -12,6 +12,12 @@ func update():
 	self.rect_position.x = -self.rect_size.x/2
 	self.rect_position.y = -self.rect_size.y/2
 	
+	
+func toggle():
+	if is_visible():
+		hide()
+	else:
+		show()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

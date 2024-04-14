@@ -5,7 +5,6 @@ extends TextureRect
 func _ready():
 	self.size_flags_horizontal = SIZE_EXPAND_FILL
 	self.size_flags_vertical = SIZE_EXPAND_FILL
-	self.size_flags_stretch_ratio = 1.0
 	pass # Replace with function body.
 
 
