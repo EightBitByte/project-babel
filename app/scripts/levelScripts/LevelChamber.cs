@@ -10,8 +10,8 @@ public class LevelChamber : TileMap
 	const int halfHeight = 10;
 	
 	const int groundTileIdx = 0;
-	const int wallTileIdx = 2;
-	const int topWallTileIdx = 1;
+	const int wallTileIdx = 8;
+	const int topWallTileIdx = 4;
 	
 	private RandomNumberGenerator random;
 	
@@ -111,7 +111,7 @@ public class LevelChamber : TileMap
 		SetCell(currentX, 0, groundTileIdx);
 		SetCell(currentX, 1, groundTileIdx);
 		SetCell(currentX, 2, topWallTileIdx);
-		SetCell(currentX, 3, wallTileIdx);
+		SetCell(currentX, 3, topWallTileIdx);
 		
 		corridor["left"] = true;
 	}
@@ -139,11 +139,9 @@ public class LevelChamber : TileMap
 		
 		++currentY;
 		
-		SetCell(-2, currentY, wallTileIdx);
 		SetCell(-1, currentY, groundTileIdx);
 		SetCell(0, currentY, groundTileIdx);
 		SetCell(1, currentY, groundTileIdx);
-		SetCell(2, currentY, wallTileIdx);
 		
 		corridor["up"] = true;
 	}
@@ -171,7 +169,7 @@ public class LevelChamber : TileMap
 		SetCell(currentX, 0, groundTileIdx);
 		SetCell(currentX, 1, groundTileIdx);
 		SetCell(currentX, 2, topWallTileIdx);
-		SetCell(currentX, 3, wallTileIdx);
+		SetCell(currentX, 3, topWallTileIdx);
 		
 		corridor["right"] = true;
 	}

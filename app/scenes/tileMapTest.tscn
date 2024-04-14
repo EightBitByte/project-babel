@@ -1,16 +1,247 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://scripts/levelScripts/LevelManager.cs" type="Script" id=1]
 [ext_resource path="res://levelPrefabs/startChamber.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scripts/Player.cs" type="Script" id=3]
+[ext_resource path="res://data/MC_left_walk.png" type="Texture" id=4]
+[ext_resource path="res://data/MC_front_walk.png" type="Texture" id=5]
+[ext_resource path="res://data/MC_right_walk.png" type="Texture" id=6]
+[ext_resource path="res://data/MC_back_walk.png" type="Texture" id=7]
+[ext_resource path="res://scripts/CameraFollow.cs" type="Script" id=8]
+
+[sub_resource type="RectangleShape2D" id=36]
+extents = Vector2( 75, 75 )
+
+[sub_resource type="CSharpScript" id=37]
+script/source = "using Godot;
+using System;
+
+public class PlayerCollision : CollisionShape2D
+{
+	// Declare member variables here. Examples:
+	// private int a = 2;
+	// private string b = \"text\";
+	
+	private float width;
+	private float height;
+
+	// Called when the node enters the scene tree for the first time.
+	public override void _Ready()
+	{
+		RectangleShape2D colliderShape = Shape as RectangleShape2D;
+		width = colliderShape.Extents.x * 2;
+		height = colliderShape.Extents.y * 2;
+	}
+
+	public Godot.Collections.Dictionary GetCollisionDirection() {
+		// Define all positions for startingRays
+		Vector2 topLeft = GlobalPosition + new Vector2(-width, height);
+		Vector2 topMid = GlobalPosition + new Vector2(0, height);
+		Vector2 topRight = GlobalPosition + new Vector2(width, height);
+		Vector2 midRight = GlobalPosition + new Vector2(width, 0);
+		Vector2 botRight = GlobalPosition + new Vector2(width, -height);
+		Vector2 botMid = GlobalPosition + new Vector2(0, -height);
+		Vector2 botLeft = GlobalPosition + new Vector2(-width, -height);
+		Vector2 midLeft = GlobalPosition + new Vector2(-width, 0);
+		
+		// We are going to create rays at each start positions in this order
+		Vector2[] rayStartPositions = { topLeft, topMid, topRight,
+										topRight, midRight, botRight,
+										botRight, botMid, botLeft,
+										botLeft, midLeft, topLeft };
+		
+		// Each ray we create is associated with a direction
+		string[] directions = { \"up\", \"up\", \"up\",
+								\"right\", \"right\", \"right\",
+								\"down\", \"down\", \"down\",
+								\"left\", \"left\", \"left\" };
+		
+		// Each direction string corresponds to Vector2 direction
+		var directionToVector = new Godot.Collections.Dictionary();
+		directionToVector[\"up\"] = new Vector2(0f, 0.1f);
+		directionToVector[\"right\"] = new Vector2(0.1f, 0f);
+		directionToVector[\"down\"] = new Vector2(0f, -0.1f);
+		directionToVector[\"left\"] = new Vector2(-0.1f, 0f);
+		
+		// Store which directions got hit
+		var isCollisionHit = new Godot.Collections.Dictionary();
+		isCollisionHit[\"up\"] = false;
+		isCollisionHit[\"right\"] = false;
+		isCollisionHit[\"down\"] = false;
+		isCollisionHit[\"left\"] = false;
+		
+		int n = rayStartPositions.Length;
+		var spaceState = GetWorld2d().DirectSpaceState;
+		
+		// Iterate over each start position to create rays & detect collisions
+		for (int i = 0; i < n; ++i) {
+			if ((bool) isCollisionHit[directions[i]]) // We can skip if this direction
+				continue;                      // already got a hit
+			
+			GD.Print(rayStartPositions[i]);
+			var result = spaceState.IntersectRay(
+				rayStartPositions[i],
+				(Vector2) directionToVector[directions[i]],
+				new Godot.Collections.Array { this }
+			);
+			
+			if (result.Count > 0)  // TODO: Add check for collision tag
+				isCollisionHit[directions[i]] = true;
+		}
+		
+		return isCollisionHit;
+	}
+	
+	public override void _Draw()
+	{
+		// Define all positions for startingRays
+		Vector2 topLeft = GlobalPosition + new Vector2(-width, height);
+		Vector2 topMid = GlobalPosition + new Vector2(0, height);
+		Vector2 topRight = GlobalPosition + new Vector2(width, height);
+		Vector2 midRight = GlobalPosition + new Vector2(width, 0);
+		Vector2 botRight = GlobalPosition + new Vector2(width, -height);
+		Vector2 botMid = GlobalPosition + new Vector2(0, -height);
+		Vector2 botLeft = GlobalPosition + new Vector2(-width, -height);
+		Vector2 midLeft = GlobalPosition + new Vector2(-width, 0);
+		
+		// We are going to create rays at each start positions in this order
+		Vector2[] rayStartPositions = { topLeft, topMid, topRight,
+										topRight, midRight, botRight,
+										botRight, botMid, botLeft,
+										botLeft, midLeft, topLeft };
+		
+		// Each ray we create is associated with a direction
+		string[] directions = { \"up\", \"up\", \"up\",
+								\"right\", \"right\", \"right\",
+								\"down\", \"down\", \"down\",
+								\"left\", \"left\", \"left\" };
+		
+		// Each direction string corresponds to Vector2 direction
+		var directionToVector = new Godot.Collections.Dictionary();
+		directionToVector[\"up\"] = new Vector2(0f, 1f);
+		directionToVector[\"right\"] = new Vector2(1f, 0f);
+		directionToVector[\"down\"] = new Vector2(0f, 1f);
+		directionToVector[\"left\"] = new Vector2(1f, 0f);
+		
+		int n = rayStartPositions.Length;
+		var spaceState = GetWorld2d().DirectSpaceState;
+		
+		// Iterate over each start position to draw rays
+		for (int i = 0; i < n; ++i) {
+			DrawCircle(rayStartPositions[i], 10f, Colors.Blue);
+			DrawLine(rayStartPositions[i], (Vector2) directionToVector[directions[i]], Colors.Red, 1f);
+		}
+	}
+}
+"
+
+[sub_resource type="AtlasTexture" id=20]
+atlas = ExtResource( 7 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=21]
+atlas = ExtResource( 7 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=22]
+atlas = ExtResource( 7 )
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=23]
+atlas = ExtResource( 7 )
+region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=24]
+atlas = ExtResource( 5 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=25]
+atlas = ExtResource( 5 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=26]
+atlas = ExtResource( 5 )
+region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=27]
+atlas = ExtResource( 5 )
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=28]
+atlas = ExtResource( 4 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=29]
+atlas = ExtResource( 4 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=30]
+atlas = ExtResource( 4 )
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=31]
+atlas = ExtResource( 4 )
+region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=32]
+atlas = ExtResource( 6 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=33]
+atlas = ExtResource( 6 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=34]
+atlas = ExtResource( 6 )
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=35]
+atlas = ExtResource( 6 )
+region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="SpriteFrames" id=38]
+animations = [ {
+"frames": [ SubResource( 20 ), SubResource( 21 ), SubResource( 22 ), SubResource( 23 ) ],
+"loop": true,
+"name": "back_walk",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 24 ), SubResource( 25 ), SubResource( 26 ), SubResource( 27 ) ],
+"loop": true,
+"name": "front_walk",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 28 ), SubResource( 29 ), SubResource( 30 ), SubResource( 31 ) ],
+"loop": true,
+"name": "left_walk",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 32 ), SubResource( 33 ), SubResource( 34 ), SubResource( 35 ) ],
+"loop": true,
+"name": "right_walk",
+"speed": 5.0
+} ]
 
 [node name="Node2D" type="Node2D"]
 
 [node name="LevelMapManager" type="Node2D" parent="."]
 script = ExtResource( 1 )
 
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2( 0, -1000 )
-current = true
-zoom = Vector2( 10, 10 )
-
 [node name="Node2D" parent="." instance=ExtResource( 2 )]
+
+[node name="Player" type="KinematicBody2D" parent="."]
+script = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+scale = Vector2( 0.44, 0.44 )
+shape = SubResource( 36 )
+script = SubResource( 37 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="Player"]
+scale = Vector2( 3.6, 3.6 )
+frames = SubResource( 38 )
+animation = "back_walk"
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+script = ExtResource( 8 )

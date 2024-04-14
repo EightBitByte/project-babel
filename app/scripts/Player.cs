@@ -4,7 +4,7 @@ using System;
 public class Player : KinematicBody2D
 {
 	// Speed at which the player moves, as a vector.
-	private Vector2 m_speed = new Vector2(200, 200);
+	private Vector2 m_speed = new Vector2(1000, 1000);
 	// Player sprite
 	private AnimatedSprite m_animatedSprite;
 
