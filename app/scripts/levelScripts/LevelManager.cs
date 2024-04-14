@@ -21,12 +21,26 @@ public class LevelManager : Node
 	private string _ConvertToString(int x, int y) {
 		return x.ToString() + ", " + y.ToString();
 	}
+	
+	// Loads all prefabs into the script
+	private void _LoadPrefabs() {
+		PackedScene level1 = GD.Load<PackedScene>("res://levelPrefabs/basicChamber.tscn");
+		PackedScene level2 = GD.Load<PackedScene>("res://levelPrefabs/enemyChamber1.tscn");
+		chamberPrefabs = new Godot.Collections.Array<PackedScene>{ level1, level2 };
+	}
+	
+	// Returns one of the random prefabs
+	private PackedScene _GetRandomPrefab() {
+		RandomNumberGenerator random = new RandomNumberGenerator();
+		random.Randomize();
+		float randomNum = random.Randf() * chamberPrefabs.Count;
+		return chamberPrefabs[(int) randomNum];
+	}
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		PackedScene testLevel = GD.Load<PackedScene>("res://levelPrefabs/testLevel1.tscn");
-		chamberPrefabs = new Godot.Collections.Array<PackedScene>{ testLevel };
+		_LoadPrefabs();
 		
 		directionToVector = new Godot.Collections.Dictionary<string, Vector2>{
 			{"left", new Vector2(-1, 0)},
@@ -58,8 +72,7 @@ public class LevelManager : Node
 		}
 		
 		// Instantiate a chamberPrefab and add it to the dictionary
-		PackedScene testLevel = GD.Load<PackedScene>("res://levelPrefabs/testLevel1.tscn");
-		Node2D instance = testLevel.Instance() as Node2D;
+		Node2D instance = _GetRandomPrefab().Instance() as Node2D;
 		AddChild(instance);
 		LevelChamber chamber = instance.GetChild(0) as LevelChamber;
 		coordToChamber[_ConvertToString(x, y)] = chamber;
