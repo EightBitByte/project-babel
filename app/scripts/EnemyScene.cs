@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Enemy2Scene : Node2D
+public class EnemyScene : Node2D
 {
 	private AnimatedSprite m_animatedSprite;
 	private string m_idleAnimation = "idle";
@@ -17,7 +17,7 @@ public class Enemy2Scene : Node2D
 		m_animatedSprite.Play(m_idleAnimation);
 	}
 	
-	private void SetAnim(int monsterId) {
+	public void SetAnim(int monsterId) {
 		if (monsterId == 99) {
 			m_idleAnimation = "testIdle";
 			m_attackAnimation = "testAttack";
@@ -29,10 +29,9 @@ public class Enemy2Scene : Node2D
 		// Stop the animation
 		m_animatedSprite.Stop();
 		m_animatedSprite.Play(m_idleAnimation);
-
 	}
-	
-	private void AttackAnimation()
+		
+	public void AttackAnimation()
 	{
 		m_animatedSprite.Play(m_attackAnimation);
 	}
@@ -40,6 +39,7 @@ public class Enemy2Scene : Node2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta)
 	{
+		/*
 		// this is for debug purposes
 		if (Input.IsActionPressed("move_left")) {
 			AttackAnimation();
@@ -48,5 +48,6 @@ public class Enemy2Scene : Node2D
 		if (Input.IsActionPressed("move_right")) {
 			SetAnim(99);
 		}
+		*/
 	}
 }
