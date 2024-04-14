@@ -4,7 +4,7 @@ using System;
 public class Player : KinematicBody2D
 {
 	// Speed at which the player moves, as a vector.
-	private Vector2 m_speed = new Vector2(300, 300);
+	private Vector2 m_speed = new Vector2(1050, 1050);
 	// Player sprite
 	private AnimatedSprite m_animatedSprite;
 
@@ -26,6 +26,9 @@ public class Player : KinematicBody2D
 		
 		// TODO: set the starting position
 		Position = new Vector2(100, 100);
+		
+		// Make sure speed scales properly
+		m_speed *= Scale.x;
 		
 		m_animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
 	}
