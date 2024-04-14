@@ -13,6 +13,7 @@ public class Interactable : Node
 	public override void _Ready()
 	{
 		interactText = GetChild(2) as Label;
+		interactText.Hide();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

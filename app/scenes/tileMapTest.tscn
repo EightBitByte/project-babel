@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://scripts/levelScripts/LevelManager.cs" type="Script" id=1]
 [ext_resource path="res://levelPrefabs/startChamber.tscn" type="PackedScene" id=2]
@@ -8,8 +8,6 @@
 [ext_resource path="res://data/MC_right_walk.png" type="Texture" id=6]
 [ext_resource path="res://data/MC_back_walk.png" type="Texture" id=7]
 [ext_resource path="res://scripts/CameraFollow.cs" type="Script" id=8]
-[ext_resource path="res://scripts/interactable/Interactable.cs" type="Script" id=9]
-[ext_resource path="res://data/red.jpg" type="Texture" id=10]
 
 [sub_resource type="RectangleShape2D" id=36]
 extents = Vector2( 75, 75 )
@@ -224,9 +222,6 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[sub_resource type="CircleShape2D" id=39]
-radius = 45.0111
-
 [node name="Node2D" type="Node2D"]
 
 [node name="LevelMapManager" type="Node2D" parent="."]
@@ -251,21 +246,3 @@ animation = "back_walk"
 current = true
 zoom = Vector2( 0.7, 0.7 )
 script = ExtResource( 8 )
-
-[node name="Interactable" type="Area2D" parent="."]
-position = Vector2( -352, -33 )
-script = ExtResource( 9 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
-shape = SubResource( 39 )
-
-[node name="Sprite" type="Sprite" parent="Interactable"]
-texture = ExtResource( 10 )
-
-[node name="Label" type="Label" parent="Interactable"]
-margin_right = 40.0
-margin_bottom = 14.0
-text = "[Q] Interact"
-
-[connection signal="body_entered" from="Interactable" to="Interactable" method="_on_Interactable_body_entered"]
-[connection signal="body_exited" from="Interactable" to="Interactable" method="_on_Interactable_body_exited"]
