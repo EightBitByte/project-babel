@@ -26,7 +26,9 @@ public class LevelManager : Node
 	private void _LoadPrefabs() {
 		PackedScene level1 = GD.Load<PackedScene>("res://levelPrefabs/basicChamber.tscn");
 		PackedScene level2 = GD.Load<PackedScene>("res://levelPrefabs/enemyChamber1.tscn");
-		chamberPrefabs = new Godot.Collections.Array<PackedScene>{ level1, level2 };
+		PackedScene level3 = GD.Load<PackedScene>("res://levelPrefabs/mazeChamber1.tscn");
+		PackedScene level4 = GD.Load<PackedScene>("res://levelPrefabs/mazeChamber2.tscn");
+		chamberPrefabs = new Godot.Collections.Array<PackedScene>{ level1, level2, level3, level4 };
 	}
 	
 	// Returns one of the random prefabs
