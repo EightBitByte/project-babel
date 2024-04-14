@@ -7,8 +7,8 @@ public class LevelManager : Node
 	// private int a = 2;
 	// private string b = "text";
 	
-	const float chamberWidth = 1560;
-	const float chamberHeight = 1200;
+	const float chamberWidth = 1725;
+	const float chamberHeight = 1340;
 	
 	Godot.Collections.Array<PackedScene> chamberPrefabs;
 	
@@ -18,7 +18,7 @@ public class LevelManager : Node
 	Godot.Collections.Dictionary<string, LevelChamber> coordToChamber;
 
 	// Makes x and y into string
-	private string convertToString(int x, int y) {
+	private string _ConvertToString(int x, int y) {
 		return x.ToString() + ", " + y.ToString();
 	}
 
@@ -30,9 +30,9 @@ public class LevelManager : Node
 		
 		directionToVector = new Godot.Collections.Dictionary<string, Vector2>{
 			{"left", new Vector2(-1, 0)},
-			{"up", new Vector2(0, 1)},
+			{"up", new Vector2(0, -1)},
 			{"right", new Vector2(1, 0)},
-			{"down", new Vector2(0, -1)}
+			{"down", new Vector2(0, 1)}
 		};
 		
 		complementDirection = new Godot.Collections.Dictionary<string, string>{
@@ -44,52 +44,31 @@ public class LevelManager : Node
 		
 		coordToChamber = new Godot.Collections.Dictionary<string, LevelChamber>();
 		
-		GenerateChamber(0, 0, "down", 2);
+		GenerateChamber(0, -1, "down", 1);
 	}
 
 	// Recursively generate a chamber and its neighbors
 	public void GenerateChamber(int x, int y, string incomingDir, int depth) {
+		// If this chamber already exists, don't create!
+		string coord = _ConvertToString(x, y);
+		if (coordToChamber.ContainsKey(coord)) {
+			// Updates a chamber to link doors with its neigher from the incoming edge 
+			coordToChamber[coord].GenerateDoor(incomingDir);
+		}
+		
 		// Instantiate a chamberPrefab and add it to the dictionary
 		PackedScene testLevel = GD.Load<PackedScene>("res://levelPrefabs/testLevel1.tscn");
 		Node2D instance = testLevel.Instance() as Node2D;
 		AddChild(instance);
 		LevelChamber chamber = instance.GetChild(0) as LevelChamber;
-		coordToChamber[convertToString(x, y)] = chamber;
+		coordToChamber[_ConvertToString(x, y)] = chamber;
 		
 		// Set position and create its chamber
 		instance.Position = new Vector2(x * chamberWidth, y * chamberHeight);
-		GD.Print(instance.Position);
-		Godot.Collections.Array<string> outgoingDirs = chamber.CreateChamber(incomingDir, depth);
+		Godot.Collections.Array<string> outgoingDirs = chamber.CreateChamber(incomingDir, depth, x, y);
 		
-		// Update nearby chambers to link their doors
-		Godot.Collections.Array<string> newDirections = _UpdateAdjacencies(outgoingDirs, x, y);
-		
-		// Generate neighbors
-		_GenerateNeighbors(newDirections, x, y, depth);
-	}
-	
-	// Updates all adjacent neighbors to link doors and returns
-	// a list of all outgoing directions that didn't have neighbors
-	private Godot.Collections.Array<string> _UpdateAdjacencies(Godot.Collections.Array<string> outgoingDirs, int x, int y) {
-		Godot.Collections.Array<string> newDirections = new Godot.Collections.Array<string>();
-		
-		foreach (string dir in outgoingDirs) {
-			Vector2 dirVector = directionToVector[dir]; 
-			int modifyX = x + (int) dirVector.x;
-			int modifyY = y + (int) dirVector.y;
-			string coord = convertToString(modifyX, modifyY);
-			
-			// Check if there is something in x, y
-			if (coordToChamber.ContainsKey(coord)) {
-				// if there, generate a door in the opposite direction
-				coordToChamber[coord].GenerateDoor(complementDirection[dir]);
-			}
-			else {
-				newDirections.Add(dir);
-			}
-		}
-		
-		return newDirections;
+		// Generate neighbors nearby
+		_GenerateNeighbors(outgoingDirs, x, y, depth);
 	}
 	
 	private void _GenerateNeighbors(Godot.Collections.Array<string> outgoingDirs, int x, int y, int currDepth) {

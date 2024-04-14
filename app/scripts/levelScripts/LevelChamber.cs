@@ -15,7 +15,6 @@ public class LevelChamber : TileMap
 	
 	private RandomNumberGenerator random;
 	
-	public int depth;
 	public Godot.Collections.Dictionary<string, bool> corridor;
 
 	// Called when the node enters the scene tree for the first time.
@@ -26,8 +25,11 @@ public class LevelChamber : TileMap
 	}
 	
 	// Based on the depth, randomly determines if the door is to be generated or not
-	private bool _HasDoor(int depth) {
+	private bool _HasDoor(int depth, int x, int y) {
 		if (depth == 0)
+			return false;
+		
+		if (y >= 0)
 			return false;
 		
 		float randomNum = random.Randf() * depth;
@@ -47,26 +49,35 @@ public class LevelChamber : TileMap
 	}
 
 	// Creates the chamber and initializes doors
-	public Godot.Collections.Array<string> CreateChamber(string incomingDir, int currDepth) {
+	public Godot.Collections.Array<string> CreateChamber(string incomingDir, int currDepth, int x, int y) {
 		
-		corridor = new Godot.Collections.Dictionary<string, bool>();
-		corridor["left"] = false;
-		corridor["up"] = false;
-		corridor["right"] = false;
-		corridor["down"] = false;
+		corridor = new Godot.Collections.Dictionary<string, bool>(){
+			{"left", false},
+			{"up", false},
+			{"right", false},
+			{"down", false},
+		};
+		
+		Godot.Collections.Dictionary<string, Vector2> directionToVector
+		= new Godot.Collections.Dictionary<string, Vector2> {
+			{"left", new Vector2(-1, 0)},
+			{"up", new Vector2(0, -1)},
+			{"right", new Vector2(1, 0)},
+			{"down", new Vector2(0, 1)}
+		};
 
 		random = new RandomNumberGenerator();
 		random.Randomize();
 		
 		GenerateDoor(incomingDir);
-		depth = currDepth;
 		Godot.Collections.Array<string> outputDirections = new Godot.Collections.Array<string>();
 		
 		foreach (string direction in corridor.Keys) {
 			if (direction == incomingDir)
 				continue;
-				
-			if (_HasDoor(depth)) {
+			
+			Vector2 dirVector = directionToVector[direction];
+			if (_HasDoor(currDepth, x + (int) dirVector.x, y + (int) dirVector.y)) {
 				GenerateDoor(direction);
 				outputDirections.Add(direction);
 			}
