@@ -1,12 +1,9 @@
 extends "res://scripts/MenuButton.gd"
 
-func _on_pressed():
-	get_tree().change_scene("res://scenes/movement.tscn")
-
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	self.text = "resume"
+	self.text = "about"
 	pass # Replace with function body.
 
 

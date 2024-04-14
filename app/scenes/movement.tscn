@@ -1,24 +1,16 @@
-<<<<<<< Updated upstream
-[gd_scene load_steps=27 format=2]
-=======
-[gd_scene load_steps=39 format=2]
->>>>>>> Stashed changes
+[gd_scene load_steps=48 format=2]
 
 [ext_resource path="res://scripts/Player.cs" type="Script" id=1]
-[ext_resource path="res://data/MC_front_walk.png" type="Texture" id=2]
+[ext_resource path="res://scripts/InventoryMenu.gd" type="Script" id=2]
 [ext_resource path="res://scripts/CameraFollow.cs" type="Script" id=3]
 [ext_resource path="res://tiles/test_tileset.tres" type="TileSet" id=4]
-<<<<<<< Updated upstream
-[ext_resource path="res://data/MC_right_walk.png" type="Texture" id=5]
-[ext_resource path="res://data/MC_back_walk.png" type="Texture" id=6]
-[ext_resource path="res://data/MC_left_walk.png" type="Texture" id=7]
-=======
 [ext_resource path="res://data/inventory_menu.tres" type="StyleBox" id=5]
 [ext_resource path="res://data/PauseMenuTheme.tres" type="Theme" id=6]
 [ext_resource path="res://scripts/UIManager.gd" type="Script" id=7]
 [ext_resource path="res://scripts/MenuSubContainer.gd" type="Script" id=8]
 [ext_resource path="res://scripts/LeftSide.gd" type="Script" id=9]
 [ext_resource path="res://scripts/RightSide.gd" type="Script" id=10]
+[ext_resource path="res://data/MC_back_walk.png" type="Texture" id=11]
 [ext_resource path="res://scripts/TopLeft.gd" type="Script" id=12]
 [ext_resource path="res://data/pixeldroidMenuRegular.ttf" type="DynamicFontData" id=13]
 [ext_resource path="res://scripts/JournalButton.gd" type="Script" id=14]
@@ -28,7 +20,12 @@
 [ext_resource path="res://data/red.jpg" type="Texture" id=18]
 [ext_resource path="res://scripts/PlayerOverview.gd" type="Script" id=19]
 [ext_resource path="res://scripts/PanelContainer.gd" type="Script" id=20]
->>>>>>> Stashed changes
+[ext_resource path="res://data/MC_front_walk.png" type="Texture" id=21]
+[ext_resource path="res://data/MC_left_walk.png" type="Texture" id=22]
+[ext_resource path="res://data/MC_right_walk.png" type="Texture" id=23]
+[ext_resource path="res://scripts/DialogueLabel.gd" type="Script" id=24]
+[ext_resource path="res://scripts/DialogueBox.gd" type="Script" id=25]
+[ext_resource path="res://scripts/InventoryBackground.gd" type="Script" id=26]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 75, 75 )
@@ -156,14 +153,11 @@ public class PlayerCollision : CollisionShape2D
 }
 "
 
-<<<<<<< Updated upstream
 [sub_resource type="AtlasTexture" id=3]
 flags = 4
 atlas = ExtResource( 6 )
 region = Rect2( 0, 0, 32, 32 )
 
-=======
->>>>>>> Stashed changes
 [sub_resource type="AtlasTexture" id=4]
 region = Rect2( 32, 0, 32, 32 )
 
@@ -207,38 +201,99 @@ region = Rect2( 32, 0, 32, 32 )
 region = Rect2( 64, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=18]
+=======
+[sub_resource type="AtlasTexture" id=20]
+atlas = ExtResource( 11 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=21]
+atlas = ExtResource( 11 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=22]
+atlas = ExtResource( 11 )
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=23]
+atlas = ExtResource( 11 )
+region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=24]
+atlas = ExtResource( 21 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=25]
+atlas = ExtResource( 21 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=26]
+atlas = ExtResource( 21 )
+region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=27]
+atlas = ExtResource( 21 )
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=28]
+atlas = ExtResource( 22 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=29]
+atlas = ExtResource( 22 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=30]
+atlas = ExtResource( 22 )
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=31]
+atlas = ExtResource( 22 )
+region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=32]
+atlas = ExtResource( 23 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=33]
+atlas = ExtResource( 23 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=34]
+atlas = ExtResource( 23 )
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=35]
+atlas = ExtResource( 23 )
 region = Rect2( 96, 0, 32, 32 )
 
 [sub_resource type="SpriteFrames" id=19]
 animations = [ {
-"frames": [ null, SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
+"frames": [ SubResource( 20 ), SubResource( 21 ), SubResource( 22 ), SubResource( 23 ) ],
 "loop": true,
 "name": "back_walk",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 8 ), SubResource( 7 ), SubResource( 10 ), SubResource( 9 ) ],
+"frames": [ SubResource( 24 ), SubResource( 25 ), SubResource( 26 ), SubResource( 27 ) ],
 "loop": true,
 "name": "front_walk",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 11 ), SubResource( 12 ), SubResource( 13 ), SubResource( 14 ) ],
+"frames": [ SubResource( 28 ), SubResource( 29 ), SubResource( 30 ), SubResource( 31 ) ],
 "loop": true,
 "name": "left_walk",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 15 ), SubResource( 16 ), SubResource( 17 ), SubResource( 18 ) ],
+"frames": [ SubResource( 32 ), SubResource( 33 ), SubResource( 34 ), SubResource( 35 ) ],
 "loop": true,
 "name": "right_walk",
 "speed": 5.0
 } ]
 
-<<<<<<< Updated upstream
-=======
-[sub_resource type="DynamicFont" id=3]
-size = 30
+[sub_resource type="DynamicFont" id=36]
+size = 48
 font_data = ExtResource( 13 )
 
->>>>>>> Stashed changes
+
 [node name="Node2D" type="Node2D"]
 
 [node name="TileMap" type="TileMap" parent="."]
@@ -259,7 +314,11 @@ script = SubResource( 2 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Player"]
 scale = Vector2( 3.6, 3.6 )
 frames = SubResource( 19 )
-animation = "front_walk"
+animation = "back_walk"
+
+[node name="UIManager" type="Node2D" parent="."]
+position = Vector2( 9, 9 )
+script = ExtResource( 7 )
 
 [node name="UIManager" type="Node2D" parent="."]
 position = Vector2( 9, 9 )
@@ -267,9 +326,29 @@ script = ExtResource( 7 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
+zoom = Vector2( 0.5, 0.5 )
 script = ExtResource( 3 )
-<<<<<<< Updated upstream
-=======
+
+[node name="DialogueBox" type="PanelContainer" parent="Camera2D"]
+margin_right = 14.0
+margin_bottom = 14.0
+custom_styles/panel = ExtResource( 5 )
+script = ExtResource( 25 )
+
+[node name="DialogueLabel" type="Label" parent="Camera2D/DialogueBox"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 9.0
+margin_bottom = 43.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 36 )
+script = ExtResource( 24 )
+
+[node name="InventoryBackground" type="ColorRect" parent="Camera2D"]
+margin_right = 40.0
+margin_bottom = 40.0
+color = Color( 0, 0, 0, 0.72549 )
+script = ExtResource( 26 )
 
 [node name="BigMenuBorder" type="PanelContainer" parent="Camera2D"]
 margin_left = 9.0
@@ -399,4 +478,3 @@ margin_bottom = 138.0
 script = ExtResource( 10 )
 
 [node name="ColorRect" type="ColorRect" parent="Camera2D/BigMenuBorder/MenuSubContainer/RightSide"]
->>>>>>> Stashed changes
