@@ -24,6 +24,7 @@ window/dpi/allow_hidpi=true
 dpy=false
 dpi=false
 default=false
+render=false
 
 [gui]
 
