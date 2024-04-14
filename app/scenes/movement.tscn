@@ -1,12 +1,26 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://scripts/Player.cs" type="Script" id=1]
-[ext_resource path="res://data/MC_front_walk.png" type="Texture" id=2]
+[ext_resource path="res://scripts/InventoryMenu.gd" type="Script" id=2]
 [ext_resource path="res://scripts/CameraFollow.cs" type="Script" id=3]
 [ext_resource path="res://tiles/test_tileset.tres" type="TileSet" id=4]
-[ext_resource path="res://data/MC_right_walk.png" type="Texture" id=5]
-[ext_resource path="res://data/MC_back_walk.png" type="Texture" id=6]
-[ext_resource path="res://data/MC_left_walk.png" type="Texture" id=7]
+[ext_resource path="res://data/inventory_menu.tres" type="StyleBox" id=5]
+[ext_resource path="res://data/PauseMenuTheme.tres" type="Theme" id=6]
+[ext_resource path="res://scripts/UIManager.gd" type="Script" id=7]
+[ext_resource path="res://scripts/MenuSubContainer.gd" type="Script" id=8]
+[ext_resource path="res://scripts/LeftSide.gd" type="Script" id=9]
+[ext_resource path="res://scripts/RightSide.gd" type="Script" id=10]
+[ext_resource path="res://data/MC_front.png" type="Texture" id=11]
+[ext_resource path="res://scripts/TopLeft.gd" type="Script" id=12]
+[ext_resource path="res://data/pixeldroidMenuRegular.ttf" type="DynamicFontData" id=13]
+[ext_resource path="res://scripts/JournalButton.gd" type="Script" id=14]
+[ext_resource path="res://scripts/BottomLeft.gd" type="Script" id=15]
+[ext_resource path="res://scripts/HealthBarContainer.gd" type="Script" id=16]
+[ext_resource path="res://scripts/InventoryBorder.gd" type="Script" id=17]
+[ext_resource path="res://data/red.jpg" type="Texture" id=18]
+[ext_resource path="res://scripts/PlayerOverview.gd" type="Script" id=19]
+[ext_resource path="res://scripts/PanelContainer.gd" type="Script" id=20]
+
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 75, 75 )
@@ -134,6 +148,10 @@ public class PlayerCollision : CollisionShape2D
 }
 "
 
+[sub_resource type="DynamicFont" id=3]
+size = 30
+font_data = ExtResource( 13 )
+
 [sub_resource type="AtlasTexture" id=3]
 flags = 4
 atlas = ExtResource( 6 )
@@ -237,6 +255,7 @@ animations = [ {
 "speed": 5.0
 } ]
 
+
 [node name="Node2D" type="Node2D"]
 
 [node name="TileMap" type="TileMap" parent="."]
@@ -254,6 +273,10 @@ scale = Vector2( 0.44, 0.44 )
 shape = SubResource( 1 )
 script = SubResource( 2 )
 
+[node name="UIManager" type="Node2D" parent="."]
+position = Vector2( 9, 9 )
+script = ExtResource( 7 )
+
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Player"]
 scale = Vector2( 3.6, 3.6 )
 frames = SubResource( 19 )
@@ -262,3 +285,133 @@ animation = "front_walk"
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 script = ExtResource( 3 )
+
+[node name="BigMenuBorder" type="PanelContainer" parent="Camera2D"]
+margin_left = 9.0
+margin_top = 9.0
+margin_right = 57.0
+margin_bottom = 51.0
+theme = ExtResource( 6 )
+custom_styles/panel = ExtResource( 5 )
+script = ExtResource( 2 )
+
+[node name="MenuSubContainer" type="HBoxContainer" parent="Camera2D/BigMenuBorder"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 180.0
+margin_bottom = 143.0
+script = ExtResource( 8 )
+
+[node name="LeftSide" type="VBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer"]
+margin_right = 171.0
+margin_bottom = 138.0
+script = ExtResource( 9 )
+
+[node name="TopLeft" type="HBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide"]
+margin_right = 171.0
+margin_bottom = 120.0
+script = ExtResource( 12 )
+
+[node name="PanelContainer" type="PanelContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft"]
+margin_right = 14.0
+margin_bottom = 120.0
+script = ExtResource( 20 )
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft/PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 7.0
+margin_bottom = 113.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch_mode = 3
+
+[node name="PlayerOverview" type="TextureRect" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft/PanelContainer/AspectRatioContainer"]
+margin_left = -53.0
+margin_right = 53.0
+margin_bottom = 106.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 11 )
+expand = true
+script = ExtResource( 19 )
+
+[node name="HealthBarContainer" type="VBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft"]
+margin_left = 18.0
+margin_right = 167.0
+margin_bottom = 120.0
+alignment = 1
+script = ExtResource( 16 )
+
+[node name="Label" type="Label" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft/HealthBarContainer"]
+margin_right = 149.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 3 )
+text = "health"
+
+[node name="ColorRect2" type="ColorRect" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft/HealthBarContainer"]
+margin_top = 28.0
+margin_right = 149.0
+margin_bottom = 58.0
+rect_min_size = Vector2( 0, 30 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0.0784314, 0.721569, 0.0901961, 1 )
+
+[node name="Label2" type="Label" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft/HealthBarContainer"]
+margin_top = 62.0
+margin_right = 149.0
+margin_bottom = 86.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 3 )
+text = "mental health"
+
+[node name="ColorRect" type="ColorRect" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft/HealthBarContainer"]
+margin_top = 90.0
+margin_right = 149.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 0, 30 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="JournalButton" type="TextureButton" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft"]
+margin_left = 171.0
+margin_right = 171.0
+margin_bottom = 120.0
+texture_normal = ExtResource( 18 )
+expand = true
+script = ExtResource( 14 )
+
+[node name="BottomLeft" type="VBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide"]
+margin_top = 124.0
+margin_right = 171.0
+margin_bottom = 138.0
+script = ExtResource( 15 )
+
+[node name="InventoryBorder" type="PanelContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/BottomLeft"]
+margin_right = 171.0
+margin_bottom = 10.0
+custom_styles/panel = ExtResource( 5 )
+script = ExtResource( 17 )
+
+[node name="Inventory" type="HBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/BottomLeft/InventoryBorder"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 166.0
+margin_bottom = 5.0
+
+[node name="Skills" type="HBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/BottomLeft"]
+margin_top = 14.0
+margin_right = 171.0
+margin_bottom = 14.0
+
+[node name="RightSide" type="VBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer"]
+margin_left = 175.0
+margin_right = 175.0
+margin_bottom = 138.0
+script = ExtResource( 10 )
+
+[node name="ColorRect" type="ColorRect" parent="Camera2D/BigMenuBorder/MenuSubContainer/RightSide"]
