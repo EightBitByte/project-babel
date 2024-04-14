@@ -12,10 +12,13 @@ func hide_inventory_menu():
 	get_node("/root/Node2D/Camera2D/BigMenuBorder").hide()
 	get_node("/root/Node2D/Camera2D/InventoryBackground").hide()
 
+# handle key inputs
 func _input(event):
 	if event is InputEventKey and event.pressed:
 		if event.scancode == KEY_E:
 			toggle_inventory_menu()
+		if event.scancode == KEY_ESCAPE:
+			get_tree().change_scene("res://scenes/pause.tscn")
 			
 # Called when the node enters the scene tree for the first time.
 func _ready():
