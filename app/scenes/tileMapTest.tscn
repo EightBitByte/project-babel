@@ -248,5 +248,4 @@ animation = "back_walk"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
-zoom = Vector2( 8, 8 )
 script = ExtResource( 8 )
