@@ -26,12 +26,11 @@ public class LevelChamber : TileMap
 	}
 	
 	// Based on the depth, randomly determines if the door is to be generated or not
-	public bool _HasDoor(int depth) {
+	private bool _HasDoor(int depth) {
 		if (depth == 0)
 			return false;
 		
 		float randomNum = random.Randf() * depth;
-		GD.Print(randomNum);
 		return randomNum <= 1;
 	}
 	
@@ -60,7 +59,6 @@ public class LevelChamber : TileMap
 		random.Randomize();
 		
 		GenerateDoor(incomingDir);
-		GD.Print(corridor);
 		depth = currDepth;
 		Godot.Collections.Array<string> outputDirections = new Godot.Collections.Array<string>();
 		
