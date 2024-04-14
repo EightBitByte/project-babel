@@ -1,16 +1,11 @@
 extends Label
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	self.text = "project babel"
 	self.align = Label.ALIGN_CENTER
-
+	self.size_flags_horizontal = SIZE_EXPAND_FILL
+	self.size_flags_vertical = SIZE_EXPAND_FILL
+	self.size_flags_stretch_ratio = 3
 	pass # Replace with function body.
 
 
