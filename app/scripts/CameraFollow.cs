@@ -19,7 +19,7 @@ public class CameraFollow : Camera2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		m_player = GetNode<Player>("/root/Node2D/Player");
+		m_player = GetNode<Player>("/root/movement/Player");
 		Position = m_player.Position;
 	}
 

@@ -14,23 +14,6 @@ class Entity {
         attackDict = aDict;
     }
 
-    /// <summary>
-    /// Gets the damage done for a given attackID. 
-    /// Factors in crit chance and upgraded attacks. 
-    /// </summary>
-    /// <param name="attackID"></param>
-    /// <returns>The amount of damage that attackID will do.</returns>
-    public int GetDamage(int attackID) {
-        Random rand = new();
-        Attack currentAttack = attackDict[attackID];
-
-        bool isCrit = rand.NextDouble() <= currentAttack.CritChance;
-        int damage = rand.Next(currentAttack.MinDamage, currentAttack.MaxDamage);
-
-        // If crit, double damage
-        return isCrit ? damage * 2 : damage;
-    }
-
 
     /// <summary>
     /// Deducts the specified amount of damage from the entity's health.
@@ -38,12 +21,13 @@ class Entity {
     /// </summary>
     /// <param name="amount">Amount of damage to deduct from the entity's health.</param>
     /// <returns>True if the entity is killed.</returns>
-    public bool Damage(int amount) {
+    public bool TakeDamage(int amount) {
         // If the damage we do to the player heals past maxHealth, just heal to max.
         Health -= Health - amount > maxHealth ? (Health - maxHealth) : amount;
 
         return Health <= 0;
     }
+
 
     /// <summary>
     /// Prints the details of the entity. For debug purposes only.
@@ -61,8 +45,25 @@ class Entity {
         GD.Print("}\n");
     }
 
+
+    /// <summary>
+    /// Compares two Entities based on speed alone.
+    /// </summary>
+    /// <param name="left">The first entity to compare.</param>
+    /// <param name="right">The second entity to compare.</param>
+    /// <returns>An integer representing the inequality (-1 for >, 0 for ==, 1 for <)</returns>
+    public static int Compare(Entity left, Entity right) {
+        if (left.Speed > right.Speed)
+            return -1;
+        else if (left.Speed == right.Speed)
+            return 0;
+        else
+            return 1;
+    }
+
+
     public int Health { get; private set; }
     public int Speed  { get; private set; }
     protected readonly int maxHealth;
-    private readonly Dictionary<int, Attack> attackDict;
+    protected readonly Dictionary<int, Attack> attackDict;
 }
