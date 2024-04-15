@@ -1,38 +1,45 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://scripts/Combat.cs" type="Script" id=1]
 [ext_resource path="res://scripts/EnemyScene.cs" type="Script" id=2]
-[ext_resource path="res://data/Enemy_temp_attack.png" type="Texture" id=3]
 [ext_resource path="res://scripts/PlayerScene.cs" type="Script" id=4]
 [ext_resource path="res://data/MC_idle.png" type="Texture" id=7]
+[ext_resource path="res://data/red.jpg" type="Texture" id=9]
 [ext_resource path="res://data/MC_attack.png" type="Texture" id=11]
 [ext_resource path="res://data/Enemy_temp_idle.png" type="Texture" id=12]
 
 [sub_resource type="AtlasTexture" id=61]
+flags = 4
 atlas = ExtResource( 11 )
 region = Rect2( 0, 0, 128, 128 )
 
 [sub_resource type="AtlasTexture" id=62]
+flags = 4
 atlas = ExtResource( 11 )
 region = Rect2( 128, 0, 128, 128 )
 
 [sub_resource type="AtlasTexture" id=63]
+flags = 4
 atlas = ExtResource( 11 )
 region = Rect2( 256, 0, 128, 128 )
 
 [sub_resource type="AtlasTexture" id=64]
+flags = 4
 atlas = ExtResource( 11 )
 region = Rect2( 384, 0, 128, 128 )
 
 [sub_resource type="AtlasTexture" id=65]
+flags = 4
 atlas = ExtResource( 11 )
 region = Rect2( 512, 0, 128, 128 )
 
 [sub_resource type="AtlasTexture" id=66]
+flags = 4
 atlas = ExtResource( 7 )
 region = Rect2( 0, 0, 128, 128 )
 
 [sub_resource type="AtlasTexture" id=67]
+flags = 4
 atlas = ExtResource( 7 )
 region = Rect2( 128, 0, 128, 128 )
 
@@ -49,25 +56,10 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[sub_resource type="AtlasTexture" id=70]
-atlas = ExtResource( 3 )
-region = Rect2( 512, 0, 128, 128 )
-
-[sub_resource type="AtlasTexture" id=71]
-atlas = ExtResource( 3 )
-region = Rect2( 384, 0, 128, 128 )
-
-[sub_resource type="AtlasTexture" id=72]
-atlas = ExtResource( 3 )
-region = Rect2( 256, 0, 128, 128 )
-
-[sub_resource type="AtlasTexture" id=73]
-atlas = ExtResource( 3 )
-region = Rect2( 128, 0, 128, 128 )
-
-[sub_resource type="AtlasTexture" id=74]
-atlas = ExtResource( 3 )
-region = Rect2( 0, 0, 128, 128 )
+[sub_resource type="AtlasTexture" id=20]
+flags = 4
+atlas = ExtResource( 9 )
+region = Rect2( 0, 16, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=68]
 atlas = ExtResource( 12 )
@@ -79,7 +71,7 @@ region = Rect2( 128, 0, 128, 128 )
 
 [sub_resource type="SpriteFrames" id=5]
 animations = [ {
-"frames": [ SubResource( 70 ), SubResource( 71 ), SubResource( 72 ), SubResource( 73 ), SubResource( 74 ) ],
+"frames": [ SubResource( 20 ) ],
 "loop": true,
 "name": "attack",
 "speed": 5.0
