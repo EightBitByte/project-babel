@@ -1,11 +1,12 @@
 using Godot;
 using System;
 
+
 public class Interactable : Node
 {
 	// Declare member variables here. Examples:
 	// private int a = 2;
-	// private string b = "text";
+	private string m_entry = "";
 	
 	Label interactText;
 
@@ -19,8 +20,23 @@ public class Interactable : Node
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta)
 	{
-		if (Input.IsActionPressed("move_right") && interactText.Visible) {
+		//if (Input.IsActionPressed("move_right") && interactText.Visible) {
+		//}
+		if (interactText.Visible && Input.IsActionPressed("interact")) {
+			if (m_notLoaded) {
+				m_entry = GetNode<JournalManager>("/root/movement/JournalManager").GetNextEntry();
+				m_notLoaded = false;
+			}
+			GetNode<PanelContainer>("/root/movement/Camera2D/DialogueBox").Call("show_dialogue", m_entry);
+			GD.Print(GetNode<PanelContainer>("/root/movement/Camera2D/DialogueBox"));
+			m_messageShowing = true;
+			return;
 		}
+		else if (m_messageShowing && !interactText.Visible) {
+			m_messageShowing = false;
+			GetNode<PanelContainer>("/root/movement/Camera2D/DialogueBox").Call("hide_dialogue");
+		}
+
 	}
 
 	private void _on_Interactable_body_entered(object body)
@@ -32,4 +48,8 @@ public class Interactable : Node
 	{
 		interactText.Hide();
 	}
+	
+	
+	private bool m_notLoaded = true;
+	private bool m_messageShowing = false;
 }
