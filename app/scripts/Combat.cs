@@ -69,9 +69,9 @@ public class Combat : Node
 		playerData = LoadCombatPlayer();
 		enemyDataList = LoadEnemies(1, 0, 2);
 		
-		isDead = new bool[4];
+		IsDead = new bool[4];
 		for (int i = 0; i < 4; ++i) {
-			isDead[i] = false;
+			IsDead[i] = false;
 		}
 		
 		turnOrder = new();
@@ -324,7 +324,7 @@ public class Combat : Node
 		
 		bool dead = enemyDataList[enemyIndex].TakeDamage(damage);
 		if (dead) {
-			isDead[enemyIndex] = true;
+			IsDead[enemyIndex] = true;
 			enemySceneArray[enemyIndex].Kill();
 		}
 		
@@ -426,8 +426,7 @@ public class Combat : Node
 
 		// If an attacker is an enemy, get enemy's attack and show/update
 		if (attacker is Enemy enemy) {
-			bool[] died = isDead;
-			if (died[enemy.Position] == true) {
+			if (IsDead[enemy.Position] == true) {
 				return;
 			}
 			// Block player action.
@@ -462,7 +461,7 @@ public class Combat : Node
 	bool isPlayerTurn = false;
 
 	private List<Entity> turnOrder;
-	public bool[] isDead = null;
+	public bool[] IsDead;
 	private int currentTurn;
 	private CombatPlayer playerData;
 	private List<Enemy> enemyDataList;
