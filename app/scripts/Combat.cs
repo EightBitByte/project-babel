@@ -18,6 +18,8 @@ public class Combat : Node
 	const int DEFAULT_MAX_HP = 20;
 	const int DEFAULT_SPEED = 5;
 	const int MAX_NUM_ENEMIES = 3;
+	const int BASE_ATTACK_X = -42;
+	const int BASE_ATTACK_Y = 69;
 
 
 	/// <summary>
@@ -60,6 +62,9 @@ public class Combat : Node
 		playerArea.Connect("mouse_entered", this, "ShowPlayerText");
 		playerArea.Connect("mouse_exited", this, "HidePlayerText");
 
+
+		Highlight = GetNode<Sprite>((NodePath)"Highlight");
+		Highlight.Visible = false;
 
 		playerData = LoadCombatPlayer();
 		enemyDataList = LoadEnemies(1, 0, 2);
@@ -276,8 +281,12 @@ public class Combat : Node
 	private void SelectAttack(int attackID) {
 		SelectedAttackButton = SelectedAttackButton == attackID ? -1 : attackID;
 
-		if (SelectedAttackButton != -1)
+		if (SelectedAttackButton != -1) {
 			SetAttackText(SelectedAttackButton);
+			ShowHighlight(SelectedAttackButton);
+		} else {
+			HideHighlight();
+		}
 	}
 
 
@@ -310,6 +319,15 @@ public class Combat : Node
 		enemyDataList[enemyIndex].TakeDamage(damage);
 		healthBars[enemyIndex+1].Value = enemyDataList[enemyIndex].GetFractionalHealth();
 		++currentTurn;
+	}
+
+	private void ShowHighlight(int attackIndex) {
+		Highlight.Visible = true;
+		Highlight.Position = new(BASE_ATTACK_X+(48*attackIndex), BASE_ATTACK_Y);
+	}
+
+	private void HideHighlight() {
+		Highlight.Visible = false;
 	}
 
 
@@ -440,6 +458,7 @@ public class Combat : Node
 	private EnemyScene[] enemySceneArray;
 	private RichTextLabel AttackNameLabel, AttackDescriptionLabel;
 	private Label EnemyNameLabel, EnemyDescriptionLabel;
+	private Sprite Highlight;
 
 	// Scene health bar resources
 	private TextureProgress[] healthBars;
