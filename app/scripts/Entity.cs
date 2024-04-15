@@ -9,7 +9,7 @@ using Godot;
 class Entity {
     public Entity (int health, int maxHP, int speed, Dictionary<int, Attack> aDict) {
         Health = health;
-        maxHealth = maxHP;
+        MaxHealth = maxHP;
         Speed = speed;
         attackDict = aDict;
     }
@@ -22,8 +22,8 @@ class Entity {
     /// <param name="amount">Amount of damage to deduct from the entity's health.</param>
     /// <returns>True if the entity is killed.</returns>
     public bool TakeDamage(int amount) {
-        // If the damage we do to the player heals past maxHealth, just heal to max.
-        Health -= Health - amount > maxHealth ? (Health - maxHealth) : amount;
+        // If the damage we do to the player heals past MaxHealth, just heal to max.
+        Health -= Health - amount > MaxHealth ? (Health - MaxHealth) : amount;
 
         return Health <= 0;
     }
@@ -34,7 +34,7 @@ class Entity {
     /// </summary>
     public void DEBUG_PRINT() {
         GD.Print("Health: ", Health, 
-                 "\nMaxHealth: ", maxHealth, 
+                 "\nMaxHealth: ", MaxHealth, 
                  "\nSpeed: ", Speed,
                  "\nattackDict: {");
 
@@ -61,9 +61,14 @@ class Entity {
             return 1;
     }
 
+    /// <returns>Returns the fractional health of the entity, 0-64.</returns>
+    public int GetFractionalHealth() {
+        return (int)Math.Floor(1.0 * Health / MaxHealth * 64);
+    }
+
 
     public int Health { get; private set; }
     public int Speed  { get; private set; }
-    protected readonly int maxHealth;
+    public int MaxHealth {get; private set; }
     protected readonly Dictionary<int, Attack> attackDict;
 }

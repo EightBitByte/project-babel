@@ -11,59 +11,62 @@ using System.Linq;
 using Godot;
 
 class Enemy : Entity {
-    public Enemy (string name, int health, int maxHP, int speed, Dictionary<int, Attack> aDict)
-           : base (health, maxHP, speed, aDict)  {
-            Name = name;
+	public Enemy (string name, int health, int maxHP, int speed, Dictionary<int, Attack> aDict, int position = 0)
+		   : base (health, maxHP, speed, aDict)  {
+			Name = name;
+			Position = position;
+			
+			
+			// Initializing randomizability...
+			rand = new();
 
-            // Initializing randomizability...
-            rand = new();
+			// Loading favorability...
+			totalFavorability = 0.0;
+			int attackIndex = 0;
+			attackFavorability = new double[attackDict.Count];
 
-            // Loading favorability...
-            totalFavorability = 0.0;
-            int attackIndex = 0;
-            attackFavorability = new double[attackDict.Count];
+			#if DEBUG_RANDOMNESS
+				GD.Print("Instantiating enemy ", Name);
+			#endif
+			foreach (Attack a in attackDict.Values) {
+				#if DEBUG_RANDOMNESS
+					GD.Print("attackFavorability[", attackIndex, "] = ", totalFavorability);
+				#endif
 
-            #if DEBUG_RANDOMNESS
-                GD.Print("Instantiating enemy ", Name);
-            #endif
-            foreach (Attack a in attackDict.Values) {
-                #if DEBUG_RANDOMNESS
-                    GD.Print("attackFavorability[", attackIndex, "] = ", totalFavorability);
-                #endif
+				attackFavorability[attackIndex++] = totalFavorability;
+				totalFavorability += a.Favorability;
+			}
+			#if DEBUG_RANDOMNESS
+				GD.Print("Finish initalization, totalFavorability: ", totalFavorability, "\n");
+			#endif
 
-                attackFavorability[attackIndex++] = totalFavorability;
-                totalFavorability += a.Favorability;
-            }
-            #if DEBUG_RANDOMNESS
-                GD.Print("Finish initalization, totalFavorability: ", totalFavorability, "\n");
-            #endif
+	}
 
-    }
+	public new void DEBUG_PRINT() {
+		GD.Print("Name: ", Name);
+		base.DEBUG_PRINT();
+	}
 
-    public new void DEBUG_PRINT() {
-        GD.Print("Name: ", Name);
-        base.DEBUG_PRINT();
-    }
+	/// <summary>
+	/// </summary>
+	/// <returns>A random attack, chosen randomly based on favorability.</returns>
+	public Attack GetAttack() {
+		double randomSelection = rand.NextDouble() * totalFavorability;
+		int attackSelection = 0;
 
-    /// <summary>
-    /// </summary>
-    /// <returns>A random attack, chosen randomly based on favorability.</returns>
-    public Attack GetAttack() {
-        double randomSelection = rand.NextDouble() * totalFavorability;
-        int attackSelection = 0;
+		while (attackSelection < attackDict.Count - 1 && attackFavorability[attackSelection + 1] < randomSelection)
+			++attackSelection;
 
-        while (attackSelection < attackDict.Count - 1 && attackFavorability[attackSelection + 1] < randomSelection)
-            ++attackSelection;
+		#if DEBUG_RANDOMNESS
+			GD.Print("Select attack ", attackDict.Values.ElementAt(attackSelection).Name, "\n");
+		#endif
 
-        #if DEBUG_RANDOMNESS
-            GD.Print("Select attack ", attackDict.Values.ElementAt(attackSelection).Name, "\n");
-        #endif
+		return attackDict.Values.ElementAt(attackSelection);
+	}
 
-        return attackDict.Values.ElementAt(attackSelection);
-    }
-
-    public string Name { get; }
-    private readonly double totalFavorability;
-    private readonly Random rand;
-    private readonly double[] attackFavorability;
+	public string Name { get; }
+	private readonly double totalFavorability;
+	private readonly Random rand;
+	private readonly double[] attackFavorability;
+	public int Position { get; }
 }

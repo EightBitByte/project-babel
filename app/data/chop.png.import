@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/MC_attack.png-4ae8ea9915fa62201a9392a382198afe.stex"
+path="res://.import/chop.png-f3b723a67800d970a03a852083297e10.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/MC_attack.png"
-dest_files=[ "res://.import/MC_attack.png-4ae8ea9915fa62201a9392a382198afe.stex" ]
+source_file="res://data/chop.png"
+dest_files=[ "res://.import/chop.png-f3b723a67800d970a03a852083297e10.stex" ]
 
 [params]
 

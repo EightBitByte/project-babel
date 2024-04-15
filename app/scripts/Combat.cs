@@ -17,6 +17,9 @@ public class Combat : Node
 	const string ENEMY_FILE = "enemies";
 	const int DEFAULT_MAX_HP = 20;
 	const int DEFAULT_SPEED = 5;
+	const int MAX_NUM_ENEMIES = 3;
+	const int BASE_ATTACK_X = -42;
+	const int BASE_ATTACK_Y = 69;
 
 
 	/// <summary>
@@ -24,6 +27,45 @@ public class Combat : Node
 	/// </summary>
 	public override void _Ready()
 	{
+		// Instantiate buttons.
+		Button target1 = GetNode<Button>((NodePath)"Target1");
+		target1.Connect("button_up", this, "InitiateAttack", new(){"0"});
+		target1.Connect("mouse_entered", this, "ShowEnemyText", new(){"0"});
+		target1.Connect("mouse_exited", this, "HideEnemyText");
+
+		Button target2 = GetNode<Button>((NodePath)"Target2");
+		target2.Connect("button_up", this, "InitiateAttack", new(){"1"});
+		target2.Connect("mouse_entered", this, "ShowEnemyText", new(){"1"});
+		target2.Connect("mouse_exited", this, "HideEnemyText");
+
+		Button target3 = GetNode<Button>((NodePath)"Target3");
+		target3.Connect("button_up", this, "InitiateAttack", new(){"2"});
+		target3.Connect("mouse_entered", this, "ShowEnemyText", new(){"2"});
+		target3.Connect("mouse_exited", this, "HideEnemyText");
+
+		AttackButton1 = GetNode<Button>((NodePath)"Attack1");
+		AttackButton1.Connect("button_up", this, "SelectAttack", new(){"0"});
+		AttackButton1.Connect("mouse_entered", this, "ShowAttackText", new(){"0"});
+		AttackButton1.Connect("mouse_exited", this, "HideAttackText");
+
+		AttackButton2 = GetNode<Button>((NodePath)"Attack2");
+		AttackButton2.Connect("button_up", this, "SelectAttack", new(){"1"});
+		AttackButton2.Connect("mouse_entered", this, "ShowAttackText", new(){"1"});
+		AttackButton2.Connect("mouse_exited", this, "HideAttackText");
+
+		AttackButton3 = GetNode<Button>((NodePath)"Attack3");
+		AttackButton3.Connect("button_up", this, "SelectAttack", new(){"2"});
+		AttackButton3.Connect("mouse_entered", this, "ShowAttackText", new(){"2"});
+		AttackButton3.Connect("mouse_exited", this, "HideAttackText");
+
+		Control playerArea = GetNode<Control>((NodePath)"PlayerArea");
+		playerArea.Connect("mouse_entered", this, "ShowPlayerText");
+		playerArea.Connect("mouse_exited", this, "HidePlayerText");
+
+
+		Highlight = GetNode<Sprite>((NodePath)"Highlight");
+		Highlight.Visible = false;
+
 		playerData = LoadCombatPlayer();
 		enemyDataList = LoadEnemies(1, 0, 2);
 		turnOrder = new();
@@ -43,13 +85,34 @@ public class Combat : Node
 			roundNum = 1;
 		#endif
 
-		// Instantiation of buttons lol
-		GetNode<Button>((NodePath)"Target1").Connect("button_up", this, "SetPlayerTarget", new(){"1"});
-		GetNode<Button>((NodePath)"Target2").Connect("button_up", this, "SetPlayerTarget", new(){"2"});
-		GetNode<Button>((NodePath)"Target3").Connect("button_up", this, "SetPlayerTarget", new(){"3"});
-		GetNode<Button>((NodePath)"Target4").Connect("button_up", this, "SetPlayerTarget", new(){"4"});
-		GetNode<Button>((NodePath)"Chop").Connect("button_up", this, "InitiateAttack", new(){"0"});
-		GetNode<Button>((NodePath)"Pommel").Connect("button_up", this, "InitiateAttack", new(){"1"});
+		// Instantiate member variables for the scene nodes.
+		playerScene = GetNode<PlayerScene>("PlayerScene");
+		enemySceneArray = new EnemyScene[MAX_NUM_ENEMIES];
+		for (int i = 1; i <= MAX_NUM_ENEMIES; ++i)
+			enemySceneArray[i-1] = GetNode<EnemyScene>($"Enemy{i}Scene");
+
+		// Instantiate member variables for health bars.
+		healthBars = new TextureProgress[MAX_NUM_ENEMIES+1];
+		healthBars[0] = GetNode<TextureProgress>("PlayerHealthBar");
+		healthBars[0].Value = 64;
+		for (int i = 1; i <= MAX_NUM_ENEMIES; ++i) {
+			healthBars[i] = GetNode<TextureProgress>($"EnemyHealthBar{i}");
+			healthBars[i].Value = 64;
+		}
+
+		// Instantiate member variables for the labels.
+		AttackNameLabel = GetNode<RichTextLabel>("AttackName");
+		AttackDescriptionLabel = GetNode<RichTextLabel>("AttackDesc");
+
+		EnemyNameLabel = GetNode<Label>("EnemyName");
+		EnemyDescriptionLabel = GetNode<Label>("EnemyDesc");
+
+		AttackNameLabel.Text = "";
+		AttackDescriptionLabel.Text = "";
+		EnemyNameLabel.Text = "";
+		EnemyDescriptionLabel.Text = "";
+		EnemyNameLabel.Align = Label.AlignEnum.Right;
+		EnemyDescriptionLabel.Align = Label.AlignEnum.Right;
 
 		SelectedAttackButton = -1;
 
@@ -72,6 +135,22 @@ public class Combat : Node
 
 		Dictionary<int, Attack> attackDict = LoadKnownAttacks(allAttacks, playerDict);
 
+		int index = 0;
+		foreach (var pair in attackDict) {
+			switch(index) {
+				case 0:
+					AttackButton1.Icon = ResourceLoader.Load(pair.Value.Icon) as Texture;
+					break;
+				case 1:
+					AttackButton2.Icon = ResourceLoader.Load(pair.Value.Icon) as Texture;
+					break;
+				case 2:
+					AttackButton3.Icon = ResourceLoader.Load(pair.Value.Icon) as Texture;
+					break;
+			}
+			++index;
+		}
+
 		// NOTE: This may need changing in the future, since this instantiates 
 		// the player at full health for some arbitrary cap.
 		return new(
@@ -90,7 +169,7 @@ public class Combat : Node
 	/// <param name="allEnemyDict">The dictionary from which to read the enemy data from all of the enemies available.</param>
 	/// <param name="enemyAttackDict">The dictionary from which to read the enemy attack data.</param>
 	/// <returns>An Enemy object representing the enemy at enemyID in enemyDict.</returns>
-	private Enemy LoadEnemyData(int enemyID, GDictionary allEnemyDict, GDictionary enemyAttackDict) {
+	private Enemy LoadEnemyData(int enemyID, GDictionary allEnemyDict, GDictionary enemyAttackDict, int index) {
 		GDictionary enemyDict = allEnemyDict[enemyID.ToString()] as GDictionary;
 
 		Dictionary<int, Attack> attackDict = LoadKnownAttacks(enemyAttackDict, enemyDict);
@@ -103,7 +182,8 @@ public class Combat : Node
 			entityHealth,
 			entityHealth,
 			int.Parse((string)enemyDict["speed"]),
-			attackDict
+			attackDict,
+			index
 		);
 	}
 
@@ -119,11 +199,11 @@ public class Combat : Node
 		GDictionary enemyAttacks = Json.ReadJSON("res://data/" + ENEMY_ATTACK_FILE + ".json");
 		GDictionary enemyData = Json.ReadJSON("res://data/" + ENEMY_FILE + ".json");
 
-		List<Enemy> enemyList = new() { LoadEnemyData(enemyID, enemyData, enemyAttacks) };
+		List<Enemy> enemyList = new() { LoadEnemyData(enemyID, enemyData, enemyAttacks, 0) };
 
 		// Instantiate all other enemies with the IDs provided
 		for (int index = 0; index < otherIDs.Length; ++index) {
-			enemyList.Add(LoadEnemyData(otherIDs[index], enemyData, enemyAttacks));
+			enemyList.Add(LoadEnemyData(otherIDs[index], enemyData, enemyAttacks, index + 1));
 		}
 
 		return enemyList;
@@ -198,24 +278,120 @@ public class Combat : Node
 	}
 
 
-	private void SetPlayerTarget(int target) {
-		SelectedEnemy = target;
+	private void SelectAttack(int attackID) {
+		SelectedAttackButton = SelectedAttackButton == attackID ? -1 : attackID;
+
+		if (SelectedAttackButton != -1) {
+			SetAttackText(SelectedAttackButton);
+			ShowHighlight(SelectedAttackButton);
+		} else {
+			HideHighlight();
+		}
 	}
 
-	private void InitiateAttack(int attackButton) {
-		Attack outgoing = playerData.GetAttack(attackButton);
+
+	private void SetPlayerTarget(int target) {
+		SelectedEnemy = target;
+
+		# if COMBAT_LOG_DEBUG
+		GD.Print("Player selected enemy ", enemyDataList[SelectedEnemy].Name);
+		# endif
+	}
+
+	private void InitiateAttack(int enemyIndex) {
+		// Check if it is currently the player's turn. Otherwise, ignore the signal.
+		if (!isPlayerTurn) return;
+		isPlayerTurn = false;
+
+		// Also check to make sure that the player has selected a skill to attack with. Otherwise, ignore the signal.
+		if (SelectedAttackButton == -1) return;
+
+		Attack outgoing = playerData.GetAttack(SelectedAttackButton);
 		int damage = outgoing.GetDamage();
 
 		# if COMBAT_LOG_DEBUG
-			GD.Print("Player ", outgoing.Name, "s ", enemyDataList[SelectedEnemy].Name, " for ", damage);
+			GD.Print("Player ", outgoing.Name, "s ", enemyDataList[enemyIndex].Name, " for ", damage);
 		# endif
-		enemyDataList[SelectedEnemy].TakeDamage(damage);
+		
+		// Play the player attack animation.
+		playerScene.AttackAnimation();
+		
+		enemyDataList[enemyIndex].TakeDamage(damage);
+		healthBars[enemyIndex+1].Value = enemyDataList[enemyIndex].GetFractionalHealth();
 		++currentTurn;
 	}
 
+	private void ShowHighlight(int attackIndex) {
+		Highlight.Visible = true;
+		Highlight.Position = new(BASE_ATTACK_X+(48*attackIndex), BASE_ATTACK_Y);
+	}
+
+	private void HideHighlight() {
+		Highlight.Visible = false;
+	}
+
+
+	private void ShowPlayerText() {
+		if (SelectedAttackButton == -1) {
+			AttackNameLabel.Text = "You";
+			AttackDescriptionLabel.Text = $"{playerData.Health}/{playerData.MaxHealth} HP";
+		}
+	}
+
+
+	private void HidePlayerText() {
+		if (SelectedAttackButton == -1) {
+			AttackNameLabel.Text = "";
+			AttackDescriptionLabel.Text = "";
+		}
+	}
+
+
+	private void ShowAttackText(int attackButton) {
+		if (SelectedAttackButton == -1) 
+			SetAttackText(attackButton);
+	}
+
+	
+	private void SetAttackText(int attackButton) {
+			Attack hoveredAttack = playerData.GetAttack(attackButton);
+
+			AttackNameLabel.BbcodeText = $"[b]{hoveredAttack.Name}[/b]";
+			AttackDescriptionLabel.Text = $"Deals {hoveredAttack.MinDamage} - {hoveredAttack.MaxDamage} Damage\nCrit Chance: {hoveredAttack.CritChance * 100}.0%";
+	}
+
+
+
+	private void HideAttackText() {
+		if (SelectedAttackButton == -1) {
+			AttackNameLabel.Text = "";
+			AttackDescriptionLabel.Text = "";
+		}
+	}
+
+
+	private void ShowEnemyText(int enemyIndex) {
+		Enemy currentEnemy = enemyDataList[enemyIndex];
+
+		EnemyNameLabel.Text = currentEnemy.Name;
+		EnemyDescriptionLabel.Text = $"{currentEnemy.Health}/{currentEnemy.MaxHealth} HP";
+	}
+
+	
+	private void HideEnemyText() {
+		EnemyNameLabel.Text = "";
+		EnemyDescriptionLabel.Text = "";
+	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta) {
+		// Process every ~1.5 seconds
+		if (timer < 1.5F) {
+			timer += delta;
+			return;
+		}
+		timer = 0.0F;
+		
 		//TODO: Remove enemy from turn order when dead
 		// If we've reached the end of the turn order, repopulate it based on speed
 		if (currentTurn == turnOrder.Count) {
@@ -237,8 +413,14 @@ public class Combat : Node
 
 		// If an attacker is an enemy, get enemy's attack and show/update
 		if (attacker is Enemy enemy) {
+			// Block player action.
+			isPlayerTurn = false;
+			
 			Attack incoming = enemy.GetAttack();
 			int damage = incoming.GetDamage();
+
+			// Play the enemy attack animation.
+			enemySceneArray[enemy.Position].AttackAnimation();
 
 			// damage = ShowEnemyAttack(damage, incoming);
 
@@ -247,12 +429,20 @@ public class Combat : Node
 			# endif
 
 			bool isDead = playerData.TakeDamage(damage);
+			healthBars[0].Value = playerData.GetFractionalHealth();
+
 			++currentTurn;
+			return;
 		}
 
-		// If the attacker is the player, await player choice
-
+		// If the attacker is the player, await player choice; set the flag to player turn.
+		isPlayerTurn = true;
 	}
+
+	// Timer variable for processing in intervals.
+	float timer = 0.0F;
+	// Flag variable for whether it is the player's turn.
+	bool isPlayerTurn = false;
 
 	private List<Entity> turnOrder;
 	private int currentTurn;
@@ -260,6 +450,18 @@ public class Combat : Node
 	private List<Enemy> enemyDataList;
 	private int SelectedEnemy;
 	private int SelectedAttackButton;
+
+	private Button AttackButton1, AttackButton2, AttackButton3;
+
+	// Scene node resources
+	private PlayerScene playerScene;
+	private EnemyScene[] enemySceneArray;
+	private RichTextLabel AttackNameLabel, AttackDescriptionLabel;
+	private Label EnemyNameLabel, EnemyDescriptionLabel;
+	private Sprite Highlight;
+
+	// Scene health bar resources
+	private TextureProgress[] healthBars;
 
 	#if COMBAT_LOG_DEBUG
 	private int roundNum;
