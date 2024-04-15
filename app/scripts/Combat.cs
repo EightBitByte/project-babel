@@ -25,6 +25,17 @@ public class Combat : Node
 	/// </summary>
 	public override void _Ready()
 	{
+		// Instantiate buttons.
+		GetNode<Button>((NodePath)"Target1").Connect("button_up", this, "SetPlayerTarget", new(){"0"});
+		GetNode<Button>((NodePath)"Target2").Connect("button_up", this, "SetPlayerTarget", new(){"1"});
+		GetNode<Button>((NodePath)"Target3").Connect("button_up", this, "SetPlayerTarget", new(){"2"});
+		AttackButton1 = GetNode<Button>((NodePath)"Attack1");
+		AttackButton1.Connect("button_up", this, "InitiateAttack", new(){"0"});
+		AttackButton2 = GetNode<Button>((NodePath)"Attack2");
+		AttackButton2.Connect("button_up", this, "InitiateAttack", new(){"1"});
+		AttackButton3 = GetNode<Button>((NodePath)"Attack3");
+		AttackButton3.Connect("button_up", this, "InitiateAttack", new(){"1"});
+
 		playerData = LoadCombatPlayer();
 		enemyDataList = LoadEnemies(1, 0, 2);
 		turnOrder = new();
@@ -59,12 +70,6 @@ public class Combat : Node
 			healthBars[i].Value = 64;
 		}
 
-		// Instantiate buttons for debug.
-		GetNode<Button>((NodePath)"Target1").Connect("button_up", this, "SetPlayerTarget", new(){"0"});
-		GetNode<Button>((NodePath)"Target2").Connect("button_up", this, "SetPlayerTarget", new(){"1"});
-		GetNode<Button>((NodePath)"Target3").Connect("button_up", this, "SetPlayerTarget", new(){"2"});
-		GetNode<Button>((NodePath)"Chop").Connect("button_up", this, "InitiateAttack", new(){"0"});
-		GetNode<Button>((NodePath)"Pommel").Connect("button_up", this, "InitiateAttack", new(){"1"});
 
 		SelectedAttackButton = -1;
 
@@ -86,6 +91,22 @@ public class Combat : Node
 		GDictionary playerDict = Json.ReadJSON("res://data/" + PLAYER_FILE + ".json");
 
 		Dictionary<int, Attack> attackDict = LoadKnownAttacks(allAttacks, playerDict);
+
+		int index = 0;
+		foreach (var pair in attackDict) {
+			switch(index) {
+				case 0:
+					AttackButton1.Icon = ResourceLoader.Load(pair.Value.Icon) as Texture;
+					break;
+				case 1:
+					AttackButton2.Icon = ResourceLoader.Load(pair.Value.Icon) as Texture;
+					break;
+				case 2:
+					AttackButton3.Icon = ResourceLoader.Load(pair.Value.Icon) as Texture;
+					break;
+			}
+			++index;
+		}
 
 		// NOTE: This may need changing in the future, since this instantiates 
 		// the player at full health for some arbitrary cap.
@@ -310,6 +331,8 @@ public class Combat : Node
 	private List<Enemy> enemyDataList;
 	private int SelectedEnemy;
 	private int SelectedAttackButton;
+
+	private Button AttackButton1, AttackButton2, AttackButton3;
 
 	// Scene node resources
 	private PlayerScene playerScene;
