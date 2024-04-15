@@ -25,10 +25,7 @@ tile_data = PoolIntArray( -393224, 3, 0, -458744, 4, 0, -327688, 3, 0, -393208, 
 
 [node name="Spawner1" parent="." instance=ExtResource( 4 )]
 position = Vector2( -78, 0 )
-prefab = "res://prefabs/EnemyOverwold.tscn"
-chance = 1.0
 
 [node name="Spawner2" parent="." instance=ExtResource( 4 )]
 position = Vector2( 121, -1 )
-prefab = "res://prefabs/EnemyOverwold.tscn"
 chance = 0.5

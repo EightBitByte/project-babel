@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 export var enemyData: Resource
 
-var m_speed = 400
+var m_speed: float
 var halfWidth: float
 var halfHeight: float
 	
@@ -19,9 +19,14 @@ var random
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Get Collision size
-	var rectShape: RectangleShape2D = get_child(0).shape
+	$CollisionShape2D.scale *= enemyData.size
+	$PlayerCheck.scale *= enemyData.size
+	var rectShape: RectangleShape2D = $CollisionShape2D.shape
 	halfWidth = rectShape.extents.x / 2
 	halfHeight = rectShape.extents.y / 2
+	
+	# Sprite
+	$Sprite.texture = load(enemyData.spritePath)
 	
 	# Add collision layer and masks
 	self.collision_layer = 1 << 2
@@ -31,7 +36,7 @@ func _ready():
 	player = get_node("/root/movement/Player")
 	
 	# Scale speed and tileWidth vars to this object's scale
-	m_speed *= self.scale.x
+	m_speed = self.scale.x * enemyData.speed
 	
 	# Makes direction strings to vectors
 	directionToVector = {

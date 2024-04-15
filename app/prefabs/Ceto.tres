@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource( 1 )
-id = 3
-speed = 300
-size = 1
-spritePath = "res://data/blob.ow.png"
+id = 4
+speed = 0
+size = 0
+spritePath = "res://data/Gods_Ceto.ow.png"

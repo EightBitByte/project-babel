@@ -96,13 +96,13 @@ public class LevelManager : Node
 		int chamberType = _GetRandomChamberType(depth);
 		
 		Node2D instance = chamberPrefabs[chamberType].Instance() as Node2D;
+		instance.GlobalPosition = new Vector2(x * chamberWidth, y * chamberHeight);
 		AddChild(instance);
 		LevelChamber chamber = instance.GetChild(0) as LevelChamber;
 		chamber.Init(minDepth, maxDepth);
 		coordToChamber[_ConvertToString(x, y)] = chamber;
 		
 		// Set position and create its chamber
-		instance.Position = new Vector2(x * chamberWidth, y * chamberHeight);
 		if (chamberType == chamberPrefabs.Count - 1) // If it's a boss room don't generate neighbors
 			depth = maxDepth;
 		Godot.Collections.Array<string> outgoingDirs = chamber.CreateChamber(incomingDir, depth, x, y);
