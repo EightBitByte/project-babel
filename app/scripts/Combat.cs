@@ -198,6 +198,10 @@ public class Combat : Node
 
 		turnOrder = PopulateOrder();
 
+
+		combatOver = false;
+		playerWin = false;
+		sequenceOver = false;
 		#if COMBAT_LOG_DEBUG
 		GD.Print("========== ROUND 1 ==========");
 		#endif
@@ -479,7 +483,11 @@ public class Combat : Node
 			
 			if (enemiesLeft == 0) {
 				// Win!
-				GetNode<CombatManager>("/root/movement/CombatManager").WinCombat();
+				combatOver = true;
+				playerWin = true;
+				timer = 0.0f;
+
+				//GetNode<CombatManager>("/root/movement/CombatManager").WinCombat();
 			}
 		}
 		
@@ -555,6 +563,7 @@ public class Combat : Node
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta) {
+		if (sequenceOver) { return; }
 		//If we've reached the end of the turn order, repopulate it based on speed
 		if (currentTurn == turnOrder.Count) {
 			# if COMBAT_LOG_DEBUG
@@ -582,6 +591,16 @@ public class Combat : Node
 			return;
 		}
 		timer = 0.0F;
+		
+		if (combatOver) {
+			sequenceOver = true;
+			if (playerWin) {
+				GetNode<CombatManager>("/root/movement/CombatManager").WinCombat();
+			}
+			else {
+				GetNode<CombatManager>("/root/movement/CombatManager").LoseCombat();
+			}
+		}
 
 		// TODO: Check status effects of current attacker, apply 
 
@@ -604,7 +623,10 @@ public class Combat : Node
 
 			bool isDead = playerData.TakeDamage(damage);
 			if (isDead) {
-				GetNode<CombatManager>("/root/movement/CombatManager").LoseCombat();
+				combatOver = true;
+				playerWin = false;
+				timer = 0.0f;
+				//GetNode<CombatManager>("/root/movement/CombatManager").LoseCombat();
 			}
 			
 			healthBars[0].Value = playerData.GetFractionalHealth();
@@ -621,6 +643,9 @@ public class Combat : Node
 	float timer = 0.0F;
 	// Flag variable for whether it is the player's turn.
 	bool isPlayerTurn = false;
+	bool combatOver = false;
+	bool playerWin = false;
+	bool sequenceOver = false;
 
 	private int enemiesLeft;
 	private int enemyCount;
