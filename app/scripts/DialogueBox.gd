@@ -13,13 +13,14 @@ func show_dialogue(dialogue_text):
 	$DialogueLabel.text = dialogue_text
 	self.show()
 	$DialogueLabel.show()
+	print("I am printing from show dialaogue \n")
 	
 	
 func hide_dialogue():
 	self.hide()
 	$DialogueLabel.hide()
 	$DialogueLabel.text = ""
-	
+	print("I am printing from hide dialaogue \n")
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
