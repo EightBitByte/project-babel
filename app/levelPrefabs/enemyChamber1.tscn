@@ -5,7 +5,7 @@
 [ext_resource path="res://tiles/tower_tiles.tres" type="TileSet" id=3]
 [ext_resource path="res://prefabs/EnemySpawner.tscn" type="PackedScene" id=4]
 
-[node name="Node2D2" type="Node2D"]
+[node name="Node2D3" type="Node2D"]
 
 [node name="TileMap" type="TileMap" parent="."]
 scale = Vector2( 4, 4 )
