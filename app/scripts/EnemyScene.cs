@@ -26,6 +26,10 @@ public class EnemyScene : Node2D
 			m_idleAnimation = "dead";
 			m_attackAnimation = "dead";
 		}
+		if (monsterId == -2) {
+			m_idleAnimation = "idle";
+			m_attackAnimation = "attack";
+		}
 		m_animatedSprite.Play(m_idleAnimation);
 	}
 	
