@@ -40,13 +40,11 @@ public class EnemyScene : Node2D
 		// Stop the animation
 		m_animatedSprite.Stop();
 		m_animatedSprite.Play(m_idleAnimation);
-		Position = new Vector2(0, 0);
 	}
 		
 	public void AttackAnimation()
 	{
 		m_animatedSprite.Play(m_attackAnimation);
-		Position = new Vector2(-31, -31);
 	}
 	
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
