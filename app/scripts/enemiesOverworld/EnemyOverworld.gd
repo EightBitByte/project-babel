@@ -118,6 +118,9 @@ func _FollowPlayerMovement():
 	
 # Called once per frame
 func _physics_process(delta):
+	if get_node("/root/movement/CombatManager").InCombat:
+		 return
+	
 	if _can_see_player():
 		seenTimer = 2
 		followingPlayer = true
