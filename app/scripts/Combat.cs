@@ -17,6 +17,7 @@ public class Combat : Node
 	const string ENEMY_FILE = "enemies";
 	const int DEFAULT_MAX_HP = 20;
 	const int DEFAULT_SPEED = 5;
+	const int MAX_NUM_ENEMIES = 3;
 
 
 	/// <summary>
@@ -45,17 +46,23 @@ public class Combat : Node
 
 		// Instantiate member variables for the scene nodes.
 		playerScene = GetNode<PlayerScene>("PlayerScene");
-		enemySceneArray = new EnemyScene[4];
-		enemySceneArray[0] = GetNode<EnemyScene>("Enemy1Scene");
-		enemySceneArray[1] = GetNode<EnemyScene>("Enemy2Scene");
-		enemySceneArray[2] = GetNode<EnemyScene>("Enemy3Scene");
-		enemySceneArray[3] = GetNode<EnemyScene>("Enemy4Scene");
+		enemySceneArray = new EnemyScene[MAX_NUM_ENEMIES];
+		for (int i = 1; i <= MAX_NUM_ENEMIES; ++i)
+			enemySceneArray[i-1] = GetNode<EnemyScene>($"Enemy{i}Scene");
 
-		// Instantiation of buttons lol
-		GetNode<Button>((NodePath)"Target1").Connect("button_up", this, "SetPlayerTarget", new(){"1"});
-		GetNode<Button>((NodePath)"Target2").Connect("button_up", this, "SetPlayerTarget", new(){"2"});
-		GetNode<Button>((NodePath)"Target3").Connect("button_up", this, "SetPlayerTarget", new(){"3"});
-		GetNode<Button>((NodePath)"Target4").Connect("button_up", this, "SetPlayerTarget", new(){"4"});
+		// Instantiate member variables for health bars.
+		healthBars = new TextureProgress[MAX_NUM_ENEMIES+1];
+		healthBars[0] = GetNode<TextureProgress>("PlayerHealthBar");
+		healthBars[0].Value = 64;
+		for (int i = 1; i <= MAX_NUM_ENEMIES; ++i) {
+			healthBars[i] = GetNode<TextureProgress>($"EnemyHealthBar{i}");
+			healthBars[i].Value = 64;
+		}
+
+		// Instantiate buttons for debug.
+		GetNode<Button>((NodePath)"Target1").Connect("button_up", this, "SetPlayerTarget", new(){"0"});
+		GetNode<Button>((NodePath)"Target2").Connect("button_up", this, "SetPlayerTarget", new(){"1"});
+		GetNode<Button>((NodePath)"Target3").Connect("button_up", this, "SetPlayerTarget", new(){"2"});
 		GetNode<Button>((NodePath)"Chop").Connect("button_up", this, "InitiateAttack", new(){"0"});
 		GetNode<Button>((NodePath)"Pommel").Connect("button_up", this, "InitiateAttack", new(){"1"});
 
@@ -209,6 +216,10 @@ public class Combat : Node
 
 	private void SetPlayerTarget(int target) {
 		SelectedEnemy = target;
+
+		# if COMBAT_LOG_DEBUG
+		GD.Print("Player selected enemy ", enemyDataList[SelectedEnemy].Name);
+		# endif
 	}
 
 	private void InitiateAttack(int attackButton) {
@@ -220,20 +231,21 @@ public class Combat : Node
 		int damage = outgoing.GetDamage();
 
 		# if COMBAT_LOG_DEBUG
-			GD.Print(isPlayerTurn + " Player ", outgoing.Name, "s ", enemyDataList[SelectedEnemy].Name, " for ", damage);
+			GD.Print("Player ", outgoing.Name, "s ", enemyDataList[SelectedEnemy].Name, " for ", damage);
 		# endif
 		
 		// Play the player attack animation.
 		playerScene.AttackAnimation();
 		
 		enemyDataList[SelectedEnemy].TakeDamage(damage);
+		healthBars[SelectedEnemy+1].Value = enemyDataList[SelectedEnemy].GetFractionalHealth();
 		++currentTurn;
 	}
 
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta) {
-		// Process every 1.5 seconds, approximately.
+		// Process every ~1.5 seconds
 		if (timer < 1.5F) {
 			timer += delta;
 			return;
@@ -277,6 +289,8 @@ public class Combat : Node
 			# endif
 
 			bool isDead = playerData.TakeDamage(damage);
+			healthBars[0].Value = playerData.GetFractionalHealth();
+
 			++currentTurn;
 			return;
 		}
@@ -297,9 +311,12 @@ public class Combat : Node
 	private int SelectedEnemy;
 	private int SelectedAttackButton;
 
-	// Scene node resources.
+	// Scene node resources
 	private PlayerScene playerScene;
 	private EnemyScene[] enemySceneArray;
+
+	// Scene health bar resources
+	private TextureProgress[] healthBars;
 
 	#if COMBAT_LOG_DEBUG
 	private int roundNum;

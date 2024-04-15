@@ -61,6 +61,11 @@ class Entity {
             return 1;
     }
 
+    /// <returns>Returns the fractional health of the entity, 0-64.</returns>
+    public int GetFractionalHealth() {
+        return (int)Math.Floor(1.0 * Health / maxHealth * 64);
+    }
+
 
     public int Health { get; private set; }
     public int Speed  { get; private set; }
