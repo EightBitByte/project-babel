@@ -139,6 +139,6 @@ func _physics_process(delta):
 	
 func _on_PlayerCheck_body_entered(body):
 	if body.name == "Player":
-		# Enter battle!
+		get_node("/root/movement/CombatManager").BeginCombat()
 		print("Battle Enter!")
 		self.queue_free()

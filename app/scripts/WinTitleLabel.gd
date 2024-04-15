@@ -2,7 +2,7 @@ extends "res://scripts/TitleLabel.gd"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	self.text = "DEATH!"
+	self.text = "WIN!"
 	pass # Replace with function body.
 
 
