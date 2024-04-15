@@ -66,8 +66,15 @@ public class Combat : Node
 		Highlight = GetNode<Sprite>((NodePath)"Highlight");
 		Highlight.Visible = false;
 
+		// Instantiate member variables for the scene nodes.
+		playerScene = GetNode<PlayerScene>("PlayerScene");
+		enemySceneArray = new EnemyScene[MAX_NUM_ENEMIES];
+		for (int i = 1; i <= MAX_NUM_ENEMIES; ++i)
+			enemySceneArray[i-1] = GetNode<EnemyScene>($"Enemy{i}Scene");
+
+
 		playerData = LoadCombatPlayer();
-		enemyDataList = LoadEnemies(1, 0, 2);
+		enemyDataList = LoadEnemies(3);//, 0, 2);
 		
 		IsDead = new bool[4];
 		for (int i = 0; i < 4; ++i) {
@@ -91,11 +98,6 @@ public class Combat : Node
 			roundNum = 1;
 		#endif
 
-		// Instantiate member variables for the scene nodes.
-		playerScene = GetNode<PlayerScene>("PlayerScene");
-		enemySceneArray = new EnemyScene[MAX_NUM_ENEMIES];
-		for (int i = 1; i <= MAX_NUM_ENEMIES; ++i)
-			enemySceneArray[i-1] = GetNode<EnemyScene>($"Enemy{i}Scene");
 
 		// Instantiate member variables for health bars.
 		healthBars = new TextureProgress[MAX_NUM_ENEMIES+1];
@@ -127,6 +129,61 @@ public class Combat : Node
 		#if COMBAT_LOG_DEBUG
 		GD.Print("========== ROUND 1 ==========");
 		#endif
+	}
+	
+	public void Hide() {
+		GetNode<TextureProgress>("./PlayerHealthBar").Visible = false;
+		GetNode<TextureProgress>("./EnemyHealthBar1").Visible = false;
+		GetNode<TextureProgress>("./EnemyHealthBar2").Visible = false;
+		GetNode<TextureProgress>("./EnemyHealthBar3").Visible = false;
+		
+		GetNode<Button>("./Target1").Visible = false;
+		GetNode<Button>("./Target2").Visible = false;
+		GetNode<Button>("./Target3").Visible = false;
+
+		GetNode<Button>("./Attack1").Visible = false;
+		GetNode<Button>("./Attack2").Visible = false;
+		GetNode<Button>("./Attack3").Visible = false;
+		
+		GetNode<RichTextLabel>("./AttackName").Visible = false;
+		GetNode<RichTextLabel>("./AttackDesc").Visible = false;
+		
+		GetNode<Label>("./EnemyName").Visible = false;
+		GetNode<Label>("./EnemyDesc").Visible = false;
+		
+		GetNode<Sprite>("./Highlight").Visible = false;
+		
+		GetNode<PlayerScene>("./PlayerScene").Visible = false;
+		GetNode<EnemyScene>("./Enemy1Scene").Visible = false;
+		GetNode<EnemyScene>("./Enemy2Scene").Visible = false;
+		GetNode<EnemyScene>("./Enemy3Scene").Visible = false;
+	}
+	public void Show() {
+		GetNode<TextureProgress>("./PlayerHealthBar").Visible = true;
+		GetNode<TextureProgress>("./EnemyHealthBar1").Visible = true;
+		GetNode<TextureProgress>("./EnemyHealthBar2").Visible = true;
+		GetNode<TextureProgress>("./EnemyHealthBar3").Visible = true;
+		
+		GetNode<Button>("./Target1").Visible = true;
+		GetNode<Button>("./Target2").Visible = true;
+		GetNode<Button>("./Target3").Visible = true;
+
+		GetNode<Button>("./Attack1").Visible = true;
+		GetNode<Button>("./Attack2").Visible = true;
+		GetNode<Button>("./Attack3").Visible = true;
+		
+		GetNode<RichTextLabel>("./AttackName").Visible = true;
+		GetNode<RichTextLabel>("./AttackDesc").Visible = true;
+		
+		GetNode<Label>("./EnemyName").Visible = true;
+		GetNode<Label>("./EnemyDesc").Visible = true;
+		
+		GetNode<Sprite>("./Highlight").Visible = true;
+		
+		GetNode<PlayerScene>("./PlayerScene").Visible = true;
+		GetNode<EnemyScene>("./Enemy1Scene").Visible = true;
+		GetNode<EnemyScene>("./Enemy2Scene").Visible = true;
+		GetNode<EnemyScene>("./Enemy3Scene").Visible = true;
 	}
 
 
@@ -201,15 +258,19 @@ public class Combat : Node
 	/// <param name="otherIDs">A variable amount of enemies to instantiate.</param>
 	/// <returns></returns>
 	private List<Enemy> LoadEnemies(int enemyID, params int[] otherIDs) {
+		enemyCount = 1 + otherIDs.Length;
 		// Read the attack collection and player stats
 		GDictionary enemyAttacks = Json.ReadJSON("res://data/" + ENEMY_ATTACK_FILE + ".json");
 		GDictionary enemyData = Json.ReadJSON("res://data/" + ENEMY_FILE + ".json");
 
 		List<Enemy> enemyList = new() { LoadEnemyData(enemyID, enemyData, enemyAttacks, 0) };
+		enemySceneArray[0].SetAnim(enemyID);
 
 		// Instantiate all other enemies with the IDs provided
 		for (int index = 0; index < otherIDs.Length; ++index) {
 			enemyList.Add(LoadEnemyData(otherIDs[index], enemyData, enemyAttacks, index + 1));
+			
+			enemySceneArray[index].SetAnim(otherIDs[index]);
 		}
 
 		return enemyList;
@@ -330,7 +391,10 @@ public class Combat : Node
 		if (dead) {
 			IsDead[enemyIndex] = true;
 			// NOTE: We may want to visually move the enemy behind the killed one up to make it visually more aesthetic.
-			enemySceneArray[enemyIndex].Visible = false;
+			// Tombstone :D
+			enemySceneArray[enemyIndex].Kill();
+			//enemySceneArray[enemyIndex].Visible = false;
+
 			healthBars[enemyIndex+1].Visible = false;
 		}
 		
@@ -390,6 +454,8 @@ public class Combat : Node
 
 
 	private void ShowEnemyText(int enemyIndex) {
+		if (enemyIndex >= enemyCount) { return; }
+
 		Enemy currentEnemy = enemyDataList[enemyIndex];
 
 		EnemyNameLabel.Text = currentEnemy.Name;
@@ -466,6 +532,8 @@ public class Combat : Node
 	float timer = 0.0F;
 	// Flag variable for whether it is the player's turn.
 	bool isPlayerTurn = false;
+
+	private int enemyCount;
 
 	private List<Entity> turnOrder;
 	public bool[] IsDead;
