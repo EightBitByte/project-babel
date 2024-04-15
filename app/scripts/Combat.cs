@@ -466,6 +466,7 @@ public class Combat : Node
 		playerScene.AttackAnimation();
 		
 		bool dead = enemyDataList[enemyIndex].TakeDamage(damage);
+		ShowEnemyText(enemyIndex);
 
 		if (dead) {
 			IsDead[enemyIndex] = true;
