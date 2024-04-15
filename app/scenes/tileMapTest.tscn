@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=2]
+[gd_scene load_steps=66 format=2]
 
 [ext_resource path="res://scripts/levelScripts/LevelManager.cs" type="Script" id=1]
 [ext_resource path="res://levelPrefabs/startChamber.tscn" type="PackedScene" id=2]
@@ -30,6 +30,18 @@
 [ext_resource path="res://scripts/MenuSubContainer.gd" type="Script" id=28]
 [ext_resource path="res://scripts/UIManager.gd" type="Script" id=29]
 [ext_resource path="res://scripts/JournalManager.cs" type="Script" id=30]
+[ext_resource path="res://Scripts/KillTitleLabel.gd" type="Script" id=31]
+[ext_resource path="res://scripts/RestartButton.gd" type="Script" id=32]
+[ext_resource path="res://scripts/CenteredVBox.gd" type="Script" id=33]
+[ext_resource path="res://scripts/KillResumeButton.gd" type="Script" id=34]
+[ext_resource path="res://scripts/MainMenuButton.gd" type="Script" id=35]
+[ext_resource path="res://data/Pixelcastle-Regular.otf" type="DynamicFontData" id=36]
+[ext_resource path="res://data/normal_button.tres" type="StyleBox" id=37]
+[ext_resource path="res://data/hover_button.tres" type="StyleBox" id=38]
+[ext_resource path="res://scripts/KillBackground.gd" type="Script" id=39]
+[ext_resource path="res://scripts/PauseTitleLabel.gd" type="Script" id=40]
+[ext_resource path="res://scripts/SaveButton.gd" type="Script" id=41]
+[ext_resource path="res://scripts/ResumeButton.gd" type="Script" id=42]
 
 [sub_resource type="RectangleShape2D" id=36]
 extents = Vector2( 75, 75 )
@@ -124,6 +136,18 @@ animations = [ {
 [sub_resource type="DynamicFont" id=39]
 size = 48
 font_data = ExtResource( 11 )
+
+[sub_resource type="Theme" id=40]
+
+[sub_resource type="DynamicFont" id=41]
+size = 140
+font_data = ExtResource( 36 )
+
+[sub_resource type="Theme" id=42]
+
+[sub_resource type="DynamicFont" id=43]
+size = 140
+font_data = ExtResource( 36 )
 
 [node name="movement" type="Node2D"]
 script = ExtResource( 9 )
@@ -300,8 +324,117 @@ script = ExtResource( 25 )
 
 [node name="ColorRect" type="ColorRect" parent="Camera2D/BigMenuBorder/MenuSubContainer/RightSide"]
 
+[node name="KillContainer" type="VBoxContainer" parent="Camera2D"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -17.0
+margin_top = 3.0
+margin_right = 857.0
+margin_bottom = 536.0
+theme = ExtResource( 15 )
+custom_constants/separation = 40
+script = ExtResource( 33 )
+
+[node name="KillTitleLabel" type="Label" parent="Camera2D/KillContainer"]
+margin_right = 874.0
+margin_bottom = 140.0
+theme = SubResource( 40 )
+custom_fonts/font = SubResource( 41 )
+script = ExtResource( 31 )
+
+[node name="ResumeButton" type="Button" parent="Camera2D/KillContainer"]
+margin_top = 180.0
+margin_right = 874.0
+margin_bottom = 244.0
+custom_styles/hover = ExtResource( 38 )
+custom_styles/pressed = ExtResource( 37 )
+custom_styles/normal = ExtResource( 37 )
+flat = true
+script = ExtResource( 34 )
+
+[node name="RestartButton" type="Button" parent="Camera2D/KillContainer"]
+margin_top = 284.0
+margin_right = 874.0
+margin_bottom = 348.0
+custom_styles/hover = ExtResource( 38 )
+custom_styles/pressed = ExtResource( 37 )
+custom_styles/normal = ExtResource( 37 )
+script = ExtResource( 32 )
+
+[node name="MainMenuButton" type="Button" parent="Camera2D/KillContainer"]
+margin_top = 388.0
+margin_right = 874.0
+margin_bottom = 452.0
+custom_styles/hover = ExtResource( 38 )
+custom_styles/pressed = ExtResource( 37 )
+custom_styles/normal = ExtResource( 37 )
+script = ExtResource( 35 )
+
+[node name="KillBackground" type="ColorRect" parent="Camera2D"]
+margin_right = 40.0
+margin_bottom = 40.0
+color = Color( 0, 0, 0, 0.72549 )
+script = ExtResource( 39 )
+
+[node name="PauseBackground" type="ColorRect" parent="Camera2D"]
+margin_right = 40.0
+margin_bottom = 40.0
+color = Color( 0, 0, 0, 0.72549 )
+script = ExtResource( 27 )
+
+[node name="PauseContainer" type="VBoxContainer" parent="Camera2D"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -17.0
+margin_top = 3.0
+margin_right = 857.0
+margin_bottom = 536.0
+theme = ExtResource( 15 )
+custom_constants/separation = 40
+script = ExtResource( 33 )
+
+[node name="PauseTitleLabel" type="Label" parent="Camera2D/PauseContainer"]
+margin_right = 874.0
+margin_bottom = 140.0
+theme = SubResource( 42 )
+custom_fonts/font = SubResource( 43 )
+script = ExtResource( 40 )
+
+[node name="ResumeButton" type="Button" parent="Camera2D/PauseContainer"]
+margin_top = 180.0
+margin_right = 874.0
+margin_bottom = 244.0
+custom_styles/hover = ExtResource( 38 )
+custom_styles/pressed = ExtResource( 37 )
+custom_styles/normal = ExtResource( 37 )
+flat = true
+script = ExtResource( 42 )
+
+[node name="SaveButton" type="Button" parent="Camera2D/PauseContainer"]
+margin_top = 284.0
+margin_right = 874.0
+margin_bottom = 348.0
+custom_styles/hover = ExtResource( 38 )
+custom_styles/pressed = ExtResource( 37 )
+custom_styles/normal = ExtResource( 37 )
+script = ExtResource( 41 )
+
+[node name="MainMenuButton" type="Button" parent="Camera2D/PauseContainer"]
+margin_top = 388.0
+margin_right = 874.0
+margin_bottom = 452.0
+custom_styles/hover = ExtResource( 38 )
+custom_styles/pressed = ExtResource( 37 )
+custom_styles/normal = ExtResource( 37 )
+script = ExtResource( 35 )
+
 [node name="Enemy" parent="." instance=ExtResource( 10 )]
 position = Vector2( -1044, -668 )
+scale = Vector2( 2, 2 )
 
 [node name="UIManager" type="Node2D" parent="."]
 position = Vector2( 9, 9 )

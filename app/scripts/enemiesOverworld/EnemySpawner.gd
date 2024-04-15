@@ -17,6 +17,7 @@ func _ready():
 	random = RandomNumberGenerator.new()
 	random.randomize()
 	enemyPrefab = load(prefab)
+	spawn_enemy()
 
 func spawn_enemy():
 	if random.randf() < chance:
