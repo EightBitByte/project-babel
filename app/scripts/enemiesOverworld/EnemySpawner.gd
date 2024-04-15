@@ -20,7 +20,5 @@ func _ready():
 
 func spawn_enemy():
 	if random.randf() < chance:
-		
-	
-	var instance = enemyPrefab.instance()
-	add_child(instance)
+		var instance = enemyPrefab.instance()
+		add_child(instance)
