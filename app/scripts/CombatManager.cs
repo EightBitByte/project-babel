@@ -13,7 +13,7 @@ public class CombatManager : Node2D
 	{
 		InCombat = false;
 		m_combat = GetNode<Combat>("../Camera2D/Combat Controller");
-		GetNode<ColorRect>("../Camera2D/CombatBackground").Visible = false;
+		GetNode<TextureRect>("../Camera2D/CombatBackground").Visible = false;
 		GetNode<Node2D>("/root/movement/UIManager").Call("hide_win");
 		
 		m_combat.Hide();
