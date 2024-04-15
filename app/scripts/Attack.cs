@@ -82,5 +82,5 @@ class Attack {
     public double Favorability { get; } 
     private readonly int MinUpgradeDamage;
     private readonly int MaxUpgradeDamage;
-    private readonly StatusEffect Effect;
+    public StatusEffect Effect { get; }
 } 

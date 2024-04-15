@@ -455,8 +455,12 @@ public class Combat : Node
 		// Also check to make sure that the player has selected a skill to attack with. Otherwise, ignore the signal.
 		if (SelectedAttackButton == -1) return;
 
+		// Apply attack damage.
 		Attack outgoing = playerData.GetAttack(SelectedAttackButton);
 		int damage = outgoing.GetDamage();
+
+		// Apply status effects to Attacker (if any).
+		enemyDataList[enemyIndex].Status = outgoing.Effect;
 
 		# if COMBAT_LOG_DEBUG
 			GD.Print("Player ", outgoing.Name, "s ", enemyDataList[enemyIndex].Name, " for ", damage);
@@ -586,7 +590,13 @@ public class Combat : Node
 		// TODO: Check status effects of current attacker, apply 
 
 		// If an attacker is an enemy, get enemy's attack and show/update
-		if (attacker is Enemy enemy) {
+		if (attacker is Enemy enemy ) {
+			if (attacker.Status == StatusEffect.Stun) {
+				attacker.Status = StatusEffect.None;
+				++currentTurn;
+				return;
+			}
+
 			// Block player action.
 			isPlayerTurn = false;
 			
