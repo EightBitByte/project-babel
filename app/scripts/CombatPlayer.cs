@@ -9,4 +9,8 @@ class CombatPlayer : Entity {
            : base (health, maxHP, speed, aDict) {
         // Empty Constructor
     }
+
+    public Attack GetAttack(int attackID) {
+        return attackDict[attackID];
+    }
 }
