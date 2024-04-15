@@ -7,6 +7,7 @@ using GArray = Godot.Collections.Array;
 
 using System.Collections.Generic;
 using Godot;
+using System;
 
 // I am the storm that is approaching...
 public class Combat : Node
@@ -405,7 +406,8 @@ public class Combat : Node
 						double.Parse((string)attackDict["favorability"]) : 0.0,
 			int.Parse((string)attackDict["minUpgradeDMG"]),
 			int.Parse((string)attackDict["maxUpgradeDMG"]),
-			(StatusEffect)int.Parse((string)attackDict["effect"])
+			(StatusEffect)int.Parse((string)attackDict["effect"]),
+			attackDict.Contains("effectChance") ? double.Parse((string)attackDict["effectChance"]) : 1.0
 		);
 	}
 
@@ -470,7 +472,12 @@ public class Combat : Node
 
 		// Apply & render status effects to Attacker (if any).
 		if (outgoing.Effect != StatusEffect.None) { 
-			enemyDataList[enemyIndex].Statuses.Add(outgoing.Effect);
+			Random rand = new();
+			double roll = rand.NextDouble();
+			GD.Print($"Roll: {roll}");
+
+			if (roll < outgoing.EffectChance)
+				enemyDataList[enemyIndex].Statuses.Add(outgoing.Effect);
 			// AddDebuffSprite(enemyDataList[enemyIndex]);
 		}
 
@@ -541,7 +548,7 @@ public class Combat : Node
 			Attack hoveredAttack = playerData.GetAttack(attackButton);
 
 			AttackNameLabel.BbcodeText = $"[b]{hoveredAttack.Name}[/b]";
-			AttackDescriptionLabel.Text = $"Deals {hoveredAttack.MinDamage} - {hoveredAttack.MaxDamage} Damage\nCrit Chance: {hoveredAttack.CritChance * 100}.0%\n{(hoveredAttack.Effect == StatusEffect.None ? "" : $"Causes the \'{hoveredAttack.Effect.ToString()}\' effect.")}";
+			AttackDescriptionLabel.Text = $"Deals {hoveredAttack.MinDamage} - {hoveredAttack.MaxDamage} Damage\nCrit Chance: {hoveredAttack.CritChance * 100}.0%\n{(hoveredAttack.Effect == StatusEffect.None ? "" : $"Causes the \'{hoveredAttack.Effect.ToString()}\' effect. ({hoveredAttack.EffectChance * 100}%)")}";
 	}
 
 
@@ -650,7 +657,7 @@ public class Combat : Node
 			
 			Attack incoming = enemy.GetAttack();
 			int damage = incoming.GetDamage();
-			GD.Print($"Full damage: {damage}\n");
+			GD.Print($"Full damage: {damage}");
 
 			if (attacker.Statuses.Contains(StatusEffect.Weaken)) {
 				attacker.Statuses.Remove(StatusEffect.Weaken);
