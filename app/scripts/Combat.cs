@@ -29,12 +29,21 @@ public class Combat : Node
 		GetNode<Button>((NodePath)"Target1").Connect("button_up", this, "SetPlayerTarget", new(){"0"});
 		GetNode<Button>((NodePath)"Target2").Connect("button_up", this, "SetPlayerTarget", new(){"1"});
 		GetNode<Button>((NodePath)"Target3").Connect("button_up", this, "SetPlayerTarget", new(){"2"});
+
 		AttackButton1 = GetNode<Button>((NodePath)"Attack1");
 		AttackButton1.Connect("button_up", this, "InitiateAttack", new(){"0"});
+		AttackButton1.Connect("mouse_entered", this, "ShowAttackText", new(){"0"});
+		AttackButton1.Connect("mouse_exited", this, "HideAttackText");
+
 		AttackButton2 = GetNode<Button>((NodePath)"Attack2");
 		AttackButton2.Connect("button_up", this, "InitiateAttack", new(){"1"});
+		AttackButton2.Connect("mouse_entered", this, "ShowAttackText", new(){"1"});
+		AttackButton2.Connect("mouse_exited", this, "HideAttackText");
+
 		AttackButton3 = GetNode<Button>((NodePath)"Attack3");
-		AttackButton3.Connect("button_up", this, "InitiateAttack", new(){"1"});
+		AttackButton3.Connect("button_up", this, "InitiateAttack", new(){"2"});
+		AttackButton3.Connect("mouse_entered", this, "ShowAttackText", new(){"2"});
+		AttackButton3.Connect("mouse_exited", this, "HideAttackText");
 
 		playerData = LoadCombatPlayer();
 		enemyDataList = LoadEnemies(1, 0, 2);
@@ -70,6 +79,12 @@ public class Combat : Node
 			healthBars[i].Value = 64;
 		}
 
+		// Instantiate member variables for the labels.
+		AttackNameLabel = GetNode<RichTextLabel>("AttackName");
+		AttackDescriptionLabel = GetNode<RichTextLabel>("AttackDesc");
+
+		AttackNameLabel.Text = "";
+		AttackDescriptionLabel.Text = "";
 
 		SelectedAttackButton = -1;
 
@@ -245,8 +260,11 @@ public class Combat : Node
 
 	private void InitiateAttack(int attackButton) {
 		// Check if it is currently the player's turn. Otherwise, ignore the signal.
-		if (!isPlayerTurn) { return; }
+		if (!isPlayerTurn) return;
 		isPlayerTurn = false;
+
+		// Also check to make sure that the player has selected an enemy to attack. Otherwise, ignore the signal.
+		if (SelectedEnemy < 0 || SelectedEnemy > 3) return;
 
 		Attack outgoing = playerData.GetAttack(attackButton);
 		int damage = outgoing.GetDamage();
@@ -261,6 +279,20 @@ public class Combat : Node
 		enemyDataList[SelectedEnemy].TakeDamage(damage);
 		healthBars[SelectedEnemy+1].Value = enemyDataList[SelectedEnemy].GetFractionalHealth();
 		++currentTurn;
+		SelectedEnemy = -1;
+	}
+
+
+	private void ShowAttackText(int attackButton) {
+		Attack hoveredAttack = playerData.GetAttack(attackButton);
+
+		AttackNameLabel.BbcodeText = $"[b]{hoveredAttack.Name}[/b]";
+		AttackDescriptionLabel.Text = $"Deals {hoveredAttack.MinDamage} - {hoveredAttack.MaxDamage} Damage\nCrit Chance: {hoveredAttack.CritChance * 100}.0%";
+	}
+
+	private void HideAttackText() {
+		AttackNameLabel.Text = "";
+		AttackDescriptionLabel.Text = "";
 	}
 
 
@@ -337,6 +369,7 @@ public class Combat : Node
 	// Scene node resources
 	private PlayerScene playerScene;
 	private EnemyScene[] enemySceneArray;
+	private RichTextLabel AttackNameLabel, AttackDescriptionLabel;
 
 	// Scene health bar resources
 	private TextureProgress[] healthBars;
