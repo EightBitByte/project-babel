@@ -18,7 +18,7 @@ public class EnemyScene : Node2D
 	}
 	
 	public void SetAnim(int monsterId) {
-		if (monsterId == 99) {
+		if (monsterId == 3) {
 			m_idleAnimation = "ArgosIdle";
 			m_attackAnimation = "ArgosAttack";
 		}
@@ -26,10 +26,13 @@ public class EnemyScene : Node2D
 			m_idleAnimation = "dead";
 			m_attackAnimation = "dead";
 		}
+		m_animatedSprite.Play(m_idleAnimation);
 	}
 	
 	public void Kill() {
-		SetAnim(-1);
+		m_idleAnimation = "dead";
+		m_attackAnimation = "dead";
+		m_animatedSprite.Play(m_idleAnimation);
 	}
 
 	private void OnAnimationFinished()

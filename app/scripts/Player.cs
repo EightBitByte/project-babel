@@ -70,6 +70,8 @@ public class Player : KinematicBody2D
 
 	// Move the player according to the current input state.
 	private void MovePlayer() {
+		if (GetNode<CombatManager>("../CombatManager").InCombat) { return; }
+		
 		// Get input from the keyboard
 		var inputVector = new Vector2();
 		Direction newDir = Direction.None;
