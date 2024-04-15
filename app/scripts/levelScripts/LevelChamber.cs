@@ -23,6 +23,8 @@ public class LevelChamber : TileMap
 	// Called when the node enters the scene tree for the first time.
 	public void Init(int minDepth=0, int maxDepth=0)
 	{
+		CollisionLayer = 1 << 1;
+		
 		corridor = new Godot.Collections.Dictionary<string, bool>(){
 			{"left", false},
 			{"up", false},
