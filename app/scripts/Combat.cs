@@ -309,6 +309,9 @@ public class Combat : Node
 		if (!isPlayerTurn) return;
 		isPlayerTurn = false;
 
+		// If the player is attacking a dead enemy: don't.
+		if (IsDead[enemyIndex]) return;
+
 		// Also check to make sure that the player has selected a skill to attack with. Otherwise, ignore the signal.
 		if (SelectedAttackButton == -1) return;
 
@@ -323,9 +326,12 @@ public class Combat : Node
 		playerScene.AttackAnimation();
 		
 		bool dead = enemyDataList[enemyIndex].TakeDamage(damage);
+
 		if (dead) {
 			IsDead[enemyIndex] = true;
-			enemySceneArray[enemyIndex].Kill();
+			// NOTE: We may want to visually move the enemy behind the killed one up to make it visually more aesthetic.
+			enemySceneArray[enemyIndex].Visible = false;
+			healthBars[enemyIndex+1].Visible = false;
 		}
 		
 		
@@ -398,17 +404,10 @@ public class Combat : Node
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta) {
-		// Process every ~1.5 seconds
-		if (timer < 1.5F) {
-			timer += delta;
-			return;
-		}
-		timer = 0.0F;
-		
-		//TODO: Remove enemy from turn order when dead
-		// If we've reached the end of the turn order, repopulate it based on speed
+		//If we've reached the end of the turn order, repopulate it based on speed
 		if (currentTurn == turnOrder.Count) {
 			# if COMBAT_LOG_DEBUG
+			// Debug printing
 			GD.Print("\n========== ROUND ", ++roundNum, " ==========");
 			GD.Print("Player: ", playerData.Health);
 			foreach (Enemy e in enemyDataList)
@@ -422,13 +421,21 @@ public class Combat : Node
 		// Get first in turn order queue
 		Entity attacker = turnOrder[currentTurn];
 
+		// If the enemy is dead, skip their turn without waiting to process.
+		if (attacker is Enemy ene && IsDead[ene.Position])
+			++currentTurn;
+
+		// Process every ~1.5 seconds
+		if (timer < 1.5F) {
+			timer += delta;
+			return;
+		}
+		timer = 0.0F;
+
 		// TODO: Check status effects of current attacker, apply 
 
 		// If an attacker is an enemy, get enemy's attack and show/update
 		if (attacker is Enemy enemy) {
-			if (IsDead[enemy.Position] == true) {
-				return;
-			}
 			// Block player action.
 			isPlayerTurn = false;
 			
