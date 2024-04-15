@@ -5,7 +5,7 @@ public class EnemyOverworld : KinematicBody2D
 {
 	private float m_speed = 300;
 	
-	const randomness = 0.1;
+	const float randomness = 10f;
 	
 	private int tileWidth = 50;
 	private string currentMotion;
@@ -13,9 +13,14 @@ public class EnemyOverworld : KinematicBody2D
 	private Godot.Collections.Dictionary<string, Vector2> directionToVector;
 	private Godot.Collections.Dictionary<string, bool> isDirOpen;
 	
+	RandomNumberGenerator random;
+	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		CollisionLayer = 1 << 2;
+		CollisionMask = 1 << 1;
+		
 		m_speed *= Scale.x;
 		tileWidth = (int) (tileWidth * Scale.x);
 		
@@ -34,14 +39,17 @@ public class EnemyOverworld : KinematicBody2D
 		};
 		
 		currentMotion = "right";
+		
+		random = new RandomNumberGenerator();
+		random.Randomize();
 	}
 	
 	private void _CheckCollisions() {
 		var spaceState = GetWorld2d().DirectSpaceState;
-		var rightColision = spaceState.IntersectRay(GlobalPosition, GlobalPosition + new Vector2(tileWidth, 0), new Godot.Collections.Array { this });
-		var downColision = spaceState.IntersectRay(GlobalPosition, GlobalPosition + new Vector2(0, tileWidth), new Godot.Collections.Array { this });
-		var leftColision = spaceState.IntersectRay(GlobalPosition, GlobalPosition + new Vector2(-tileWidth, 0), new Godot.Collections.Array { this });
-		var upColision = spaceState.IntersectRay(GlobalPosition, GlobalPosition + new Vector2(0, -tileWidth), new Godot.Collections.Array { this });
+		var rightColision = spaceState.IntersectRay(GlobalPosition, GlobalPosition + new Vector2(tileWidth, 0), new Godot.Collections.Array { this }, 2);
+		var downColision = spaceState.IntersectRay(GlobalPosition, GlobalPosition + new Vector2(0, tileWidth), new Godot.Collections.Array { this }, 2);
+		var leftColision = spaceState.IntersectRay(GlobalPosition, GlobalPosition + new Vector2(-tileWidth, 0), new Godot.Collections.Array { this }, 2);
+		var upColision = spaceState.IntersectRay(GlobalPosition, GlobalPosition + new Vector2(0, -tileWidth), new Godot.Collections.Array { this }, 2);
 		
 		isDirOpen["right"] = rightColision.Count == 0;
 		isDirOpen["down"] = downColision.Count == 0;
@@ -60,8 +68,6 @@ public class EnemyOverworld : KinematicBody2D
 			}
 		}
 		
-		RandomNumberGenerator random = new RandomNumberGenerator();
-		random.Randomize();
 		float randomNum = random.Randf() * (availableDirs.Count);
 		return availableDirs[(int) randomNum];
 	}
@@ -74,7 +80,12 @@ public class EnemyOverworld : KinematicBody2D
 			currentMotion = _ChooseAvailableDirection();
 		}
 		
+		float randomNum = random.Randf();
+		
+		if (randomNum < delta * randomness) {
+			currentMotion = _ChooseAvailableDirection();
+		}
+		
 		MoveAndSlide(directionToVector[currentMotion] * m_speed);
-		_Draw();
 	}
 }

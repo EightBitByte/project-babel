@@ -22,6 +22,9 @@ public class Player : KinematicBody2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		CollisionLayer = 1 << 0;
+		CollisionMask = 1 << 1;
+		
 		RectangleShape2D rectangle = new RectangleShape2D();
 		
 		// TODO: set the starting position
