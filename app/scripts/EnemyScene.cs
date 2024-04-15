@@ -22,6 +22,14 @@ public class EnemyScene : Node2D
 			m_idleAnimation = "ArgosIdle";
 			m_attackAnimation = "ArgosAttack";
 		}
+		if (monsterId == -1) {
+			m_idleAnimation = "dead";
+			m_attackAnimation = "dead";
+		}
+	}
+	
+	public void Kill() {
+		SetAnim(-1);
 	}
 
 	private void OnAnimationFinished()
