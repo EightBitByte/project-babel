@@ -131,6 +131,64 @@ public class Combat : Node
 		#endif
 	}
 	
+	public void Reset()
+	{
+		// Instantiate member variables for the scene nodes.
+		playerScene = GetNode<PlayerScene>("PlayerScene");
+		enemySceneArray = new EnemyScene[MAX_NUM_ENEMIES];
+		for (int i = 1; i <= MAX_NUM_ENEMIES; ++i)
+			enemySceneArray[i-1] = GetNode<EnemyScene>($"Enemy{i}Scene");
+
+
+		playerData = LoadCombatPlayer();
+		enemyDataList = LoadEnemies(3);//, 0, 2);
+		
+		IsDead = new bool[4];
+		for (int i = 0; i < 4; ++i) {
+			IsDead[i] = false;
+		}
+		
+		turnOrder = new();
+		currentTurn = 0;
+
+		#if COMBAT_LOAD_DEBUG
+			GD.Print("========== Player ==========\n");
+			playerData.DEBUG_PRINT();
+			
+			GD.Print("========== Enemies ==========\n");
+			foreach(Enemy e in enemyDataList) {
+				e.DEBUG_PRINT();
+			}
+		#endif
+
+		#if COMBAT_LOG_DEBUG
+			roundNum = 1;
+		#endif
+
+
+		// Instantiate member variables for health bars.
+		healthBars[0].Value = 64;
+		for (int i = 1; i <= MAX_NUM_ENEMIES; ++i) {
+			healthBars[i].Value = 64;
+		}
+
+
+		AttackNameLabel.Text = "";
+		AttackDescriptionLabel.Text = "";
+		EnemyNameLabel.Text = "";
+		EnemyDescriptionLabel.Text = "";
+		EnemyNameLabel.Align = Label.AlignEnum.Right;
+		EnemyDescriptionLabel.Align = Label.AlignEnum.Right;
+
+		SelectedAttackButton = -1;
+
+		turnOrder = PopulateOrder();
+
+		#if COMBAT_LOG_DEBUG
+		GD.Print("========== ROUND 1 ==========");
+		#endif
+	}
+	
 	public void Hide() {
 		GetNode<TextureProgress>("./PlayerHealthBar").Visible = false;
 		GetNode<TextureProgress>("./EnemyHealthBar1").Visible = false;
@@ -259,6 +317,7 @@ public class Combat : Node
 	/// <returns></returns>
 	private List<Enemy> LoadEnemies(int enemyID, params int[] otherIDs) {
 		enemyCount = 1 + otherIDs.Length;
+		enemiesLeft = enemyCount;
 		// Read the attack collection and player stats
 		GDictionary enemyAttacks = Json.ReadJSON("res://data/" + ENEMY_ATTACK_FILE + ".json");
 		GDictionary enemyData = Json.ReadJSON("res://data/" + ENEMY_FILE + ".json");
@@ -394,8 +453,14 @@ public class Combat : Node
 			// Tombstone :D
 			enemySceneArray[enemyIndex].Kill();
 			//enemySceneArray[enemyIndex].Visible = false;
-
+			--enemiesLeft;
 			healthBars[enemyIndex+1].Visible = false;
+			
+			if (enemiesLeft == 0) {
+				// Win!
+				Hide();
+				GetNode<CombatManager>("../../CombatManager").EndCombat();
+			}
 		}
 		
 		
@@ -533,6 +598,7 @@ public class Combat : Node
 	// Flag variable for whether it is the player's turn.
 	bool isPlayerTurn = false;
 
+	private int enemiesLeft;
 	private int enemyCount;
 
 	private List<Entity> turnOrder;

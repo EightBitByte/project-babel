@@ -165,7 +165,7 @@ public class EnemyOverworld : KinematicBody2D
 	{
 		if (body.Name == "Player") {
 			// Enter battle!
-			GetNode<CombatManager>("../CombatManager").BeginCombat();
+			GetNode<CombatManager>("/root/movement/CombatManager").BeginCombat();
 			GD.Print("Battle Enter!");
 			QueueFree();
 		}

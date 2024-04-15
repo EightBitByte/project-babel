@@ -1,4 +1,4 @@
-[gd_scene load_steps=68 format=2]
+[gd_scene load_steps=67 format=2]
 
 [ext_resource path="res://scripts/levelScripts/LevelManager.cs" type="Script" id=1]
 [ext_resource path="res://levelPrefabs/startChamber.tscn" type="PackedScene" id=2]
@@ -9,7 +9,6 @@
 [ext_resource path="res://data/MC_back_walk.png" type="Texture" id=7]
 [ext_resource path="res://scripts/CameraFollow.cs" type="Script" id=8]
 [ext_resource path="res://scripts/movement.cs" type="Script" id=9]
-[ext_resource path="res://prefabs/EnemyOverwold.tscn" type="PackedScene" id=10]
 [ext_resource path="res://data/pixeldroidMenuRegular.ttf" type="DynamicFontData" id=11]
 [ext_resource path="res://scripts/DialogueBox.gd" type="Script" id=12]
 [ext_resource path="res://scripts/DialogueLabel.gd" type="Script" id=13]
@@ -444,10 +443,6 @@ script = ExtResource( 39 )
 [node name="Combat Controller" parent="Camera2D" instance=ExtResource( 44 )]
 position = Vector2( -69, -2 )
 scale = Vector2( 3, 3 )
-
-[node name="Enemy" parent="." instance=ExtResource( 10 )]
-position = Vector2( -1044, -668 )
-scale = Vector2( 2, 2 )
 
 [node name="UIManager" type="Node2D" parent="."]
 position = Vector2( 9, 9 )
