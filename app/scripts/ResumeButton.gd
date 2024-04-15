@@ -1,7 +1,7 @@
 extends "res://scripts/MenuButton.gd"
 
 func _on_pressed():
-	get_tree().change_scene("res://scenes/movement.tscn")
+	get_node("/root/movement/UIManager").hide_pause()
 
 
 # Called when the node enters the scene tree for the first time.

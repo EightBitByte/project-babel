@@ -10,12 +10,17 @@ public class LevelManager : Node
 	const float chamberWidth = 1725;
 	const float chamberHeight = 1340;
 	
+	const int maxDepth = 8;
+	const int minDepth = 5;
+	
 	Godot.Collections.Array<PackedScene> chamberPrefabs;
 	
 	Godot.Collections.Dictionary<string, Vector2> directionToVector;
 	Godot.Collections.Dictionary<string, string> complementDirection;
 	
 	Godot.Collections.Dictionary<string, LevelChamber> coordToChamber;
+	
+	private bool hasBossRoom = false;
 
 	// Makes x and y into string
 	private string _ConvertToString(int x, int y) {
@@ -24,19 +29,33 @@ public class LevelManager : Node
 	
 	// Loads all prefabs into the script
 	private void _LoadPrefabs() {
-		PackedScene level1 = GD.Load<PackedScene>("res://levelPrefabs/basicChamber.tscn");
-		PackedScene level2 = GD.Load<PackedScene>("res://levelPrefabs/enemyChamber1.tscn");
-		PackedScene level3 = GD.Load<PackedScene>("res://levelPrefabs/mazeChamber1.tscn");
-		PackedScene level4 = GD.Load<PackedScene>("res://levelPrefabs/mazeChamber2.tscn");
-		chamberPrefabs = new Godot.Collections.Array<PackedScene>{ level1, level2, level3, level4 };
+		// By convention, last stage is boss stage
+		PackedScene level1 = GD.Load<PackedScene>("res://levelPrefabs/enemyChamber1.tscn");
+		PackedScene level2 = GD.Load<PackedScene>("res://levelPrefabs/mazeChamber1.tscn");
+		PackedScene level3 = GD.Load<PackedScene>("res://levelPrefabs/mazeChamber2.tscn");
+		PackedScene bossLevel = GD.Load<PackedScene>("res://levelPrefabs/bossChamber.tscn");
+		chamberPrefabs = new Godot.Collections.Array<PackedScene>{ level1, level2, level3, bossLevel };
 	}
 	
 	// Returns one of the random prefabs
-	private PackedScene _GetRandomPrefab() {
+	private int _GetRandomChamberType(int depth) {
+		if (!hasBossRoom && depth >= minDepth) {
+			hasBossRoom = true;
+			return chamberPrefabs.Count - 1;
+		}
+		
 		RandomNumberGenerator random = new RandomNumberGenerator();
 		random.Randomize();
-		float randomNum = random.Randf() * chamberPrefabs.Count;
-		return chamberPrefabs[(int) randomNum];
+		float randomNum;
+		if (depth < minDepth || hasBossRoom)
+			randomNum = random.Randf() * (chamberPrefabs.Count - 1);
+		else
+			randomNum = random.Randf() * (chamberPrefabs.Count);
+		
+		if (randomNum == chamberPrefabs.Count - 1)
+			hasBossRoom = true;
+			
+		return (int) randomNum;
 	}
 
 	// Called when the node enters the scene tree for the first time.
@@ -74,13 +93,18 @@ public class LevelManager : Node
 		}
 		
 		// Instantiate a chamberPrefab and add it to the dictionary
-		Node2D instance = _GetRandomPrefab().Instance() as Node2D;
+		int chamberType = _GetRandomChamberType(depth);
+		
+		Node2D instance = chamberPrefabs[chamberType].Instance() as Node2D;
 		AddChild(instance);
 		LevelChamber chamber = instance.GetChild(0) as LevelChamber;
+		chamber.Init(minDepth, maxDepth);
 		coordToChamber[_ConvertToString(x, y)] = chamber;
 		
 		// Set position and create its chamber
 		instance.Position = new Vector2(x * chamberWidth, y * chamberHeight);
+		if (chamberType == chamberPrefabs.Count - 1) // If it's a boss room don't generate neighbors
+			depth = maxDepth;
 		Godot.Collections.Array<string> outgoingDirs = chamber.CreateChamber(incomingDir, depth, x, y);
 		
 		// Generate neighbors nearby

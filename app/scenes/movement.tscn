@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=2]
+[gd_scene load_steps=61 format=2]
 
 [ext_resource path="res://scripts/Player.cs" type="Script" id=1]
 [ext_resource path="res://scripts/InventoryMenu.gd" type="Script" id=2]
@@ -27,132 +27,21 @@
 [ext_resource path="res://scripts/DialogueBox.gd" type="Script" id=25]
 [ext_resource path="res://scripts/InventoryBackground.gd" type="Script" id=26]
 [ext_resource path="res://scripts/movement.cs" type="Script" id=27]
+[ext_resource path="res://data/normal_button.tres" type="StyleBox" id=28]
+[ext_resource path="res://data/hover_button.tres" type="StyleBox" id=29]
+[ext_resource path="res://scripts/PauseTitleLabel.gd" type="Script" id=30]
+[ext_resource path="res://scripts/CenteredVBox.gd" type="Script" id=31]
+[ext_resource path="res://scripts/MainMenuButton.gd" type="Script" id=32]
+[ext_resource path="res://scripts/SaveButton.gd" type="Script" id=33]
+[ext_resource path="res://scripts/ResumeButton.gd" type="Script" id=34]
+[ext_resource path="res://data/Pixelcastle-Regular.otf" type="DynamicFontData" id=35]
+[ext_resource path="res://scripts/KillBackground.gd" type="Script" id=36]
+[ext_resource path="res://Scripts/KillTitleLabel.gd" type="Script" id=37]
+[ext_resource path="res://scripts/KillResumeButton.gd" type="Script" id=38]
+[ext_resource path="res://scripts/RestartButton.gd" type="Script" id=39]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 75, 75 )
-
-[sub_resource type="CSharpScript" id=2]
-script/source = "using Godot;
-using System;
-
-public class PlayerCollision : CollisionShape2D
-{
-	// Declare member variables here. Examples:
-	// private int a = 2;
-	// private string b = \"text\";
-	
-	private float width;
-	private float height;
-
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
-		RectangleShape2D colliderShape = Shape as RectangleShape2D;
-		width = colliderShape.Extents.x * 2;
-		height = colliderShape.Extents.y * 2;
-	}
-
-	public Godot.Collections.Dictionary GetCollisionDirection() {
-		// Define all positions for startingRays
-		Vector2 topLeft = GlobalPosition + new Vector2(-width, height);
-		Vector2 topMid = GlobalPosition + new Vector2(0, height);
-		Vector2 topRight = GlobalPosition + new Vector2(width, height);
-		Vector2 midRight = GlobalPosition + new Vector2(width, 0);
-		Vector2 botRight = GlobalPosition + new Vector2(width, -height);
-		Vector2 botMid = GlobalPosition + new Vector2(0, -height);
-		Vector2 botLeft = GlobalPosition + new Vector2(-width, -height);
-		Vector2 midLeft = GlobalPosition + new Vector2(-width, 0);
-		
-		// We are going to create rays at each start positions in this order
-		Vector2[] rayStartPositions = { topLeft, topMid, topRight,
-										topRight, midRight, botRight,
-										botRight, botMid, botLeft,
-										botLeft, midLeft, topLeft };
-		
-		// Each ray we create is associated with a direction
-		string[] directions = { \"up\", \"up\", \"up\",
-								\"right\", \"right\", \"right\",
-								\"down\", \"down\", \"down\",
-								\"left\", \"left\", \"left\" };
-		
-		// Each direction string corresponds to Vector2 direction
-		var directionToVector = new Godot.Collections.Dictionary();
-		directionToVector[\"up\"] = new Vector2(0f, 0.1f);
-		directionToVector[\"right\"] = new Vector2(0.1f, 0f);
-		directionToVector[\"down\"] = new Vector2(0f, -0.1f);
-		directionToVector[\"left\"] = new Vector2(-0.1f, 0f);
-		
-		// Store which directions got hit
-		var isCollisionHit = new Godot.Collections.Dictionary();
-		isCollisionHit[\"up\"] = false;
-		isCollisionHit[\"right\"] = false;
-		isCollisionHit[\"down\"] = false;
-		isCollisionHit[\"left\"] = false;
-		
-		int n = rayStartPositions.Length;
-		var spaceState = GetWorld2d().DirectSpaceState;
-		
-		// Iterate over each start position to create rays & detect collisions
-		for (int i = 0; i < n; ++i) {
-			if ((bool) isCollisionHit[directions[i]]) // We can skip if this direction
-				continue;                      // already got a hit
-			
-			GD.Print(rayStartPositions[i]);
-			var result = spaceState.IntersectRay(
-				rayStartPositions[i],
-				(Vector2) directionToVector[directions[i]],
-				new Godot.Collections.Array { this }
-			);
-			
-			if (result.Count > 0)  // TODO: Add check for collision tag
-				isCollisionHit[directions[i]] = true;
-		}
-		
-		return isCollisionHit;
-	}
-	
-	public override void _Draw()
-	{
-		// Define all positions for startingRays
-		Vector2 topLeft = GlobalPosition + new Vector2(-width, height);
-		Vector2 topMid = GlobalPosition + new Vector2(0, height);
-		Vector2 topRight = GlobalPosition + new Vector2(width, height);
-		Vector2 midRight = GlobalPosition + new Vector2(width, 0);
-		Vector2 botRight = GlobalPosition + new Vector2(width, -height);
-		Vector2 botMid = GlobalPosition + new Vector2(0, -height);
-		Vector2 botLeft = GlobalPosition + new Vector2(-width, -height);
-		Vector2 midLeft = GlobalPosition + new Vector2(-width, 0);
-		
-		// We are going to create rays at each start positions in this order
-		Vector2[] rayStartPositions = { topLeft, topMid, topRight,
-										topRight, midRight, botRight,
-										botRight, botMid, botLeft,
-										botLeft, midLeft, topLeft };
-		
-		// Each ray we create is associated with a direction
-		string[] directions = { \"up\", \"up\", \"up\",
-								\"right\", \"right\", \"right\",
-								\"down\", \"down\", \"down\",
-								\"left\", \"left\", \"left\" };
-		
-		// Each direction string corresponds to Vector2 direction
-		var directionToVector = new Godot.Collections.Dictionary();
-		directionToVector[\"up\"] = new Vector2(0f, 1f);
-		directionToVector[\"right\"] = new Vector2(1f, 0f);
-		directionToVector[\"down\"] = new Vector2(0f, 1f);
-		directionToVector[\"left\"] = new Vector2(1f, 0f);
-		
-		int n = rayStartPositions.Length;
-		var spaceState = GetWorld2d().DirectSpaceState;
-		
-		// Iterate over each start position to draw rays
-		for (int i = 0; i < n; ++i) {
-			DrawCircle(rayStartPositions[i], 10f, Colors.Blue);
-			DrawLine(rayStartPositions[i], (Vector2) directionToVector[directions[i]], Colors.Red, 1f);
-		}
-	}
-}
-"
 
 [sub_resource type="AtlasTexture" id=20]
 atlas = ExtResource( 11 )
@@ -245,6 +134,12 @@ animations = [ {
 size = 48
 font_data = ExtResource( 13 )
 
+[sub_resource type="Theme" id=37]
+
+[sub_resource type="DynamicFont" id=38]
+size = 140
+font_data = ExtResource( 35 )
+
 [node name="movement" type="Node2D"]
 script = ExtResource( 27 )
 
@@ -261,7 +156,6 @@ script = ExtResource( 1 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
 scale = Vector2( 0.44, 0.44 )
 shape = SubResource( 1 )
-script = SubResource( 2 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Player"]
 scale = Vector2( 3.6, 3.6 )
@@ -272,13 +166,8 @@ animation = "back_walk"
 position = Vector2( 9, 9 )
 script = ExtResource( 7 )
 
-[node name="UIManager" type="Node2D" parent="."]
-position = Vector2( 9, 9 )
-script = ExtResource( 7 )
-
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
-zoom = Vector2( 0.5, 0.5 )
 script = ExtResource( 3 )
 
 [node name="DialogueBox" type="PanelContainer" parent="Camera2D"]
@@ -428,3 +317,111 @@ margin_bottom = 218.0
 script = ExtResource( 10 )
 
 [node name="ColorRect" type="ColorRect" parent="Camera2D/BigMenuBorder/MenuSubContainer/RightSide"]
+
+[node name="PauseBackground" type="ColorRect" parent="Camera2D"]
+margin_right = 40.0
+margin_bottom = 40.0
+color = Color( 0, 0, 0, 0.72549 )
+script = ExtResource( 26 )
+
+[node name="PauseContainer" type="VBoxContainer" parent="Camera2D"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -17.0
+margin_top = 3.0
+margin_right = 857.0
+margin_bottom = 536.0
+theme = ExtResource( 6 )
+custom_constants/separation = 40
+script = ExtResource( 31 )
+
+[node name="PauseTitleLabel" type="Label" parent="Camera2D/PauseContainer"]
+margin_right = 874.0
+margin_bottom = 140.0
+theme = SubResource( 37 )
+custom_fonts/font = SubResource( 38 )
+script = ExtResource( 30 )
+
+[node name="ResumeButton" type="Button" parent="Camera2D/PauseContainer"]
+margin_top = 180.0
+margin_right = 874.0
+margin_bottom = 244.0
+custom_styles/hover = ExtResource( 29 )
+custom_styles/pressed = ExtResource( 28 )
+custom_styles/normal = ExtResource( 28 )
+flat = true
+script = ExtResource( 34 )
+
+[node name="SaveButton" type="Button" parent="Camera2D/PauseContainer"]
+margin_top = 284.0
+margin_right = 874.0
+margin_bottom = 348.0
+custom_styles/hover = ExtResource( 29 )
+custom_styles/pressed = ExtResource( 28 )
+custom_styles/normal = ExtResource( 28 )
+script = ExtResource( 33 )
+
+[node name="MainMenuButton" type="Button" parent="Camera2D/PauseContainer"]
+margin_top = 388.0
+margin_right = 874.0
+margin_bottom = 452.0
+custom_styles/hover = ExtResource( 29 )
+custom_styles/pressed = ExtResource( 28 )
+custom_styles/normal = ExtResource( 28 )
+script = ExtResource( 32 )
+
+[node name="KillBackground" type="ColorRect" parent="Camera2D"]
+margin_right = 40.0
+margin_bottom = 40.0
+color = Color( 0, 0, 0, 0.72549 )
+script = ExtResource( 36 )
+
+[node name="KillContainer" type="VBoxContainer" parent="Camera2D"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -17.0
+margin_top = 3.0
+margin_right = 857.0
+margin_bottom = 536.0
+theme = ExtResource( 6 )
+custom_constants/separation = 40
+script = ExtResource( 31 )
+
+[node name="KillTitleLabel" type="Label" parent="Camera2D/KillContainer"]
+margin_right = 874.0
+margin_bottom = 140.0
+theme = SubResource( 37 )
+custom_fonts/font = SubResource( 38 )
+script = ExtResource( 37 )
+
+[node name="ResumeButton" type="Button" parent="Camera2D/KillContainer"]
+margin_top = 180.0
+margin_right = 874.0
+margin_bottom = 244.0
+custom_styles/hover = ExtResource( 29 )
+custom_styles/pressed = ExtResource( 28 )
+custom_styles/normal = ExtResource( 28 )
+flat = true
+script = ExtResource( 38 )
+
+[node name="RestartButton" type="Button" parent="Camera2D/KillContainer"]
+margin_top = 284.0
+margin_right = 874.0
+margin_bottom = 348.0
+custom_styles/hover = ExtResource( 29 )
+custom_styles/pressed = ExtResource( 28 )
+custom_styles/normal = ExtResource( 28 )
+script = ExtResource( 39 )
+
+[node name="MainMenuButton" type="Button" parent="Camera2D/KillContainer"]
+margin_top = 388.0
+margin_right = 874.0
+margin_bottom = 452.0
+custom_styles/hover = ExtResource( 29 )
+custom_styles/pressed = ExtResource( 28 )
+custom_styles/normal = ExtResource( 28 )
+script = ExtResource( 32 )

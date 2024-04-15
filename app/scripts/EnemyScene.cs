@@ -19,8 +19,8 @@ public class EnemyScene : Node2D
 	
 	public void SetAnim(int monsterId) {
 		if (monsterId == 99) {
-			m_idleAnimation = "testIdle";
-			m_attackAnimation = "testAttack";
+			m_idleAnimation = "ArgosIdle";
+			m_attackAnimation = "ArgosAttack";
 		}
 	}
 
