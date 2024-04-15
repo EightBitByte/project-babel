@@ -68,6 +68,12 @@ public class Combat : Node
 
 		playerData = LoadCombatPlayer();
 		enemyDataList = LoadEnemies(1, 0, 2);
+		
+		IsDead = new bool[4];
+		for (int i = 0; i < 4; ++i) {
+			IsDead[i] = false;
+		}
+		
 		turnOrder = new();
 		currentTurn = 0;
 
@@ -303,6 +309,9 @@ public class Combat : Node
 		if (!isPlayerTurn) return;
 		isPlayerTurn = false;
 
+		// If the player is attacking a dead enemy: don't.
+		if (IsDead[enemyIndex]) return;
+
 		// Also check to make sure that the player has selected a skill to attack with. Otherwise, ignore the signal.
 		if (SelectedAttackButton == -1) return;
 
@@ -316,7 +325,17 @@ public class Combat : Node
 		// Play the player attack animation.
 		playerScene.AttackAnimation();
 		
-		enemyDataList[enemyIndex].TakeDamage(damage);
+		bool dead = enemyDataList[enemyIndex].TakeDamage(damage);
+
+		if (dead) {
+			IsDead[enemyIndex] = true;
+			// NOTE: We may want to visually move the enemy behind the killed one up to make it visually more aesthetic.
+			enemySceneArray[enemyIndex].Visible = false;
+			healthBars[enemyIndex+1].Visible = false;
+		}
+		
+		
+		
 		healthBars[enemyIndex+1].Value = enemyDataList[enemyIndex].GetFractionalHealth();
 		++currentTurn;
 	}
@@ -385,17 +404,10 @@ public class Combat : Node
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta) {
-		// Process every ~1.5 seconds
-		if (timer < 1.5F) {
-			timer += delta;
-			return;
-		}
-		timer = 0.0F;
-		
-		//TODO: Remove enemy from turn order when dead
-		// If we've reached the end of the turn order, repopulate it based on speed
+		//If we've reached the end of the turn order, repopulate it based on speed
 		if (currentTurn == turnOrder.Count) {
 			# if COMBAT_LOG_DEBUG
+			// Debug printing
 			GD.Print("\n========== ROUND ", ++roundNum, " ==========");
 			GD.Print("Player: ", playerData.Health);
 			foreach (Enemy e in enemyDataList)
@@ -408,6 +420,17 @@ public class Combat : Node
 
 		// Get first in turn order queue
 		Entity attacker = turnOrder[currentTurn];
+
+		// If the enemy is dead, skip their turn without waiting to process.
+		if (attacker is Enemy ene && IsDead[ene.Position])
+			++currentTurn;
+
+		// Process every ~1.5 seconds
+		if (timer < 1.5F) {
+			timer += delta;
+			return;
+		}
+		timer = 0.0F;
 
 		// TODO: Check status effects of current attacker, apply 
 
@@ -445,6 +468,7 @@ public class Combat : Node
 	bool isPlayerTurn = false;
 
 	private List<Entity> turnOrder;
+	public bool[] IsDead;
 	private int currentTurn;
 	private CombatPlayer playerData;
 	private List<Enemy> enemyDataList;
