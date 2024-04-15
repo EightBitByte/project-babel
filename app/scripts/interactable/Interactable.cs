@@ -20,7 +20,6 @@ public class Interactable : Node
 	public override void _Process(float delta)
 	{
 		if (Input.IsActionPressed("move_right") && interactText.Visible) {
-			GD.Print("yippee");
 		}
 	}
 
