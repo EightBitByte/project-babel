@@ -26,9 +26,21 @@ public class Combat : Node
 	public override void _Ready()
 	{
 		// Instantiate buttons.
-		GetNode<Button>((NodePath)"Target1").Connect("button_up", this, "SetPlayerTarget", new(){"0"});
-		GetNode<Button>((NodePath)"Target2").Connect("button_up", this, "SetPlayerTarget", new(){"1"});
-		GetNode<Button>((NodePath)"Target3").Connect("button_up", this, "SetPlayerTarget", new(){"2"});
+		Button target1 = GetNode<Button>((NodePath)"Target1");
+		target1.Connect("button_up", this, "SetPlayerTarget", new(){"0"});
+		target1.Connect("mouse_entered", this, "ShowEnemyText", new(){"0"});
+		target1.Connect("mouse_exited", this, "HideEnemyText");
+
+		Button target2 = GetNode<Button>((NodePath)"Target2");
+		target2.Connect("button_up", this, "SetPlayerTarget", new(){"1"});
+		target2.Connect("mouse_entered", this, "ShowEnemyText", new(){"1"});
+		target2.Connect("mouse_exited", this, "HideEnemyText");
+
+		Button target3 = GetNode<Button>((NodePath)"Target3");
+		target3.Connect("button_up", this, "SetPlayerTarget", new(){"2"});
+		target3.Connect("mouse_entered", this, "ShowEnemyText", new(){"2"});
+		target3.Connect("mouse_exited", this, "HideEnemyText");
+
 
 		AttackButton1 = GetNode<Button>((NodePath)"Attack1");
 		AttackButton1.Connect("button_up", this, "InitiateAttack", new(){"0"});
@@ -83,8 +95,15 @@ public class Combat : Node
 		AttackNameLabel = GetNode<RichTextLabel>("AttackName");
 		AttackDescriptionLabel = GetNode<RichTextLabel>("AttackDesc");
 
+		EnemyNameLabel = GetNode<Label>("EnemyName");
+		EnemyDescriptionLabel = GetNode<Label>("EnemyDesc");
+
 		AttackNameLabel.Text = "";
 		AttackDescriptionLabel.Text = "";
+		EnemyNameLabel.Text = "";
+		EnemyDescriptionLabel.Text = "";
+		EnemyNameLabel.Align = Label.AlignEnum.Right;
+		EnemyDescriptionLabel.Align = Label.AlignEnum.Right;
 
 		SelectedAttackButton = -1;
 
@@ -290,11 +309,25 @@ public class Combat : Node
 		AttackDescriptionLabel.Text = $"Deals {hoveredAttack.MinDamage} - {hoveredAttack.MaxDamage} Damage\nCrit Chance: {hoveredAttack.CritChance * 100}.0%";
 	}
 
+
 	private void HideAttackText() {
 		AttackNameLabel.Text = "";
 		AttackDescriptionLabel.Text = "";
 	}
 
+
+	private void ShowEnemyText(int enemyIndex) {
+		Enemy currentEnemy = enemyDataList[enemyIndex];
+
+		EnemyNameLabel.Text = currentEnemy.Name;
+		EnemyDescriptionLabel.Text = $"{currentEnemy.Health}/{currentEnemy.MaxHealth} HP";
+	}
+
+	
+	private void HideEnemyText() {
+		EnemyNameLabel.Text = "";
+		EnemyDescriptionLabel.Text = "";
+	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta) {
@@ -370,6 +403,7 @@ public class Combat : Node
 	private PlayerScene playerScene;
 	private EnemyScene[] enemySceneArray;
 	private RichTextLabel AttackNameLabel, AttackDescriptionLabel;
+	private Label EnemyNameLabel, EnemyDescriptionLabel;
 
 	// Scene health bar resources
 	private TextureProgress[] healthBars;
