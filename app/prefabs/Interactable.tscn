@@ -3,6 +3,7 @@
 [ext_resource path="res://data/pages.png" type="Texture" id=1]
 [ext_resource path="res://scripts/interactable/Interactable.cs" type="Script" id=2]
 
+
 [sub_resource type="CircleShape2D" id=39]
 radius = 45.0111
 

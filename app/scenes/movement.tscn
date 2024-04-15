@@ -40,6 +40,7 @@
 [ext_resource path="res://scripts/KillResumeButton.gd" type="Script" id=38]
 [ext_resource path="res://scripts/RestartButton.gd" type="Script" id=39]
 
+
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 75, 75 )
 
@@ -140,7 +141,7 @@ font_data = ExtResource( 13 )
 size = 140
 font_data = ExtResource( 35 )
 
-[node name="movement" type="Node2D"]
+[node name="movement2" type="Node2D"]
 script = ExtResource( 27 )
 
 [node name="TileMap" type="TileMap" parent="."]
