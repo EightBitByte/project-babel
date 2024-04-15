@@ -175,6 +175,8 @@ scale = Vector2( 3.6, 3.6 )
 frames = SubResource( 38 )
 animation = "back_walk"
 
+[node name="Enemies" type="Node2D" parent="."]
+
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 script = ExtResource( 8 )
