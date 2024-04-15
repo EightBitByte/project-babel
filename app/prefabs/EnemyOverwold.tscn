@@ -1,10 +1,11 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://data/MC_right_walk.png" type="Texture" id=1]
 [ext_resource path="res://data/MC_front_walk.png" type="Texture" id=2]
 [ext_resource path="res://data/MC_back_walk.png" type="Texture" id=3]
 [ext_resource path="res://data/MC_left_walk.png" type="Texture" id=4]
 [ext_resource path="res://scripts/enemiesOverworld/EnemyOverworld.gd" type="Script" id=5]
+[ext_resource path="res://data/blob.ow.png" type="Texture" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 50.5682, 65.9091 )
@@ -80,6 +81,11 @@ animations = [ {
 "name": "back_walk",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 6 ) ],
+"loop": true,
+"name": "default_enemy",
+"speed": 5.0
+}, {
 "frames": [ SubResource( 24 ), SubResource( 25 ), SubResource( 26 ), SubResource( 27 ) ],
 "loop": true,
 "name": "front_walk",
@@ -112,7 +118,7 @@ shape = SubResource( 1 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 3.6, 3.6 )
 frames = SubResource( 36 )
-animation = "front_walk"
+animation = "default_enemy"
 
 [node name="PlayerCheck" type="Area2D" parent="."]
 position = Vector2( 0, 1 )
