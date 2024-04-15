@@ -194,6 +194,12 @@ drag_margin_top = 0.0
 drag_margin_right = 0.0
 drag_margin_bottom = 0.0
 
+[node name="PlayerArea" type="Control" parent="."]
+margin_left = -78.0
+margin_top = -32.0
+margin_right = -14.0
+margin_bottom = 32.0
+
 [node name="Target1" type="Button" parent="."]
 margin_left = 14.0
 margin_top = -34.0

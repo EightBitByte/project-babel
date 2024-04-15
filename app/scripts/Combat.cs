@@ -27,35 +27,39 @@ public class Combat : Node
 	{
 		// Instantiate buttons.
 		Button target1 = GetNode<Button>((NodePath)"Target1");
-		target1.Connect("button_up", this, "SetPlayerTarget", new(){"0"});
+		target1.Connect("button_up", this, "InitiateAttack", new(){"0"});
 		target1.Connect("mouse_entered", this, "ShowEnemyText", new(){"0"});
 		target1.Connect("mouse_exited", this, "HideEnemyText");
 
 		Button target2 = GetNode<Button>((NodePath)"Target2");
-		target2.Connect("button_up", this, "SetPlayerTarget", new(){"1"});
+		target2.Connect("button_up", this, "InitiateAttack", new(){"1"});
 		target2.Connect("mouse_entered", this, "ShowEnemyText", new(){"1"});
 		target2.Connect("mouse_exited", this, "HideEnemyText");
 
 		Button target3 = GetNode<Button>((NodePath)"Target3");
-		target3.Connect("button_up", this, "SetPlayerTarget", new(){"2"});
+		target3.Connect("button_up", this, "InitiateAttack", new(){"2"});
 		target3.Connect("mouse_entered", this, "ShowEnemyText", new(){"2"});
 		target3.Connect("mouse_exited", this, "HideEnemyText");
 
-
 		AttackButton1 = GetNode<Button>((NodePath)"Attack1");
-		AttackButton1.Connect("button_up", this, "InitiateAttack", new(){"0"});
+		AttackButton1.Connect("button_up", this, "SelectAttack", new(){"0"});
 		AttackButton1.Connect("mouse_entered", this, "ShowAttackText", new(){"0"});
 		AttackButton1.Connect("mouse_exited", this, "HideAttackText");
 
 		AttackButton2 = GetNode<Button>((NodePath)"Attack2");
-		AttackButton2.Connect("button_up", this, "InitiateAttack", new(){"1"});
+		AttackButton2.Connect("button_up", this, "SelectAttack", new(){"1"});
 		AttackButton2.Connect("mouse_entered", this, "ShowAttackText", new(){"1"});
 		AttackButton2.Connect("mouse_exited", this, "HideAttackText");
 
 		AttackButton3 = GetNode<Button>((NodePath)"Attack3");
-		AttackButton3.Connect("button_up", this, "InitiateAttack", new(){"2"});
+		AttackButton3.Connect("button_up", this, "SelectAttack", new(){"2"});
 		AttackButton3.Connect("mouse_entered", this, "ShowAttackText", new(){"2"});
 		AttackButton3.Connect("mouse_exited", this, "HideAttackText");
+
+		Control playerArea = GetNode<Control>((NodePath)"PlayerArea");
+		playerArea.Connect("mouse_entered", this, "ShowPlayerText");
+		playerArea.Connect("mouse_exited", this, "HidePlayerText");
+
 
 		playerData = LoadCombatPlayer();
 		enemyDataList = LoadEnemies(1, 0, 2);
@@ -269,6 +273,14 @@ public class Combat : Node
 	}
 
 
+	private void SelectAttack(int attackID) {
+		SelectedAttackButton = SelectedAttackButton == attackID ? -1 : attackID;
+
+		if (SelectedAttackButton != -1)
+			SetAttackText(SelectedAttackButton);
+	}
+
+
 	private void SetPlayerTarget(int target) {
 		SelectedEnemy = target;
 
@@ -277,42 +289,66 @@ public class Combat : Node
 		# endif
 	}
 
-	private void InitiateAttack(int attackButton) {
+	private void InitiateAttack(int enemyIndex) {
 		// Check if it is currently the player's turn. Otherwise, ignore the signal.
 		if (!isPlayerTurn) return;
 		isPlayerTurn = false;
 
-		// Also check to make sure that the player has selected an enemy to attack. Otherwise, ignore the signal.
-		if (SelectedEnemy < 0 || SelectedEnemy > 3) return;
+		// Also check to make sure that the player has selected a skill to attack with. Otherwise, ignore the signal.
+		if (SelectedAttackButton == -1) return;
 
-		Attack outgoing = playerData.GetAttack(attackButton);
+		Attack outgoing = playerData.GetAttack(SelectedAttackButton);
 		int damage = outgoing.GetDamage();
 
 		# if COMBAT_LOG_DEBUG
-			GD.Print("Player ", outgoing.Name, "s ", enemyDataList[SelectedEnemy].Name, " for ", damage);
+			GD.Print("Player ", outgoing.Name, "s ", enemyDataList[enemyIndex].Name, " for ", damage);
 		# endif
 		
 		// Play the player attack animation.
 		playerScene.AttackAnimation();
 		
-		enemyDataList[SelectedEnemy].TakeDamage(damage);
-		healthBars[SelectedEnemy+1].Value = enemyDataList[SelectedEnemy].GetFractionalHealth();
+		enemyDataList[enemyIndex].TakeDamage(damage);
+		healthBars[enemyIndex+1].Value = enemyDataList[enemyIndex].GetFractionalHealth();
 		++currentTurn;
-		SelectedEnemy = -1;
+	}
+
+
+	private void ShowPlayerText() {
+		if (SelectedAttackButton == -1) {
+			AttackNameLabel.Text = "You";
+			AttackDescriptionLabel.Text = $"{playerData.Health}/{playerData.MaxHealth} HP";
+		}
+	}
+
+
+	private void HidePlayerText() {
+		if (SelectedAttackButton == -1) {
+			AttackNameLabel.Text = "";
+			AttackDescriptionLabel.Text = "";
+		}
 	}
 
 
 	private void ShowAttackText(int attackButton) {
-		Attack hoveredAttack = playerData.GetAttack(attackButton);
+		if (SelectedAttackButton == -1) 
+			SetAttackText(attackButton);
+	}
 
-		AttackNameLabel.BbcodeText = $"[b]{hoveredAttack.Name}[/b]";
-		AttackDescriptionLabel.Text = $"Deals {hoveredAttack.MinDamage} - {hoveredAttack.MaxDamage} Damage\nCrit Chance: {hoveredAttack.CritChance * 100}.0%";
+	
+	private void SetAttackText(int attackButton) {
+			Attack hoveredAttack = playerData.GetAttack(attackButton);
+
+			AttackNameLabel.BbcodeText = $"[b]{hoveredAttack.Name}[/b]";
+			AttackDescriptionLabel.Text = $"Deals {hoveredAttack.MinDamage} - {hoveredAttack.MaxDamage} Damage\nCrit Chance: {hoveredAttack.CritChance * 100}.0%";
 	}
 
 
+
 	private void HideAttackText() {
-		AttackNameLabel.Text = "";
-		AttackDescriptionLabel.Text = "";
+		if (SelectedAttackButton == -1) {
+			AttackNameLabel.Text = "";
+			AttackDescriptionLabel.Text = "";
+		}
 	}
 
 
