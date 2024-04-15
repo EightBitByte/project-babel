@@ -12,7 +12,7 @@ class Entity {
 		MaxHealth = maxHP;
 		Speed = speed;
 		attackDict = aDict;
-		Status = StatusEffect.None;
+		Statuses = new();
 	}
 
 
@@ -71,6 +71,6 @@ class Entity {
 	public int Health { get; private set; }
 	public int Speed  { get; private set; }
 	public int MaxHealth {get; private set; }
-	public StatusEffect Status { get; set; }
+	public List<StatusEffect> Statuses { get; set; }
 	protected readonly Dictionary<int, Attack> attackDict;
 }

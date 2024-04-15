@@ -30,7 +30,7 @@
         "minUpgradeDMG": "3",
         "maxUpgradeDMG": "3",
         "reach": ["1+2"],
-        "effect": "-1"
+        "effect": "1"
 
     }
 }

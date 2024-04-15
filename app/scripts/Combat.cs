@@ -130,6 +130,15 @@ public class Combat : Node
 		EnemyNameLabel.Align = Label.AlignEnum.Right;
 		EnemyDescriptionLabel.Align = Label.AlignEnum.Right;
 
+		// Instantiate status effect textures.
+		statusTextures = new() {
+			[StatusEffect.None] = null,
+			[StatusEffect.Stun] = ResourceLoader.Load("res://data/stunned.png") as Texture,
+			[StatusEffect.Weaken] = ResourceLoader.Load("res://data/weakened.png") as Texture
+		};
+
+		debuffSprites = new();
+
 		SelectedAttackButton = -1;
 
 		turnOrder = PopulateOrder();
@@ -459,8 +468,11 @@ public class Combat : Node
 		Attack outgoing = playerData.GetAttack(SelectedAttackButton);
 		int damage = outgoing.GetDamage();
 
-		// Apply status effects to Attacker (if any).
-		enemyDataList[enemyIndex].Status = outgoing.Effect;
+		// Apply & render status effects to Attacker (if any).
+		if (outgoing.Effect != StatusEffect.None) { 
+			enemyDataList[enemyIndex].Statuses.Add(outgoing.Effect);
+			// AddDebuffSprite(enemyDataList[enemyIndex]);
+		}
 
 		# if COMBAT_LOG_DEBUG
 			GD.Print("Player ", outgoing.Name, "s ", enemyDataList[enemyIndex].Name, " for ", damage);
@@ -529,7 +541,7 @@ public class Combat : Node
 			Attack hoveredAttack = playerData.GetAttack(attackButton);
 
 			AttackNameLabel.BbcodeText = $"[b]{hoveredAttack.Name}[/b]";
-			AttackDescriptionLabel.Text = $"Deals {hoveredAttack.MinDamage} - {hoveredAttack.MaxDamage} Damage\nCrit Chance: {hoveredAttack.CritChance * 100}.0%";
+			AttackDescriptionLabel.Text = $"Deals {hoveredAttack.MinDamage} - {hoveredAttack.MaxDamage} Damage\nCrit Chance: {hoveredAttack.CritChance * 100}.0%\n{(hoveredAttack.Effect == StatusEffect.None ? "" : $"Causes the \'{hoveredAttack.Effect.ToString()}\' effect.")}";
 	}
 
 
@@ -556,6 +568,39 @@ public class Combat : Node
 		EnemyNameLabel.Text = "";
 		EnemyDescriptionLabel.Text = "";
 	}
+
+	/// <summary>
+	/// Creates, stores and shows the statusEffects of the targetted entity.
+	/// </summary>
+	/// <param name="target">The targetted entity to show the statusEffects of</param>
+	// private void AddDebuffSprite(Entity target) {
+	// 	// Get the position of target
+	// 	Vector2 targetPos = (target is Enemy e) ? 
+	// 						GetNode<Node2D>($"Enemy{e.Position+1}Scene").Position 
+	// 						: GetNode<Node2D>("PlayerScene").Position;
+
+	// 	// For each status we have, place it and show it.	
+	// 	for (int i = 0; i < target.Statuses.Count; ++i) {
+	// 		Texture texture = statusTextures[target.Statuses[i]];
+
+	// 		Vector2 newPos = targetPos;
+	// 		targetPos.x += i * 32;
+	// 		targetPos.y += 50;
+
+	// 		Sprite sprite = new(){
+	// 			Texture = texture,
+	// 			Visible = true,
+	// 			Position = newPos
+	// 		};
+
+	// 		GD.Print($"Texture {texture.ResourcePath}\nPosition {newPos}");
+
+	// 		if (target is Enemy ene)
+	// 			debuffSprites[ene.Position+1] = sprite;
+	// 		else
+	// 			debuffSprites[0] = sprite;
+	// 	}
+	// }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta) {
@@ -591,8 +636,11 @@ public class Combat : Node
 
 		// If an attacker is an enemy, get enemy's attack and show/update
 		if (attacker is Enemy enemy ) {
-			if (attacker.Status == StatusEffect.Stun) {
-				attacker.Status = StatusEffect.None;
+			if (attacker.Statuses.Contains(StatusEffect.Stun)) {
+				attacker.Statuses.Remove(StatusEffect.Stun);
+
+				// debuffSprites[enemy.Position+1].QueueFree();
+
 				++currentTurn;
 				return;
 			}
@@ -602,6 +650,13 @@ public class Combat : Node
 			
 			Attack incoming = enemy.GetAttack();
 			int damage = incoming.GetDamage();
+			GD.Print($"Full damage: {damage}\n");
+
+			if (attacker.Statuses.Contains(StatusEffect.Weaken)) {
+				attacker.Statuses.Remove(StatusEffect.Weaken);
+				damage /= 2;
+				GD.Print($"..Cut in half to {damage}.");
+			}
 
 			// Play the enemy attack animation.
 			enemySceneArray[enemy.Position].AttackAnimation();
@@ -651,6 +706,8 @@ public class Combat : Node
 	private RichTextLabel AttackNameLabel, AttackDescriptionLabel;
 	private Label EnemyNameLabel, EnemyDescriptionLabel;
 	private Sprite Highlight;
+	private Dictionary<int, Sprite> debuffSprites;
+	private Dictionary<StatusEffect, Texture> statusTextures;
 
 	// Scene health bar resources
 	private TextureProgress[] healthBars;

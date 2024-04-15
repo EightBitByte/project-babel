@@ -8,8 +8,6 @@ enum StatusEffect {
     None = -1,
     Stun,
     Weaken,
-    Slow,
-    Blind
 }
 
 class Attack {
@@ -65,7 +63,7 @@ class Attack {
         Random rand = new();
 
         bool isCrit = rand.NextDouble() <= CritChance;
-        int damage = rand.Next(MinDamage, MaxDamage);
+        int damage = rand.Next(MinDamage, MaxDamage+1);
 
         // If crit, double damage
         return isCrit ? damage * 2 : damage;
