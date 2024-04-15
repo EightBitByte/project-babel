@@ -32,6 +32,14 @@ func hide_kill():
 	get_node("/root/movement/Camera2D/KillContainer").hide()
 	get_node("/root/movement/Camera2D/KillBackground").hide()
 
+func show_win():
+	get_node("/root/movement/Camera2D/WinContainer").show()
+	get_node("/root/movement/Camera2D/WinBackground").show()
+
+func hide_win():
+	get_node("/root/movement/Camera2D/WinContainer").hide()
+	get_node("/root/movement/Camera2D/WinBackground").hide()
+
 
 # handle key inputs
 func _input(event):

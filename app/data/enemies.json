@@ -19,7 +19,7 @@
   },
   "3": {
     "name": "Argos",
-    "health": "15",
+    "health": "7",
     "speed": "1",
     "knownAttacks": [ "2" ]
   }

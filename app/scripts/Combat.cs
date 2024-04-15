@@ -1,6 +1,6 @@
 // Define this flag for combat loading from JSON debug output.
 // # define COMBAT_LOAD_DEBUG
-# define COMBAT_LOG_DEBUG
+//# define COMBAT_LOG_DEBUG
 
 using GDictionary = Godot.Collections.Dictionary;
 using GArray = Godot.Collections.Array;
@@ -103,9 +103,17 @@ public class Combat : Node
 		healthBars = new TextureProgress[MAX_NUM_ENEMIES+1];
 		healthBars[0] = GetNode<TextureProgress>("PlayerHealthBar");
 		healthBars[0].Value = 64;
+		
+		GetNode<TextureProgress>("./EnemyHealthBar1").Visible = false;
+		GetNode<TextureProgress>("./EnemyHealthBar2").Visible = false;
+		GetNode<TextureProgress>("./EnemyHealthBar3").Visible = false;
+		
 		for (int i = 1; i <= MAX_NUM_ENEMIES; ++i) {
 			healthBars[i] = GetNode<TextureProgress>($"EnemyHealthBar{i}");
 			healthBars[i].Value = 64;
+			if (i < enemyCount) {
+				healthBars[i].Visible = true;
+			}
 		}
 
 		// Instantiate member variables for the labels.
@@ -167,9 +175,15 @@ public class Combat : Node
 
 
 		// Instantiate member variables for health bars.
+		GetNode<TextureProgress>("./EnemyHealthBar1").Visible = false;
+		GetNode<TextureProgress>("./EnemyHealthBar2").Visible = false;
+		GetNode<TextureProgress>("./EnemyHealthBar3").Visible = false;
 		healthBars[0].Value = 64;
 		for (int i = 1; i <= MAX_NUM_ENEMIES; ++i) {
 			healthBars[i].Value = 64;
+			if (i < enemyCount) {
+				healthBars[i].Visible = true;
+			}
 		}
 
 
@@ -218,9 +232,15 @@ public class Combat : Node
 	}
 	public void Show() {
 		GetNode<TextureProgress>("./PlayerHealthBar").Visible = true;
-		GetNode<TextureProgress>("./EnemyHealthBar1").Visible = true;
-		GetNode<TextureProgress>("./EnemyHealthBar2").Visible = true;
-		GetNode<TextureProgress>("./EnemyHealthBar3").Visible = true;
+
+		GetNode<TextureProgress>("./EnemyHealthBar1").Visible = false;
+		GetNode<TextureProgress>("./EnemyHealthBar2").Visible = false;
+		GetNode<TextureProgress>("./EnemyHealthBar3").Visible = false;
+		for (int i = 1; i <= MAX_NUM_ENEMIES; ++i) {
+			if (i < enemyCount + 1) {
+				GetNode<TextureProgress>($"EnemyHealthBar{i}").Visible = true;
+			}
+		}
 		
 		GetNode<Button>("./Target1").Visible = true;
 		GetNode<Button>("./Target2").Visible = true;
@@ -236,7 +256,7 @@ public class Combat : Node
 		GetNode<Label>("./EnemyName").Visible = true;
 		GetNode<Label>("./EnemyDesc").Visible = true;
 		
-		GetNode<Sprite>("./Highlight").Visible = true;
+		//GetNode<Sprite>("./Highlight").Visible = true;
 		
 		GetNode<PlayerScene>("./PlayerScene").Visible = true;
 		GetNode<EnemyScene>("./Enemy1Scene").Visible = true;
@@ -458,8 +478,7 @@ public class Combat : Node
 			
 			if (enemiesLeft == 0) {
 				// Win!
-				Hide();
-				GetNode<CombatManager>("../../CombatManager").EndCombat();
+				GetNode<CombatManager>("/root/movement/CombatManager").WinCombat();
 			}
 		}
 		
@@ -583,6 +602,10 @@ public class Combat : Node
 			# endif
 
 			bool isDead = playerData.TakeDamage(damage);
+			if (isDead) {
+				GetNode<CombatManager>("/root/movement/CombatManager").LoseCombat();
+			}
+			
 			healthBars[0].Value = playerData.GetFractionalHealth();
 
 			++currentTurn;

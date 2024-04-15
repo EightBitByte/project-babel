@@ -6,10 +6,10 @@ func _on_pressed():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	self.text = "sacrifice your humanity (respawn, at the cost of your sanity)"
+	self.text = "revive at the cost of your sanity"
 	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
-#	pass
+#	passs

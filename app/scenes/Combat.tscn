@@ -240,6 +240,7 @@ texture_over = ExtResource( 3 )
 texture_progress = ExtResource( 5 )
 
 [node name="EnemyHealthBar1" type="TextureProgress" parent="."]
+visible = false
 margin_left = 18.0
 margin_top = -80.0
 margin_right = 82.0
@@ -250,6 +251,7 @@ texture_over = ExtResource( 3 )
 texture_progress = ExtResource( 5 )
 
 [node name="EnemyHealthBar2" type="TextureProgress" parent="."]
+visible = false
 margin_left = 92.0
 margin_top = -80.0
 margin_right = 156.0
@@ -259,6 +261,7 @@ texture_over = ExtResource( 3 )
 texture_progress = ExtResource( 5 )
 
 [node name="EnemyHealthBar3" type="TextureProgress" parent="."]
+visible = false
 margin_left = 166.0
 margin_top = -80.0
 margin_right = 230.0
