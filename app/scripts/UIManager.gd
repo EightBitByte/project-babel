@@ -24,6 +24,15 @@ func hide_pause():
 	get_node("/root/movement/Camera2D/PauseContainer").hide()
 	get_node("/root/movement/Camera2D/PauseBackground").hide()
 
+func show_kill():
+	get_node("/root/movement/Camera2D/KillContainer").show()
+	get_node("/root/movement/Camera2D/KillBackground").show()
+
+func hide_kill():
+	get_node("/root/movement/Camera2D/KillContainer").hide()
+	get_node("/root/movement/Camera2D/KillBackground").hide()
+
+
 # handle key inputs
 func _input(event):
 	if event is InputEventKey and event.pressed:
@@ -32,10 +41,15 @@ func _input(event):
 		if event.scancode == KEY_ESCAPE:
 			toggle_pause()
 			
+		if event.scancode == KEY_K:
+			show_kill()
+			
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	hide_inventory_menu()
+	hide_kill()
 	hide_pause()
+	get_node("/root/movement/Camera2D/DialogueBox").hide_dialogue();
 	#get_node("/root/movement/Camera2D/DialogueBox").show_dialogue("i said a thing")
 	pass # Replace with function body.
 

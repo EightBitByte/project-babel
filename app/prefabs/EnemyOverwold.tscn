@@ -111,7 +111,7 @@ shape = SubResource( 1 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 3.6, 3.6 )
 frames = SubResource( 36 )
-animation = "back_walk"
+animation = "front_walk"
 
 [node name="PlayerCheck" type="Area2D" parent="."]
 

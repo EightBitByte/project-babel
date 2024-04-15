@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=66 format=2]
 
 [ext_resource path="res://scripts/levelScripts/LevelManager.cs" type="Script" id=1]
 [ext_resource path="res://levelPrefabs/startChamber.tscn" type="PackedScene" id=2]
@@ -9,6 +9,39 @@
 [ext_resource path="res://data/MC_back_walk.png" type="Texture" id=7]
 [ext_resource path="res://scripts/CameraFollow.cs" type="Script" id=8]
 [ext_resource path="res://scripts/movement.cs" type="Script" id=9]
+[ext_resource path="res://prefabs/EnemyOverwold.tscn" type="PackedScene" id=10]
+[ext_resource path="res://data/pixeldroidMenuRegular.ttf" type="DynamicFontData" id=11]
+[ext_resource path="res://scripts/DialogueBox.gd" type="Script" id=12]
+[ext_resource path="res://scripts/DialogueLabel.gd" type="Script" id=13]
+[ext_resource path="res://data/inventory_menu.tres" type="StyleBox" id=14]
+[ext_resource path="res://data/PauseMenuTheme.tres" type="Theme" id=15]
+[ext_resource path="res://data/red.jpg" type="Texture" id=16]
+[ext_resource path="res://scripts/TopLeft.gd" type="Script" id=17]
+[ext_resource path="res://scripts/JournalButton.gd" type="Script" id=18]
+[ext_resource path="res://scripts/BottomLeft.gd" type="Script" id=19]
+[ext_resource path="res://scripts/HealthBarContainer.gd" type="Script" id=20]
+[ext_resource path="res://scripts/PanelContainer.gd" type="Script" id=21]
+[ext_resource path="res://scripts/InventoryMenu.gd" type="Script" id=22]
+[ext_resource path="res://scripts/LeftSide.gd" type="Script" id=23]
+[ext_resource path="res://scripts/InventoryBorder.gd" type="Script" id=24]
+[ext_resource path="res://scripts/RightSide.gd" type="Script" id=25]
+[ext_resource path="res://scripts/PlayerOverview.gd" type="Script" id=26]
+[ext_resource path="res://scripts/InventoryBackground.gd" type="Script" id=27]
+[ext_resource path="res://scripts/MenuSubContainer.gd" type="Script" id=28]
+[ext_resource path="res://scripts/UIManager.gd" type="Script" id=29]
+[ext_resource path="res://scripts/JournalManager.cs" type="Script" id=30]
+[ext_resource path="res://Scripts/KillTitleLabel.gd" type="Script" id=31]
+[ext_resource path="res://scripts/RestartButton.gd" type="Script" id=32]
+[ext_resource path="res://scripts/CenteredVBox.gd" type="Script" id=33]
+[ext_resource path="res://scripts/KillResumeButton.gd" type="Script" id=34]
+[ext_resource path="res://scripts/MainMenuButton.gd" type="Script" id=35]
+[ext_resource path="res://data/Pixelcastle-Regular.otf" type="DynamicFontData" id=36]
+[ext_resource path="res://data/normal_button.tres" type="StyleBox" id=37]
+[ext_resource path="res://data/hover_button.tres" type="StyleBox" id=38]
+[ext_resource path="res://scripts/KillBackground.gd" type="Script" id=39]
+[ext_resource path="res://scripts/PauseTitleLabel.gd" type="Script" id=40]
+[ext_resource path="res://scripts/SaveButton.gd" type="Script" id=41]
+[ext_resource path="res://scripts/ResumeButton.gd" type="Script" id=42]
 
 [sub_resource type="RectangleShape2D" id=36]
 extents = Vector2( 75, 75 )
@@ -100,6 +133,22 @@ animations = [ {
 "speed": 5.0
 } ]
 
+[sub_resource type="DynamicFont" id=39]
+size = 48
+font_data = ExtResource( 11 )
+
+[sub_resource type="Theme" id=40]
+
+[sub_resource type="DynamicFont" id=41]
+size = 140
+font_data = ExtResource( 36 )
+
+[sub_resource type="Theme" id=42]
+
+[sub_resource type="DynamicFont" id=43]
+size = 140
+font_data = ExtResource( 36 )
+
 [node name="movement" type="Node2D"]
 script = ExtResource( 9 )
 
@@ -126,3 +175,270 @@ animation = "back_walk"
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 script = ExtResource( 8 )
+
+[node name="DialogueBox" type="PanelContainer" parent="Camera2D"]
+margin_right = 14.0
+margin_bottom = 14.0
+custom_styles/panel = ExtResource( 14 )
+script = ExtResource( 12 )
+
+[node name="DialogueLabel" type="Label" parent="Camera2D/DialogueBox"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 9.0
+margin_bottom = 43.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 39 )
+script = ExtResource( 13 )
+
+[node name="InventoryBackground" type="ColorRect" parent="Camera2D"]
+margin_right = 40.0
+margin_bottom = 40.0
+color = Color( 0, 0, 0, 0.72549 )
+script = ExtResource( 27 )
+
+[node name="BigMenuBorder" type="PanelContainer" parent="Camera2D"]
+margin_left = 9.0
+margin_top = 9.0
+margin_right = 57.0
+margin_bottom = 51.0
+theme = ExtResource( 15 )
+custom_styles/panel = ExtResource( 14 )
+script = ExtResource( 22 )
+
+[node name="MenuSubContainer" type="HBoxContainer" parent="Camera2D/BigMenuBorder"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 431.0
+margin_bottom = 223.0
+script = ExtResource( 28 )
+
+[node name="LeftSide" type="VBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer"]
+margin_right = 422.0
+margin_bottom = 218.0
+script = ExtResource( 23 )
+
+[node name="TopLeft" type="HBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide"]
+margin_right = 422.0
+margin_bottom = 200.0
+script = ExtResource( 17 )
+
+[node name="PanelContainer" type="PanelContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft"]
+margin_right = 14.0
+margin_bottom = 200.0
+script = ExtResource( 21 )
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft/PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 7.0
+margin_bottom = 193.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch_mode = 3
+
+[node name="PlayerOverview" type="TextureRect" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft/PanelContainer/AspectRatioContainer"]
+margin_left = -93.0
+margin_right = 93.0
+margin_bottom = 186.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+expand = true
+script = ExtResource( 26 )
+
+[node name="HealthBarContainer" type="VBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft"]
+margin_left = 18.0
+margin_right = 418.0
+margin_bottom = 200.0
+alignment = 1
+script = ExtResource( 20 )
+
+[node name="Label" type="Label" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft/HealthBarContainer"]
+margin_right = 400.0
+margin_bottom = 64.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "health"
+
+[node name="ColorRect2" type="ColorRect" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft/HealthBarContainer"]
+margin_top = 68.0
+margin_right = 400.0
+margin_bottom = 98.0
+rect_min_size = Vector2( 0, 30 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0.0784314, 0.721569, 0.0901961, 1 )
+
+[node name="Label2" type="Label" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft/HealthBarContainer"]
+margin_top = 102.0
+margin_right = 400.0
+margin_bottom = 166.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "mental health"
+
+[node name="ColorRect" type="ColorRect" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft/HealthBarContainer"]
+margin_top = 170.0
+margin_right = 400.0
+margin_bottom = 200.0
+rect_min_size = Vector2( 0, 30 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="JournalButton" type="TextureButton" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/TopLeft"]
+margin_left = 422.0
+margin_right = 422.0
+margin_bottom = 200.0
+texture_normal = ExtResource( 16 )
+expand = true
+script = ExtResource( 18 )
+
+[node name="BottomLeft" type="VBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide"]
+margin_top = 204.0
+margin_right = 422.0
+margin_bottom = 218.0
+script = ExtResource( 19 )
+
+[node name="InventoryBorder" type="PanelContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/BottomLeft"]
+margin_right = 422.0
+margin_bottom = 10.0
+custom_styles/panel = ExtResource( 14 )
+script = ExtResource( 24 )
+
+[node name="Inventory" type="HBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/BottomLeft/InventoryBorder"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 417.0
+margin_bottom = 5.0
+
+[node name="Skills" type="HBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer/LeftSide/BottomLeft"]
+margin_top = 14.0
+margin_right = 422.0
+margin_bottom = 14.0
+
+[node name="RightSide" type="VBoxContainer" parent="Camera2D/BigMenuBorder/MenuSubContainer"]
+margin_left = 426.0
+margin_right = 426.0
+margin_bottom = 218.0
+script = ExtResource( 25 )
+
+[node name="ColorRect" type="ColorRect" parent="Camera2D/BigMenuBorder/MenuSubContainer/RightSide"]
+
+[node name="KillContainer" type="VBoxContainer" parent="Camera2D"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -17.0
+margin_top = 3.0
+margin_right = 857.0
+margin_bottom = 536.0
+theme = ExtResource( 15 )
+custom_constants/separation = 40
+script = ExtResource( 33 )
+
+[node name="KillTitleLabel" type="Label" parent="Camera2D/KillContainer"]
+margin_right = 874.0
+margin_bottom = 140.0
+theme = SubResource( 40 )
+custom_fonts/font = SubResource( 41 )
+script = ExtResource( 31 )
+
+[node name="ResumeButton" type="Button" parent="Camera2D/KillContainer"]
+margin_top = 180.0
+margin_right = 874.0
+margin_bottom = 244.0
+custom_styles/hover = ExtResource( 38 )
+custom_styles/pressed = ExtResource( 37 )
+custom_styles/normal = ExtResource( 37 )
+flat = true
+script = ExtResource( 34 )
+
+[node name="RestartButton" type="Button" parent="Camera2D/KillContainer"]
+margin_top = 284.0
+margin_right = 874.0
+margin_bottom = 348.0
+custom_styles/hover = ExtResource( 38 )
+custom_styles/pressed = ExtResource( 37 )
+custom_styles/normal = ExtResource( 37 )
+script = ExtResource( 32 )
+
+[node name="MainMenuButton" type="Button" parent="Camera2D/KillContainer"]
+margin_top = 388.0
+margin_right = 874.0
+margin_bottom = 452.0
+custom_styles/hover = ExtResource( 38 )
+custom_styles/pressed = ExtResource( 37 )
+custom_styles/normal = ExtResource( 37 )
+script = ExtResource( 35 )
+
+[node name="KillBackground" type="ColorRect" parent="Camera2D"]
+margin_right = 40.0
+margin_bottom = 40.0
+color = Color( 0, 0, 0, 0.72549 )
+script = ExtResource( 39 )
+
+[node name="PauseBackground" type="ColorRect" parent="Camera2D"]
+margin_right = 40.0
+margin_bottom = 40.0
+color = Color( 0, 0, 0, 0.72549 )
+script = ExtResource( 27 )
+
+[node name="PauseContainer" type="VBoxContainer" parent="Camera2D"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -17.0
+margin_top = 3.0
+margin_right = 857.0
+margin_bottom = 536.0
+theme = ExtResource( 15 )
+custom_constants/separation = 40
+script = ExtResource( 33 )
+
+[node name="PauseTitleLabel" type="Label" parent="Camera2D/PauseContainer"]
+margin_right = 874.0
+margin_bottom = 140.0
+theme = SubResource( 42 )
+custom_fonts/font = SubResource( 43 )
+script = ExtResource( 40 )
+
+[node name="ResumeButton" type="Button" parent="Camera2D/PauseContainer"]
+margin_top = 180.0
+margin_right = 874.0
+margin_bottom = 244.0
+custom_styles/hover = ExtResource( 38 )
+custom_styles/pressed = ExtResource( 37 )
+custom_styles/normal = ExtResource( 37 )
+flat = true
+script = ExtResource( 42 )
+
+[node name="SaveButton" type="Button" parent="Camera2D/PauseContainer"]
+margin_top = 284.0
+margin_right = 874.0
+margin_bottom = 348.0
+custom_styles/hover = ExtResource( 38 )
+custom_styles/pressed = ExtResource( 37 )
+custom_styles/normal = ExtResource( 37 )
+script = ExtResource( 41 )
+
+[node name="MainMenuButton" type="Button" parent="Camera2D/PauseContainer"]
+margin_top = 388.0
+margin_right = 874.0
+margin_bottom = 452.0
+custom_styles/hover = ExtResource( 38 )
+custom_styles/pressed = ExtResource( 37 )
+custom_styles/normal = ExtResource( 37 )
+script = ExtResource( 35 )
+
+[node name="Enemy" parent="." instance=ExtResource( 10 )]
+position = Vector2( -1044, -668 )
+scale = Vector2( 2, 2 )
+
+[node name="UIManager" type="Node2D" parent="."]
+position = Vector2( 9, 9 )
+script = ExtResource( 29 )
+
+[node name="JournalManager" type="Node2D" parent="."]
+script = ExtResource( 30 )
