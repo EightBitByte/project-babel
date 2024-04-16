@@ -8,7 +8,8 @@
         "minUpgradeDMG": "2",
         "maxUpgradeDMG": "3",
         "reach": ["1", "2", "3", "4"],
-        "effect": "-1"
+        "effect": "-1",
+        "effectChance": "1"
     },
     "1": {
         "name": "Pommel Strike",
@@ -19,7 +20,8 @@
         "minUpgradeDMG": "2",
         "maxUpgradeDMG": "3",
         "reach": ["1", "2", "3", "4"],
-        "effect": "0"
+        "effect": "0",
+        "effectChance": "0.25"
     },
     "2": {
         "name": "Cull",
@@ -30,7 +32,7 @@
         "minUpgradeDMG": "3",
         "maxUpgradeDMG": "3",
         "reach": ["1+2"],
-        "effect": "-1"
-
+        "effect": "1",
+        "effectChance": "0.5"
     }
 }

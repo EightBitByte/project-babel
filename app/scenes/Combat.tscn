@@ -384,8 +384,8 @@ scroll_active = false
 [node name="AttackDesc" type="RichTextLabel" parent="."]
 margin_left = -240.0
 margin_top = 60.0
-margin_right = -40.0
-margin_bottom = 210.0
+margin_right = 10.0
+margin_bottom = 260.0
 rect_scale = Vector2( 0.5, 0.5 )
 theme = ExtResource( 8 )
 bbcode_enabled = true
