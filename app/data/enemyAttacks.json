@@ -23,8 +23,8 @@
   },
   "2": {
     "name": "Toxic Gas",
-    "minBaseDMG": "4",
-    "maxBaseDMG": "5",
+    "minBaseDMG": "1",
+    "maxBaseDMG": "3",
     "critChance": "0.15",
     "favorability": "0.5",
     "minUpgradeDMG": "1",
