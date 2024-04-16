@@ -1,4 +1,4 @@
-[gd_scene load_steps=61 format=2]
+[gd_scene load_steps=63 format=2]
 
 [ext_resource path="res://scripts/Player.cs" type="Script" id=1]
 [ext_resource path="res://scripts/InventoryMenu.gd" type="Script" id=2]
@@ -39,7 +39,8 @@
 [ext_resource path="res://Scripts/KillTitleLabel.gd" type="Script" id=37]
 [ext_resource path="res://scripts/KillResumeButton.gd" type="Script" id=38]
 [ext_resource path="res://scripts/RestartButton.gd" type="Script" id=39]
-
+[ext_resource path="res://data/pause_screen.webp" type="Texture" id=40]
+[ext_resource path="res://data/death_screen.webp" type="Texture" id=41]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 75, 75 )
@@ -141,7 +142,7 @@ font_data = ExtResource( 13 )
 size = 140
 font_data = ExtResource( 35 )
 
-[node name="movement2" type="Node2D"]
+[node name="movement" type="Node2D"]
 script = ExtResource( 27 )
 
 [node name="TileMap" type="TileMap" parent="."]
@@ -190,7 +191,6 @@ script = ExtResource( 24 )
 margin_right = 40.0
 margin_bottom = 40.0
 color = Color( 0, 0, 0, 0.72549 )
-script = ExtResource( 26 )
 
 [node name="BigMenuBorder" type="PanelContainer" parent="Camera2D"]
 margin_left = 9.0
@@ -319,10 +319,12 @@ script = ExtResource( 10 )
 
 [node name="ColorRect" type="ColorRect" parent="Camera2D/BigMenuBorder/MenuSubContainer/RightSide"]
 
-[node name="PauseBackground" type="ColorRect" parent="Camera2D"]
+[node name="PauseBackground" type="TextureRect" parent="Camera2D"]
+modulate = Color( 0.4, 0.4, 0.4, 1 )
 margin_right = 40.0
 margin_bottom = 40.0
-color = Color( 0, 0, 0, 0.72549 )
+texture = ExtResource( 40 )
+expand = true
 script = ExtResource( 26 )
 
 [node name="PauseContainer" type="VBoxContainer" parent="Camera2D"]
@@ -373,10 +375,12 @@ custom_styles/pressed = ExtResource( 28 )
 custom_styles/normal = ExtResource( 28 )
 script = ExtResource( 32 )
 
-[node name="KillBackground" type="ColorRect" parent="Camera2D"]
+[node name="KillBackground" type="TextureRect" parent="Camera2D"]
+modulate = Color( 0.4, 0.4, 0.4, 1 )
 margin_right = 40.0
 margin_bottom = 40.0
-color = Color( 0, 0, 0, 0.72549 )
+texture = ExtResource( 41 )
+expand = true
 script = ExtResource( 36 )
 
 [node name="KillContainer" type="VBoxContainer" parent="Camera2D"]
