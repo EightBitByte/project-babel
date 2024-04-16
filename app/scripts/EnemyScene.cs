@@ -18,6 +18,18 @@ public class EnemyScene : Node2D
 	}
 	
 	public void SetAnim(int monsterId) {
+		if (monsterId == 6) {
+			m_idleAnimation = "NemesisIdle";
+			m_attackAnimation = "NemesisIdle";
+		}
+		if (monsterId == 5) {
+			m_idleAnimation = "HecateIdle";
+			m_attackAnimation = "HecateIdle";
+		}
+		if (monsterId == 4) {
+			m_idleAnimation = "CetoIdle";
+			m_attackAnimation = "CetoIdle";
+		}
 		if (monsterId == 3) {
 			m_idleAnimation = "ArgosIdle";
 			m_attackAnimation = "ArgosAttack";

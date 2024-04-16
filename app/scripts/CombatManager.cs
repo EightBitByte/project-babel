@@ -21,9 +21,9 @@ public class CombatManager : Node2D
 		m_combat.Hide();
 	}
 	
-	public void BeginCombat()
+	public void BeginCombat(int enemyID)
 	{
-		m_combat.LoadEnemiesWithConstraints(3, 3); // spawn argos (id 3) with max 3 enemies
+		m_combat.LoadEnemiesWithConstraints(enemyID, 3); // spawn argos (id 3) with max 3 enemies
 		m_combat.Reset();
 		
 		
