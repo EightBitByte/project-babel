@@ -474,7 +474,10 @@ public class Combat : Node
 		if (outgoing.Effect != StatusEffect.None) { 
 			Random rand = new();
 			double roll = rand.NextDouble();
-			GD.Print($"Roll: {roll}");
+			
+			#if COMBAT_LOG_DEBUG
+				GD.Print($"Status Roll: {roll}");
+			#endif
 
 			if (roll < outgoing.EffectChance)
 				enemyDataList[enemyIndex].Statuses.Add(outgoing.Effect);
