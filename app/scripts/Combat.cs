@@ -8,6 +8,7 @@ using GArray = Godot.Collections.Array;
 using System.Collections.Generic;
 using System;
 using Godot;
+using System;
 
 // I am the storm that is approaching...
 public class Combat : Node
@@ -130,6 +131,15 @@ public class Combat : Node
 		EnemyDescriptionLabel.Text = "";
 		EnemyNameLabel.Align = Label.AlignEnum.Right;
 		EnemyDescriptionLabel.Align = Label.AlignEnum.Right;
+
+		// Instantiate status effect textures.
+		statusTextures = new() {
+			[StatusEffect.None] = null,
+			[StatusEffect.Stun] = ResourceLoader.Load("res://data/stunned.png") as Texture,
+			[StatusEffect.Weaken] = ResourceLoader.Load("res://data/weakened.png") as Texture
+		};
+
+		debuffSprites = new();
 
 		SelectedAttackButton = -1;
 
@@ -427,7 +437,8 @@ public class Combat : Node
 						double.Parse((string)attackDict["favorability"]) : 0.0,
 			int.Parse((string)attackDict["minUpgradeDMG"]),
 			int.Parse((string)attackDict["maxUpgradeDMG"]),
-			(StatusEffect)int.Parse((string)attackDict["effect"])
+			(StatusEffect)int.Parse((string)attackDict["effect"]),
+			attackDict.Contains("effectChance") ? double.Parse((string)attackDict["effectChance"]) : 1.0
 		);
 	}
 
@@ -486,8 +497,23 @@ public class Combat : Node
 		// Also check to make sure that the player has selected a skill to attack with. Otherwise, ignore the signal.
 		if (SelectedAttackButton == -1) return;
 
+		// Apply attack damage.
 		Attack outgoing = playerData.GetAttack(SelectedAttackButton);
 		int damage = outgoing.GetDamage();
+
+		// Apply & render status effects to Attacker (if any).
+		if (outgoing.Effect != StatusEffect.None) { 
+			Random rand = new();
+			double roll = rand.NextDouble();
+			
+			#if COMBAT_LOG_DEBUG
+				GD.Print($"Status Roll: {roll}");
+			#endif
+
+			if (roll < outgoing.EffectChance)
+				enemyDataList[enemyIndex].Statuses.Add(outgoing.Effect);
+			// AddDebuffSprite(enemyDataList[enemyIndex]);
+		}
 
 		# if COMBAT_LOG_DEBUG
 			GD.Print("Player ", outgoing.Name, "s ", enemyDataList[enemyIndex].Name, " for ", damage);
@@ -560,7 +586,7 @@ public class Combat : Node
 			Attack hoveredAttack = playerData.GetAttack(attackButton);
 
 			AttackNameLabel.BbcodeText = $"[b]{hoveredAttack.Name}[/b]";
-			AttackDescriptionLabel.Text = $"Deals {hoveredAttack.MinDamage} - {hoveredAttack.MaxDamage} Damage\nCrit Chance: {hoveredAttack.CritChance * 100}.0%";
+			AttackDescriptionLabel.Text = $"Deals {hoveredAttack.MinDamage} - {hoveredAttack.MaxDamage} Damage\nCrit Chance: {hoveredAttack.CritChance * 100}.0%\n{(hoveredAttack.Effect == StatusEffect.None ? "" : $"Causes the \'{hoveredAttack.Effect.ToString()}\' effect. ({hoveredAttack.EffectChance * 100}%)")}";
 	}
 
 
@@ -587,6 +613,39 @@ public class Combat : Node
 		EnemyNameLabel.Text = "";
 		EnemyDescriptionLabel.Text = "";
 	}
+
+	/// <summary>
+	/// Creates, stores and shows the statusEffects of the targetted entity.
+	/// </summary>
+	/// <param name="target">The targetted entity to show the statusEffects of</param>
+	// private void AddDebuffSprite(Entity target) {
+	// 	// Get the position of target
+	// 	Vector2 targetPos = (target is Enemy e) ? 
+	// 						GetNode<Node2D>($"Enemy{e.Position+1}Scene").Position 
+	// 						: GetNode<Node2D>("PlayerScene").Position;
+
+	// 	// For each status we have, place it and show it.	
+	// 	for (int i = 0; i < target.Statuses.Count; ++i) {
+	// 		Texture texture = statusTextures[target.Statuses[i]];
+
+	// 		Vector2 newPos = targetPos;
+	// 		targetPos.x += i * 32;
+	// 		targetPos.y += 50;
+
+	// 		Sprite sprite = new(){
+	// 			Texture = texture,
+	// 			Visible = true,
+	// 			Position = newPos
+	// 		};
+
+	// 		GD.Print($"Texture {texture.ResourcePath}\nPosition {newPos}");
+
+	// 		if (target is Enemy ene)
+	// 			debuffSprites[ene.Position+1] = sprite;
+	// 		else
+	// 			debuffSprites[0] = sprite;
+	// 	}
+	// }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta) {
@@ -633,12 +692,28 @@ public class Combat : Node
 		// TODO: Check status effects of current attacker, apply 
 
 		// If an attacker is an enemy, get enemy's attack and show/update
-		if (attacker is Enemy enemy) {
+		if (attacker is Enemy enemy ) {
+			if (attacker.Statuses.Contains(StatusEffect.Stun)) {
+				attacker.Statuses.Remove(StatusEffect.Stun);
+
+				// debuffSprites[enemy.Position+1].QueueFree();
+
+				++currentTurn;
+				return;
+			}
+
 			// Block player action.
 			isPlayerTurn = false;
 			
 			Attack incoming = enemy.GetAttack();
 			int damage = incoming.GetDamage();
+			GD.Print($"Full damage: {damage}");
+
+			if (attacker.Statuses.Contains(StatusEffect.Weaken)) {
+				attacker.Statuses.Remove(StatusEffect.Weaken);
+				damage /= 2;
+				GD.Print($"..Cut in half to {damage}.");
+			}
 
 			// Play the enemy attack animation.
 			enemySceneArray[enemy.Position].AttackAnimation();
@@ -697,6 +772,8 @@ public class Combat : Node
 	private RichTextLabel AttackNameLabel, AttackDescriptionLabel;
 	private Label EnemyNameLabel, EnemyDescriptionLabel;
 	private Sprite Highlight;
+	private Dictionary<int, Sprite> debuffSprites;
+	private Dictionary<StatusEffect, Texture> statusTextures;
 
 	// Scene health bar resources
 	private TextureProgress[] healthBars;

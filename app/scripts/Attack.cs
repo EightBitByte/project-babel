@@ -8,8 +8,6 @@ enum StatusEffect {
     None = -1,
     Stun,
     Weaken,
-    Slow,
-    Blind
 }
 
 class Attack {
@@ -18,7 +16,7 @@ class Attack {
     /// </summary>
     public Attack(string name, int minDamage, int maxDamage, double critChance, 
                   string icon, double favorability,int minUpgradeDamage, 
-                  int maxUpgradeDamage, StatusEffect effect) {
+                  int maxUpgradeDamage, StatusEffect effect, double effectChance) {
         Name = name;
         MinDamage = minDamage;
         MaxDamage = maxDamage;
@@ -28,6 +26,7 @@ class Attack {
         MinUpgradeDamage = minUpgradeDamage;
         MaxUpgradeDamage = maxUpgradeDamage;
         Effect = effect;
+        EffectChance = effectChance;
     }
     
 
@@ -65,7 +64,7 @@ class Attack {
         Random rand = new();
 
         bool isCrit = rand.NextDouble() <= CritChance;
-        int damage = rand.Next(MinDamage, MaxDamage);
+        int damage = rand.Next(MinDamage, MaxDamage+1);
 
         // If crit, double damage
         return isCrit ? damage * 2 : damage;
@@ -76,11 +75,12 @@ class Attack {
     public int MinDamage { get; private set; }
     public int MaxDamage { get; private set; }
     public double CritChance { get; }
+    public double EffectChance { get; }
     public int Level { get; private set; }
     public string Icon { get; }
     // For use only with enemies - determines which attack they choose
     public double Favorability { get; } 
     private readonly int MinUpgradeDamage;
     private readonly int MaxUpgradeDamage;
-    private readonly StatusEffect Effect;
+    public StatusEffect Effect { get; }
 } 
