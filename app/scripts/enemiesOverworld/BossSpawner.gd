@@ -23,6 +23,8 @@ func _ready():
 	for path in resourcePaths:
 		bossData.append(load(path))
 	spawn_enemy()
+	get_node("../ExitStairs").hide()
+	get_node("../ExitStairs").get_child(0).disabled = true
 
 func spawn_enemy():
 	var randomBoss = bossData[randi() % resourcePaths.size()]
@@ -33,4 +35,5 @@ func spawn_enemy():
 
 func _process(delta):
 	if !instance:
-		get_node("../ExitStairs").show();
+		get_node("../ExitStairs").show()
+		get_node("../ExitStairs").get_child(0).disabled = false

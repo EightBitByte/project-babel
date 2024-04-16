@@ -33,7 +33,6 @@ prefabPath = "res://prefabs/EnemyOverwold.tscn"
 resourcePaths = [ "res://prefabs/Ceto.tres", "res://prefabs/Hecate.tres", "res://prefabs/Nemisis.tres" ]
 
 [node name="ExitStairs" type="Area2D" parent="."]
-visible = false
 position = Vector2( 0, -193 )
 script = ExtResource( 5 )
 

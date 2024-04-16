@@ -147,6 +147,6 @@ func _physics_process(delta):
 	
 func _on_PlayerCheck_body_entered(body):
 	if body.name == "Player":
-		get_node("/root/movement/CombatManager").BeginCombat()
+		get_node("/root/movement/CombatManager").BeginCombat(enemyData.id)
 		print("Battle Enter!")
 		self.queue_free()
