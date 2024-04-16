@@ -380,7 +380,6 @@ public class Combat : Node
 		GDictionary enemyData = Json.ReadJSON("res://data/" + ENEMY_FILE + ".json");
 
 		List<Enemy> enemyList = new();
-		//enemySceneArray[0].SetAnim(enemyID);
 
 		// Instantiate all other enemies with the IDs provided
 		int index = 0;
