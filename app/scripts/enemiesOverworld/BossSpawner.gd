@@ -34,6 +34,6 @@ func spawn_enemy():
 	instance.position = self.global_position
 
 func _process(delta):
-	if !instance:
+	if !is_instance_valid(instance):
 		get_node("../ExitStairs").show()
 		get_node("../ExitStairs").get_child(0).disabled = false
