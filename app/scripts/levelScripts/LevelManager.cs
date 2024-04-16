@@ -10,8 +10,8 @@ public class LevelManager : Node
 	const float chamberWidth = 1725;
 	const float chamberHeight = 1340;
 	
-	const int maxDepth = 8;
-	const int minDepth = 5;
+	const int maxDepth = 1;
+	const int minDepth = 1;
 	
 	Godot.Collections.Array<PackedScene> chamberPrefabs;
 	
