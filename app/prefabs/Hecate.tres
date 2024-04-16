@@ -6,5 +6,5 @@
 script = ExtResource( 1 )
 id = 5
 speed = 0
-size = 0
+size = 2
 spritePath = "res://data/Gods_hecate.ow.png"

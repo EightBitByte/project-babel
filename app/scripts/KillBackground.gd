@@ -1,4 +1,4 @@
-extends ColorRect
+extends TextureRect
 
 func update():
 	self.set_size(get_viewport_rect().size)

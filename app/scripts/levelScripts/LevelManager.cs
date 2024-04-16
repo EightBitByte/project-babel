@@ -103,8 +103,9 @@ public class LevelManager : Node
 		coordToChamber[_ConvertToString(x, y)] = chamber;
 		
 		// Set position and create its chamber
-		if (chamberType == chamberPrefabs.Count - 1) // If it's a boss room don't generate neighbors
+		if (chamberType == chamberPrefabs.Count - 1) { // If it's a boss room 
 			depth = maxDepth;
+		}
 		Godot.Collections.Array<string> outgoingDirs = chamber.CreateChamber(incomingDir, depth, x, y);
 		
 		// Generate neighbors nearby
