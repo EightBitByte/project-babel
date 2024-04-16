@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scripts/enemiesOverworld/EnemyOverworld.gd" type="Script" id=5]
+[ext_resource path="res://data/blob.ow.png" type="Texture" id=6]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 145.455, 144.318 )
+
+[sub_resource type="RectangleShape2D" id=37]
+extents = Vector2( 63.5, 63.5 )
+
+[node name="Enemy" type="KinematicBody2D"]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource( 5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -1.90735e-06, 0.5 )
+scale = Vector2( 0.44, 0.44 )
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 8, 8 )
+texture = ExtResource( 6 )
+
+[node name="PlayerCheck" type="Area2D" parent="."]
+position = Vector2( 0, 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerCheck"]
+position = Vector2( -0.5, -0.5 )
+shape = SubResource( 37 )
+
+[connection signal="body_entered" from="PlayerCheck" to="." method="_on_PlayerCheck_body_entered"]

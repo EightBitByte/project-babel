@@ -1,0 +1,44 @@
+{
+  "0": {
+    "name": "Feral Beast",
+    "health": "5",
+    "speed": "2",
+    "knownAttacks": [ "0" ]
+  },
+  "1": {
+    "name": "Minotaur",
+    "health": "10",
+    "speed": "1",
+    "knownAttacks": [ "1" ]
+  },
+  "2": {
+    "name": "Mutant Rat",
+    "health": "2",
+    "speed": "9",
+    "knownAttacks": [ "0" ]
+  },
+  "3": {
+    "name": "Argos",
+    "health": "7",
+    "speed": "1",
+    "knownAttacks": [ "2" ]
+  },
+  "4": {
+    "name": "Ceto",
+    "health": "45",
+    "speed": "2",
+    "knownAttacks": [ "2" ]
+  },
+  "5": {
+    "name": "Hecate",
+    "health": "55",
+    "speed": "2",
+    "knownAttacks": [ "2" ]
+  },
+  "6": {
+    "name": "Nemesis",
+    "health": "65",
+    "speed": "9",
+    "knownAttacks": [ "2" ]
+  }
+}

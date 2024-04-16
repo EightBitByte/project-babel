@@ -1,0 +1,35 @@
+{
+  "0": {
+    "name": "Scratch",
+    "minBaseDMG": "1",
+    "maxBaseDMG": "3",
+    "critChance": "0.25",
+    "favorability": "0.5",
+    "minUpgradeDMG": "2",
+    "maxUpgradeDMG": "3",
+    "reach": [ "1", "2", "3", "4" ],
+    "effect": "-1"
+  },
+  "1": {
+    "name": "Slam",
+    "minBaseDMG": "3",
+    "maxBaseDMG": "5",
+    "critChance": "0.15",
+    "favorability": "0.5",
+    "minUpgradeDMG": "1",
+    "maxUpgradeDMG": "2",
+    "reach": [ "1", "2", "3", "4" ],
+    "effect": "-1"
+  },
+  "2": {
+    "name": "Toxic Gas",
+    "minBaseDMG": "1",
+    "maxBaseDMG": "3",
+    "critChance": "0.15",
+    "favorability": "0.5",
+    "minUpgradeDMG": "1",
+    "maxUpgradeDMG": "2",
+    "reach": [ "1", "2", "3", "4" ],
+    "effect": "-1"
+  }
+}

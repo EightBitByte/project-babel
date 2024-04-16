@@ -1,0 +1,38 @@
+{
+    "0": {
+        "name": "Chop",
+        "minBaseDMG": "2",
+        "maxBaseDMG": "5",
+        "critChance": "0.25",
+        "icon": "res://data/chop.png",
+        "minUpgradeDMG": "2",
+        "maxUpgradeDMG": "3",
+        "reach": ["1", "2", "3", "4"],
+        "effect": "-1",
+        "effectChance": "1"
+    },
+    "1": {
+        "name": "Pommel Strike",
+        "minBaseDMG": "1",
+        "maxBaseDMG": "2",
+        "critChance": "0.15",
+        "icon": "res://data/pommel.png",
+        "minUpgradeDMG": "2",
+        "maxUpgradeDMG": "3",
+        "reach": ["1", "2", "3", "4"],
+        "effect": "0",
+        "effectChance": "0.25"
+    },
+    "2": {
+        "name": "Cull",
+        "minBaseDMG": "10",
+        "maxBaseDMG": "20",
+        "critChance": "0.15",
+        "icon": "res://data/cull.png",
+        "minUpgradeDMG": "3",
+        "maxUpgradeDMG": "3",
+        "reach": ["1+2"],
+        "effect": "1",
+        "effectChance": "0.5"
+    }
+}
