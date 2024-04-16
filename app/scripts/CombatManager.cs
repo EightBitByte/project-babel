@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public class CombatManager : Node2D
 {
@@ -13,7 +15,7 @@ public class CombatManager : Node2D
 	{
 		InCombat = false;
 		m_combat = GetNode<Combat>("../Camera2D/Combat Controller");
-		GetNode<ColorRect>("../Camera2D/CombatBackground").Visible = false;
+		GetNode<TextureRect>("../Camera2D/CombatBackground").Visible = false;
 		GetNode<Node2D>("/root/movement/UIManager").Call("hide_win");
 		
 		m_combat.Hide();
@@ -21,7 +23,11 @@ public class CombatManager : Node2D
 	
 	public void BeginCombat()
 	{
+		m_combat.LoadEnemiesWithConstraints(3, 3); // spawn argos (id 3) with max 3 enemies
 		m_combat.Reset();
+		
+		
+		
 		InCombat = true;
 		GetNode<ColorRect>("../Camera2D/CombatBackground").Visible = true;
 		m_combat.Show();

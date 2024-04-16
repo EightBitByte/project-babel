@@ -1,4 +1,4 @@
-[gd_scene load_steps=69 format=2]
+[gd_scene load_steps=72 format=2]
 
 [ext_resource path="res://scripts/levelScripts/LevelManager.cs" type="Script" id=1]
 [ext_resource path="res://levelPrefabs/startChamber.tscn" type="PackedScene" id=2]
@@ -45,6 +45,9 @@
 [ext_resource path="res://scripts/CombatManager.cs" type="Script" id=43]
 [ext_resource path="res://scenes/Combat.tscn" type="PackedScene" id=44]
 [ext_resource path="res://scripts/WinResumeButton.gd" type="Script" id=45]
+[ext_resource path="res://data/death_screen.webp" type="Texture" id=46]
+[ext_resource path="res://data/win_screen.webp" type="Texture" id=47]
+[ext_resource path="res://data/pause_screen.webp" type="Texture" id=48]
 
 [sub_resource type="RectangleShape2D" id=36]
 extents = Vector2( 75, 75 )
@@ -175,6 +178,8 @@ scale = Vector2( 3.6, 3.6 )
 frames = SubResource( 38 )
 animation = "back_walk"
 
+[node name="Enemies" type="Node2D" parent="."]
+
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 script = ExtResource( 8 )
@@ -194,10 +199,9 @@ custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 39 )
 script = ExtResource( 13 )
 
-[node name="InventoryBackground" type="ColorRect" parent="Camera2D"]
+[node name="InventoryBackground" type="TextureRect" parent="Camera2D"]
 margin_right = 40.0
 margin_bottom = 40.0
-color = Color( 0, 0, 0, 0.72549 )
 script = ExtResource( 27 )
 
 [node name="BigMenuBorder" type="PanelContainer" parent="Camera2D"]
@@ -327,10 +331,12 @@ script = ExtResource( 25 )
 
 [node name="ColorRect" type="ColorRect" parent="Camera2D/BigMenuBorder/MenuSubContainer/RightSide"]
 
-[node name="PauseBackground" type="ColorRect" parent="Camera2D"]
+[node name="PauseBackground" type="TextureRect" parent="Camera2D"]
+modulate = Color( 0.4, 0.4, 0.4, 1 )
 margin_right = 40.0
 margin_bottom = 40.0
-color = Color( 0, 0, 0, 0.72549 )
+texture = ExtResource( 48 )
+expand = true
 script = ExtResource( 27 )
 
 [node name="PauseContainer" type="VBoxContainer" parent="Camera2D"]
@@ -381,20 +387,21 @@ custom_styles/pressed = ExtResource( 37 )
 custom_styles/normal = ExtResource( 37 )
 script = ExtResource( 35 )
 
-[node name="CombatBackground" type="ColorRect" parent="Camera2D"]
+[node name="CombatBackground" type="TextureRect" parent="Camera2D"]
 margin_right = 40.0
 margin_bottom = 40.0
-color = Color( 0, 0, 0, 0.72549 )
 script = ExtResource( 39 )
 
 [node name="Combat Controller" parent="Camera2D" instance=ExtResource( 44 )]
 position = Vector2( -69, -2 )
 scale = Vector2( 3, 3 )
 
-[node name="WinBackground" type="ColorRect" parent="Camera2D"]
+[node name="WinBackground" type="TextureRect" parent="Camera2D"]
+modulate = Color( 0.4, 0.4, 0.4, 1 )
 margin_right = 40.0
 margin_bottom = 40.0
-color = Color( 0, 0, 0, 0.72549 )
+texture = ExtResource( 47 )
+expand = true
 script = ExtResource( 39 )
 
 [node name="WinContainer" type="VBoxContainer" parent="Camera2D"]
@@ -427,12 +434,14 @@ custom_styles/normal = ExtResource( 37 )
 flat = true
 script = ExtResource( 45 )
 
-[node name="KillBackground" type="ColorRect" parent="Camera2D"]
+[node name="KillBackground" type="TextureRect" parent="Camera2D"]
+modulate = Color( 0.4, 0.4, 0.4, 1 )
 margin_left = -17.0
 margin_top = 287.0
 margin_right = 857.0
 margin_bottom = 287.0
-color = Color( 0, 0, 0, 0.72549 )
+texture = ExtResource( 46 )
+expand = true
 script = ExtResource( 39 )
 
 [node name="KillContainer" type="VBoxContainer" parent="Camera2D"]

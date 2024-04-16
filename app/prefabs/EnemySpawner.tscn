@@ -4,3 +4,6 @@
 
 [node name="Spawner" type="Node2D"]
 script = ExtResource( 1 )
+prefabPath = "res://prefabs/EnemyOverwold.tscn"
+resourcePath = "res://prefabs/Argos.tres"
+chance = 1.0

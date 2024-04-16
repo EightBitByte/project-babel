@@ -6,6 +6,7 @@ using GDictionary = Godot.Collections.Dictionary;
 using GArray = Godot.Collections.Array;
 
 using System.Collections.Generic;
+using System;
 using Godot;
 using System;
 
@@ -74,8 +75,8 @@ public class Combat : Node
 			enemySceneArray[i-1] = GetNode<EnemyScene>($"Enemy{i}Scene");
 
 
-		playerData = LoadCombatPlayer();
-		enemyDataList = LoadEnemies(3);//, 0, 2);
+		playerData = null;//LoadCombatPlayer();
+		enemyDataList = null;//LoadEnemies(3);//, 0, 2);
 		
 		IsDead = new bool[4];
 		for (int i = 0; i < 4; ++i) {
@@ -142,11 +143,43 @@ public class Combat : Node
 
 		SelectedAttackButton = -1;
 
-		turnOrder = PopulateOrder();
+		//turnOrder = PopulateOrder();
 
 		#if COMBAT_LOG_DEBUG
 		GD.Print("========== ROUND 1 ==========");
 		#endif
+		
+		rand = new Random();
+	}
+	
+	public void LoadEnemiesWithConstraints(int id, int maxCount) {
+		int generatedEnemyCount = 1;
+		if (rand.NextDouble() > 0.5) {
+			++generatedEnemyCount;
+			if (rand.NextDouble() > 0.5) {
+				++generatedEnemyCount;
+			}
+		}
+		GD.Print(generatedEnemyCount);
+		int[] idArray = new int[generatedEnemyCount];
+		for (int i = 0; i < generatedEnemyCount; ++i) {
+			idArray[i] = id;
+		} 
+		enemyDataList = LoadEnemies(idArray);
+		playerData = LoadCombatPlayer();
+
+		// Instantiate member variables for health bars.
+		GetNode<TextureProgress>("./EnemyHealthBar1").Visible = false;
+		GetNode<TextureProgress>("./EnemyHealthBar2").Visible = false;
+		GetNode<TextureProgress>("./EnemyHealthBar3").Visible = false;
+		for (int i = 0; i <= MAX_NUM_ENEMIES; ++i) {
+			healthBars[i].Value = 64;
+			if (i < enemyCount) {
+				healthBars[i].Visible = true;
+			}
+		}
+		
+		turnOrder = PopulateOrder();
 	}
 	
 	public void Reset()
@@ -158,8 +191,8 @@ public class Combat : Node
 			enemySceneArray[i-1] = GetNode<EnemyScene>($"Enemy{i}Scene");
 
 
-		playerData = LoadCombatPlayer();
-		enemyDataList = LoadEnemies(3);//, 0, 2);
+		//playerData = LoadCombatPlayer();
+		//enemyDataList = LoadEnemies(3);//, 0, 2);
 		
 		IsDead = new bool[4];
 		for (int i = 0; i < 4; ++i) {
@@ -184,17 +217,7 @@ public class Combat : Node
 		#endif
 
 
-		// Instantiate member variables for health bars.
-		GetNode<TextureProgress>("./EnemyHealthBar1").Visible = false;
-		GetNode<TextureProgress>("./EnemyHealthBar2").Visible = false;
-		GetNode<TextureProgress>("./EnemyHealthBar3").Visible = false;
-		healthBars[0].Value = 64;
-		for (int i = 1; i <= MAX_NUM_ENEMIES; ++i) {
-			healthBars[i].Value = 64;
-			if (i < enemyCount) {
-				healthBars[i].Visible = true;
-			}
-		}
+
 
 
 		AttackNameLabel.Text = "";
@@ -206,8 +229,12 @@ public class Combat : Node
 
 		SelectedAttackButton = -1;
 
-		turnOrder = PopulateOrder();
 
+
+		combatOver = false;
+		playerWin = false;
+		sequenceOver = false;
+		beforeStart = false;
 		#if COMBAT_LOG_DEBUG
 		GD.Print("========== ROUND 1 ==========");
 		#endif
@@ -345,21 +372,25 @@ public class Combat : Node
 	/// <param name="enemyID">The first enemy at id ID to instantiate.</param>
 	/// <param name="otherIDs">A variable amount of enemies to instantiate.</param>
 	/// <returns></returns>
-	private List<Enemy> LoadEnemies(int enemyID, params int[] otherIDs) {
-		enemyCount = 1 + otherIDs.Length;
+	private List<Enemy> LoadEnemies(int[] ids) {
+		enemyCount = ids.Length;
 		enemiesLeft = enemyCount;
 		// Read the attack collection and player stats
 		GDictionary enemyAttacks = Json.ReadJSON("res://data/" + ENEMY_ATTACK_FILE + ".json");
 		GDictionary enemyData = Json.ReadJSON("res://data/" + ENEMY_FILE + ".json");
 
-		List<Enemy> enemyList = new() { LoadEnemyData(enemyID, enemyData, enemyAttacks, 0) };
-		enemySceneArray[0].SetAnim(enemyID);
+		List<Enemy> enemyList = new();
+		//enemySceneArray[0].SetAnim(enemyID);
 
 		// Instantiate all other enemies with the IDs provided
-		for (int index = 0; index < otherIDs.Length; ++index) {
-			enemyList.Add(LoadEnemyData(otherIDs[index], enemyData, enemyAttacks, index + 1));
+		int index = 0;
+		for (; index < ids.Length; ++index) {
+			enemyList.Add(LoadEnemyData(ids[index], enemyData, enemyAttacks, index));
 			
-			enemySceneArray[index].SetAnim(otherIDs[index]);
+			enemySceneArray[index].SetAnim(ids[index]);
+		}
+		for (; index < MAX_NUM_ENEMIES; ++index) {
+			enemySceneArray[index].SetAnim(-2);
 		}
 
 		return enemyList;
@@ -505,7 +536,11 @@ public class Combat : Node
 			
 			if (enemiesLeft == 0) {
 				// Win!
-				GetNode<CombatManager>("/root/movement/CombatManager").WinCombat();
+				combatOver = true;
+				playerWin = true;
+				timer = 0.0f;
+
+				//GetNode<CombatManager>("/root/movement/CombatManager").WinCombat();
 			}
 		}
 		
@@ -614,6 +649,7 @@ public class Combat : Node
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta) {
+		if (beforeStart || sequenceOver) { return; }
 		//If we've reached the end of the turn order, repopulate it based on speed
 		if (currentTurn == turnOrder.Count) {
 			# if COMBAT_LOG_DEBUG
@@ -641,6 +677,17 @@ public class Combat : Node
 			return;
 		}
 		timer = 0.0F;
+		
+		if (combatOver) {
+			sequenceOver = true;
+			beforeStart = true;
+			if (playerWin) {
+				GetNode<CombatManager>("/root/movement/CombatManager").WinCombat();
+			}
+			else {
+				GetNode<CombatManager>("/root/movement/CombatManager").LoseCombat();
+			}
+		}
 
 		// TODO: Check status effects of current attacker, apply 
 
@@ -679,7 +726,10 @@ public class Combat : Node
 
 			bool isDead = playerData.TakeDamage(damage);
 			if (isDead) {
-				GetNode<CombatManager>("/root/movement/CombatManager").LoseCombat();
+				combatOver = true;
+				playerWin = false;
+				timer = 0.0f;
+				//GetNode<CombatManager>("/root/movement/CombatManager").LoseCombat();
 			}
 			
 			healthBars[0].Value = playerData.GetFractionalHealth();
@@ -692,10 +742,16 @@ public class Combat : Node
 		isPlayerTurn = true;
 	}
 
+
+	private Random rand;
 	// Timer variable for processing in intervals.
-	float timer = 0.0F;
+	private float timer = 0.0F;
 	// Flag variable for whether it is the player's turn.
-	bool isPlayerTurn = false;
+	private bool isPlayerTurn = false;
+	private bool combatOver = false;
+	private bool playerWin = false;
+	private bool sequenceOver = false;
+	private bool beforeStart = true;
 
 	private int enemiesLeft;
 	private int enemyCount;
