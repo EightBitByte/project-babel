@@ -1,8 +1,13 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://tiles/tower_tiles.tres" type="TileSet" id=1]
 [ext_resource path="res://scripts/levelScripts/LevelChamber.cs" type="Script" id=2]
 [ext_resource path="res://tiles/shading.tres" type="TileSet" id=3]
+[ext_resource path="res://scripts/enemiesOverworld/BossSpawner.gd" type="Script" id=4]
+[ext_resource path="res://scripts/interactable/Exit.cs" type="Script" id=5]
+[ext_resource path="res://data/red.jpg" type="Texture" id=6]
+
+[sub_resource type="RectangleShape2D" id=1]
 
 [node name="Node2D" type="Node2D"]
 
@@ -21,3 +26,23 @@ tile_set = ExtResource( 3 )
 cell_size = Vector2( 16, 16 )
 format = 1
 tile_data = PoolIntArray( -393226, 3, 0, -458742, 4, 0, -327690, 3, 0, -393206, 4, 0, -262154, 3, 0, -327670, 4, 0, -196618, 3, 0, -196615, 536870912, 0, -196614, 0, 0, -262139, 536870912, 0, -262138, 0, 0, -262134, 4, 0, -131082, 3, 0, -131079, 4, 0, -131078, 3, 0, -196603, 4, 0, -196602, 3, 0, -196598, 4, 0, -65546, 3, 0, -131062, 4, 0, -10, 3, 0, -65526, 4, 0, 65526, 3, 0, 10, 4, 0, 131062, 3, 0, 65546, 4, 0, 196598, 3, 0, 131082, 4, 0, 262134, 3, 0, 262137, 536870912, 0, 262138, 0, 0, 196613, 536870912, 0, 196614, 0, 0, 196618, 4, 0, 327670, 3, 0, 327673, 4, 0, 327674, 3, 0, 262149, 4, 0, 262150, 3, 0, 262154, 4, 0, 393206, 3, 0, 327690, 4, 0, 458742, 3, 0, 393226, 4, 0, 524278, 3, 0, 458762, 4, 0, 589815, 2, 0, 589816, 2, 0, 589817, 2, 0, 589818, 2, 0, 589819, 2, 0, 589820, 2, 0, 589821, 2, 0, 589822, 2, 0, 589823, 2, 0, 524288, 2, 0, 524289, 2, 0, 524290, 2, 0, 524291, 2, 0, 524292, 2, 0, 524293, 2, 0, 524294, 2, 0, 524295, 2, 0, 524296, 2, 0, 524297, 2, 0 )
+
+[node name="BossSpawner" type="Node2D" parent="."]
+script = ExtResource( 4 )
+prefabPath = "res://prefabs/EnemyOverwold.tscn"
+resourcePaths = [ "res://prefabs/Ceto.tres", "res://prefabs/Hecate.tres", "res://prefabs/Nemisis.tres" ]
+
+[node name="ExitStairs" type="Area2D" parent="."]
+visible = false
+position = Vector2( 0, -193 )
+script = ExtResource( 5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExitStairs"]
+scale = Vector2( 3, 3 )
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="ExitStairs"]
+modulate = Color( 0, 0, 0, 1 )
+texture = ExtResource( 6 )
+
+[connection signal="body_entered" from="ExitStairs" to="ExitStairs" method="_on_ExitStairs_body_entered"]
