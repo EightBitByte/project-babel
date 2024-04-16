@@ -23,8 +23,8 @@
     },
     "2": {
         "name": "Cull",
-        "minBaseDMG": "1",
-        "maxBaseDMG": "3",
+        "minBaseDMG": "10",
+        "maxBaseDMG": "20",
         "critChance": "0.15",
         "icon": "res://data/cull.png",
         "minUpgradeDMG": "3",

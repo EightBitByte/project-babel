@@ -29,12 +29,13 @@ public class CombatManager : Node2D
 		
 		
 		InCombat = true;
-		GetNode<ColorRect>("../Camera2D/CombatBackground").Visible = true;
+		//GetNode<TextureRect>("../Camera2D/CombatBackground").Visible = true;
+		GetNode<TextureRect>("../Camera2D/CombatBackground").Call("show");
 		m_combat.Show();
 	}
 	public void WinCombat()
 	{
-		GetNode<ColorRect>("../Camera2D/CombatBackground").Visible = false;
+		GetNode<TextureRect>("../Camera2D/CombatBackground").Visible = false;
 		m_combat.Hide();
 		
 		GetNode<Node2D>("/root/movement/UIManager").Call("show_win");
@@ -43,7 +44,7 @@ public class CombatManager : Node2D
 
 	public void LoseCombat()
 	{
-		GetNode<ColorRect>("../Camera2D/CombatBackground").Visible = false;
+		GetNode<TextureRect>("../Camera2D/CombatBackground").Visible = false;
 		m_combat.Hide();
 		
 		

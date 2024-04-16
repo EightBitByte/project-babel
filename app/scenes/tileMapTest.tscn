@@ -1,4 +1,4 @@
-[gd_scene load_steps=72 format=2]
+[gd_scene load_steps=74 format=2]
 
 [ext_resource path="res://scripts/levelScripts/LevelManager.cs" type="Script" id=1]
 [ext_resource path="res://levelPrefabs/startChamber.tscn" type="PackedScene" id=2]
@@ -48,6 +48,8 @@
 [ext_resource path="res://data/death_screen.webp" type="Texture" id=46]
 [ext_resource path="res://data/win_screen.webp" type="Texture" id=47]
 [ext_resource path="res://data/pause_screen.webp" type="Texture" id=48]
+[ext_resource path="res://scripts/CombatBackground.gd" type="Script" id=49]
+[ext_resource path="res://scripts/InventoryBackground.gd" type="Script" id=50]
 
 [sub_resource type="RectangleShape2D" id=36]
 extents = Vector2( 75, 75 )
@@ -337,7 +339,7 @@ margin_right = 40.0
 margin_bottom = 40.0
 texture = ExtResource( 48 )
 expand = true
-script = ExtResource( 27 )
+script = ExtResource( 50 )
 
 [node name="PauseContainer" type="VBoxContainer" parent="Camera2D"]
 anchor_left = 0.5
@@ -390,7 +392,9 @@ script = ExtResource( 35 )
 [node name="CombatBackground" type="TextureRect" parent="Camera2D"]
 margin_right = 40.0
 margin_bottom = 40.0
-script = ExtResource( 39 )
+texture = ExtResource( 48 )
+expand = true
+script = ExtResource( 49 )
 
 [node name="Combat Controller" parent="Camera2D" instance=ExtResource( 44 )]
 position = Vector2( -69, -2 )
@@ -402,7 +406,7 @@ margin_right = 40.0
 margin_bottom = 40.0
 texture = ExtResource( 47 )
 expand = true
-script = ExtResource( 39 )
+script = ExtResource( 50 )
 
 [node name="WinContainer" type="VBoxContainer" parent="Camera2D"]
 anchor_left = 0.5

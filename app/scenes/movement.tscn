@@ -39,7 +39,6 @@
 [ext_resource path="res://Scripts/KillTitleLabel.gd" type="Script" id=37]
 [ext_resource path="res://scripts/KillResumeButton.gd" type="Script" id=38]
 [ext_resource path="res://scripts/RestartButton.gd" type="Script" id=39]
-
 [ext_resource path="res://data/pause_screen.webp" type="Texture" id=40]
 [ext_resource path="res://data/death_screen.webp" type="Texture" id=41]
 
